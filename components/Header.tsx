@@ -37,11 +37,6 @@ const tabs = [
     href: '/dashboard',
     icon: CircleGauge,
   },
-  {
-    label: 'Transactions',
-    href: '/transactions',
-    icon: ArrowRightLeft,
-  },
 ];
 
 export function Header() {
@@ -49,7 +44,7 @@ export function Header() {
   const { user } = useUser();
 
   const [isOpen, setIsOpen] = useState(false);
-  const isLarge = useMedia('(min-width: 768px)');
+  const isLarge = useMedia('(min-width: 768px)', false);
 
   const name =
     user?.fullName ||
