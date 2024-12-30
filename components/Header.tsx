@@ -76,7 +76,7 @@ export function Header() {
                 className={cn(
                   'flex items-center gap-2 text-sm text-muted-foreground hover:text-black dark:hover:text-white',
                   pathname === tab.href &&
-                    'text-black dark:text-white underline underline-offset-8'
+                    'text-black dark:text-white underline underline-offset-4'
                 )}
               >
                 {tab.label}

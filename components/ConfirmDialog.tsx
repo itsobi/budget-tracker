@@ -41,7 +41,7 @@ export function ConfirmDialog({
           <AlertDialogAction asChild>
             <Button
               variant="destructive"
-              className="bg-red-400 hover:bg-red-500 text-white"
+              className="bg-red-500 hover:bg-red-600 text-white"
             >
               {confirmText}
             </Button>

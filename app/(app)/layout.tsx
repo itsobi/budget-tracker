@@ -1,4 +1,5 @@
 import { ConvexClientProvider } from '@/components/ConvexClientProvider';
+import { ExpenseSheet } from '@/components/ExpenseSheet';
 import { Header } from '@/components/Header';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -6,6 +7,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body>
         <ConvexClientProvider>
+          <ExpenseSheet />
           <div className="min-h-screen flex flex-col">
             <div className="shadow-sm dark:border-b border-zinc mb-4">
               <Header />

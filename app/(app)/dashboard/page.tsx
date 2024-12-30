@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Download, PlusCircle } from 'lucide-react';
 import { DashboardExpenses } from './_components/DashboardExpenses';
+import { AddExpenseButton } from './_components/AddExpenseButton';
 
 export default function DashboardPage() {
   return (
@@ -15,10 +16,7 @@ export default function DashboardPage() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <div className="flex items-center gap-2">
-          <Button>
-            <PlusCircle />
-            Add Expense
-          </Button>
+          <AddExpenseButton />
           <TooltipProvider delayDuration={200}>
             <Tooltip>
               <TooltipTrigger asChild>

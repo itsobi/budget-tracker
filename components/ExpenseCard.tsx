@@ -59,23 +59,25 @@ export function ExpenseCard({
               <p className="text-xs text-muted-foreground">{subtitle}</p>
             </div>
 
-            <Button variant="ghost" size="icon">
-              <Pencil />
-            </Button>
-            <ConfirmDialog
-              triggerComponent={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-red-500 hover:text-white"
-                >
-                  <Trash />
-                </Button>
-              }
-              title="Are you sure?"
-              description="This action cannot be undone. This will permanently delete this expense."
-              confirmText="Delete"
-            />
+            <div>
+              <Button variant="ghost" size="icon">
+                <Pencil />
+              </Button>
+              <ConfirmDialog
+                triggerComponent={
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:bg-red-500 hover:text-white"
+                  >
+                    <Trash />
+                  </Button>
+                }
+                title="Are you sure?"
+                description="This action cannot be undone. This will permanently delete this expense."
+                confirmText="Delete"
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
