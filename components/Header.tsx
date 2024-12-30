@@ -37,6 +37,11 @@ const tabs = [
     href: '/dashboard',
     icon: CircleGauge,
   },
+  {
+    label: 'Transactions',
+    href: '/transactions',
+    icon: ArrowRightLeft,
+  },
 ];
 
 export function Header() {
@@ -60,8 +65,24 @@ export function Header() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-2 xl:px-0">
       <nav className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
-          <h1 className="lg:text-2xl italic">BudgetTracker</h1>
+        <div className="flex items-center">
+          <h1 className="text-xl font-bold italic mr-16">BudgetTracker</h1>
+
+          <div className="hidden md:flex items-center gap-4">
+            {tabs.map((tab) => (
+              <Link
+                href={tab.href}
+                key={tab.label}
+                className={cn(
+                  'flex items-center gap-2 text-sm text-muted-foreground hover:text-black dark:hover:text-white',
+                  pathname === tab.href &&
+                    'text-black dark:text-white underline underline-offset-8'
+                )}
+              >
+                {tab.label}
+              </Link>
+            ))}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <ThemeButton />
@@ -113,23 +134,6 @@ export function Header() {
           </Sheet>
         </div>
       </nav>
-
-      <div className="hidden md:flex items-center gap-2 py-2 text-zinc">
-        {tabs.map((tab) => (
-          <Link
-            href={tab.href}
-            key={tab.label}
-            className={cn(
-              'flex items-center gap-2 py-1 text-muted-foreground rounded px-2 hover:text-black/60 hover:bg-zinc-200 dark:hover:bg-zinc-600 dark:hover:text-white',
-              pathname === tab.href &&
-                'bg-zinc-200 dark:bg-zinc-600 font-semibold text-black/60 dark:text-white'
-            )}
-          >
-            <tab.icon className="w-4 h-4" />
-            {tab.label}
-          </Link>
-        ))}
-      </div>
     </div>
   );
 }
