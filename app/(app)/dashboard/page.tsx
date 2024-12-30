@@ -1,4 +1,3 @@
-import { DashboardCard } from '@/components/DashboardCard';
 import { TransactionsCard } from '@/components/TransactionsCard';
 import { Button } from '@/components/ui/button';
 import {
@@ -7,14 +6,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  CalendarSync,
-  CreditCard,
-  DollarSign,
-  Download,
-  PiggyBank,
-  PlusCircle,
-} from 'lucide-react';
+import { Download, PlusCircle } from 'lucide-react';
+import { DashboardExpenses } from './_components/DashboardExpenses';
 
 export default function DashboardPage() {
   return (
@@ -38,32 +31,11 @@ export default function DashboardPage() {
           </TooltipProvider>
         </div>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <DashboardCard
-          title="Monthly Budget"
-          amount={1000}
-          Icon={DollarSign}
-          subtitle="+20.1% from last month"
-        />
-        <DashboardCard
-          title="Monthly Expenses"
-          amount={1000}
-          Icon={CreditCard}
-          subtitle="+20.1% from last month"
-        />
-        <DashboardCard
-          title="Savings"
-          amount={1000}
-          Icon={PiggyBank}
-          subtitle="+20.1% from last month"
-        />
-        <DashboardCard
-          title="Recurring Expenses"
-          amount={1000}
-          Icon={CalendarSync}
-          subtitle="+20.1% from last month"
-        />
+        <DashboardExpenses />
       </div>
+
       <div className="mb-4">
         <TransactionsCard />
       </div>

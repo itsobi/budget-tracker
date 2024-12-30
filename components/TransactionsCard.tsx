@@ -1,6 +1,5 @@
 import {
   Car,
-  CircleDot,
   CreditCard,
   LucideIcon,
   MoveUpRight,

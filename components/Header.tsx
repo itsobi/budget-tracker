@@ -94,10 +94,10 @@ export function Header() {
                       <Link
                         href={tab.href}
                         key={tab.label}
-                        className="flex items-center gap-2 w-full text-sm text-muted-foreground hover:text-black/60 hover:bg-zinc-200 dark:hover:bg-zinc-600 p-2 rounded"
+                        className="flex items-center gap-2 w-full text-sm text-muted-foreground hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-600 p-2 rounded"
                       >
                         <tab.icon className="w-4 h-4" />
-                        {tab.label}
+                        <p className="text-lg">{tab.label}</p>
                       </Link>
                     ))}
                   </div>
