@@ -1,6 +1,7 @@
 import { ConvexClientProvider } from '@/components/ConvexClientProvider';
 import { ExpenseSheet } from '@/components/ExpenseSheet';
 import { Header } from '@/components/Header';
+import { Toaster } from '@/components/ui/sonner';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,6 +18,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </ConvexClientProvider>
+        <Toaster />
       </body>
     </html>
   );

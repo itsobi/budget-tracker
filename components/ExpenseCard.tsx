@@ -7,11 +7,11 @@ import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
 
 interface ExpenseCardProps {
-  id: number;
+  id: string;
   title: string;
   amount: number;
   Icon: React.ElementType;
-  subtitle: string;
+  // subtitle: string;
 }
 
 export function ExpenseCard({
@@ -19,7 +19,7 @@ export function ExpenseCard({
   title,
   amount,
   Icon,
-  subtitle,
+  // subtitle,
 }: ExpenseCardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useSortable({ id });
@@ -56,7 +56,7 @@ export function ExpenseCard({
           <div className="flex justify-between items-center">
             <div>
               <p className="text-2xl font-bold">${amount}</p>
-              <p className="text-xs text-muted-foreground">{subtitle}</p>
+              {/* <p className="text-xs text-muted-foreground">{subtitle}</p> */}
             </div>
 
             <div>
