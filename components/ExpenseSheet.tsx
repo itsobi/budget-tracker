@@ -25,12 +25,14 @@ import {
 } from '@/components/ui/select';
 
 import { useExpenseSheetStore } from '@/store/useExpenseSheetStore';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useAuth } from '@clerk/nextjs';
+import { Id } from '@/convex/_generated/dataModel';
+import { updateExpense } from '@/convex/expenses';
 
 const expenseTypes = [
   { value: 'education', label: 'Education' },
@@ -46,18 +48,23 @@ const expenseTypes = [
 ];
 
 export function ExpenseSheet() {
-  const { isOpen, close } = useExpenseSheetStore();
+  const { isOpen, close, expenseId } = useExpenseSheetStore();
   const [isMounted, setIsMounted] = useState(false);
-  const [expense, setExpense] = useState({
-    title: '',
-    amount: '',
-    type: '',
-  });
+  const formRef = useRef<HTMLFormElement>(null);
+
   const { userId } = useAuth();
+
   const existingExpenses = useQuery(api.expenses.getExpenses, {
     userId: userId!,
   });
+
+  const existingExpense = useQuery(
+    api.expenses.getExpense,
+    typeof expenseId === 'string' ? { id: expenseId as Id<'expenses'> } : 'skip'
+  );
+
   const createExpenseMutation = useMutation(api.expenses.createExpense);
+  const updateExpenseMutation = useMutation(api.expenses.updateExpense);
 
   useEffect(() => {
     setIsMounted(true);
@@ -69,20 +76,53 @@ export function ExpenseSheet() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await createExpenseMutation({
-      ...expense,
-      amount: Number(expense.amount) || 0,
-      userId: userId!,
-      order: existingExpenses?.length || 0,
-    });
+
+    const formData = new FormData(e.currentTarget);
+
+    // Extract the values directly
+    const title = formData.get('name') as string;
+    const type = formData.get('type') as string;
+    const amount = formData.get('amount');
+
+    // When editing, use existing values as fallback
+    const finalTitle = title || existingExpense?.title;
+    const finalType = type || existingExpense?.type;
+    const finalAmount = amount || existingExpense?.amount;
+
+    // Validate required fields
+    if (!finalTitle || !finalType || !finalAmount) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    const data = {
+      title,
+      type: type || existingExpense?.type || '',
+      amount: Number(amount),
+    };
+
+    let response;
+
+    if (expenseId) {
+      response = await updateExpenseMutation({
+        id: expenseId as Id<'expenses'>,
+        ...data,
+      });
+    } else {
+      response = await createExpenseMutation({
+        ...data,
+        userId: userId!,
+        order: existingExpenses?.length || 0,
+      });
+    }
 
     if (response.success) {
       toast.success(response.message);
+      formRef.current?.reset();
+      close();
     } else {
       toast.error(response.message);
     }
-    setExpense({ title: '', amount: '', type: '' });
-    close();
   };
 
   return (
@@ -104,24 +144,30 @@ export function ExpenseSheet() {
             Add an expense to your budget dashboard.
           </SheetDescription>
         </SheetHeader>
-        <form onSubmit={handleSubmit} className="my-4 flex flex-col gap-4">
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="my-4 flex flex-col gap-4"
+        >
           <div className="space-y-1">
             <Label htmlFor="name">Name</Label>
             <Input
-              value={expense.title}
-              onChange={(e) =>
-                setExpense({ ...expense, title: e.target.value })
-              }
+              name="name"
+              defaultValue={expenseId ? existingExpense?.title : ''}
             />
           </div>
           <div className="space-y-1">
             <Label htmlFor="type">Type</Label>
             <Select
-              value={expense.type}
-              onValueChange={(value) => setExpense({ ...expense, type: value })}
+              name="type"
+              defaultValue={expenseId ? existingExpense?.type : undefined}
             >
-              <SelectTrigger className="">
-                <SelectValue placeholder="Select type" />
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={
+                    expenseId ? existingExpense?.type : 'Select type'
+                  }
+                />
               </SelectTrigger>
               <SelectContent>
                 {expenseTypes.map((type) => (
@@ -135,18 +181,13 @@ export function ExpenseSheet() {
           <div className="space-y-1">
             <Label htmlFor="amount">Amount</Label>
             <Input
+              name="amount"
               type="number"
-              value={expense.amount}
-              onChange={(e) =>
-                setExpense({
-                  ...expense,
-                  amount: e.target.value,
-                })
-              }
+              defaultValue={expenseId ? existingExpense?.amount.toString() : ''}
             />
           </div>
           <Button type="submit" className="w-full">
-            Add Expense
+            {expenseId ? 'Update Expense' : 'Add Expense'}
           </Button>
         </form>
       </SheetContent>

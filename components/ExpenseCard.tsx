@@ -5,6 +5,8 @@ import { ConfirmDialog } from './ConfirmDialog';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
+import EditButton from '@/app/(app)/dashboard/_components/EditButton';
+import { Id } from '@/convex/_generated/dataModel';
 
 interface ExpenseCardProps {
   id: string;
@@ -22,7 +24,7 @@ export function ExpenseCard({
   // subtitle,
 }: ExpenseCardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useSortable({ id });
+    useSortable({ id: id as Id<'expenses'> });
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -60,9 +62,7 @@ export function ExpenseCard({
             </div>
 
             <div>
-              <Button variant="ghost" size="icon">
-                <Pencil />
-              </Button>
+              <EditButton id={id} />
               <ConfirmDialog
                 triggerComponent={
                   <Button

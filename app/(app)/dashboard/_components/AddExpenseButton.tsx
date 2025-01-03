@@ -7,7 +7,7 @@ import { PlusCircle } from 'lucide-react';
 export function AddExpenseButton() {
   const { open } = useExpenseSheetStore();
   return (
-    <Button onClick={open}>
+    <Button onClick={() => open(undefined)}>
       <PlusCircle />
       Add Expense
     </Button>

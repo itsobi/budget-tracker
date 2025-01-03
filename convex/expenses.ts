@@ -22,6 +22,7 @@ export const createExpense = mutation({
         expenseId,
       };
     } catch (error) {
+      console.error(error);
       return {
         success: false,
         message: 'Failed to create expense. Please try again.',
@@ -35,6 +36,10 @@ export const getExpenses = query({
     userId: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) {
+      throw new Error('Not authenticated');
+    }
     return await ctx.db
       .query('expenses')
       .withIndex('by_user_and_order')
@@ -46,6 +51,10 @@ export const getExpenses = query({
 export const getExpensesCount = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
+    // const identity = await ctx.auth.getUserIdentity();
+    // if (identity === null) {
+    //   throw new Error('Not authenticated');
+    // }
     return await ctx.db
       .query('expenses')
       .filter((q) => q.eq(q.field('userId'), args.userId))
@@ -54,9 +63,56 @@ export const getExpensesCount = query({
   },
 });
 
-export const updateOrder = mutation({
+export const getExpense = query({
+  args: { id: v.id('expenses') },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) {
+      throw new Error('Not authenticated');
+    }
+    return await ctx.db.get(args.id);
+  },
+});
+
+export const updateExpenseOrder = mutation({
   args: { id: v.id('expenses'), order: v.number() },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) {
+      throw new Error('Not authenticated');
+    }
     await ctx.db.patch(args.id, { order: args.order });
+  },
+});
+
+export const updateExpense = mutation({
+  args: {
+    id: v.id('expenses'),
+    title: v.optional(v.string()),
+    amount: v.optional(v.number()),
+    type: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) {
+      throw new Error('Not authenticated');
+    }
+
+    // Remove the id from the args before patching
+    const { id, ...updateFields } = args;
+
+    try {
+      await ctx.db.patch(id, updateFields);
+
+      return {
+        success: true,
+        message: 'Expense updated successfully',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Failed to update expense. Please try again.',
+      };
+    }
   },
 });

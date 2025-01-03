@@ -58,37 +58,6 @@ const expenseTypeToIcon: Record<string, LucideIcon> = {
   recurring: CalendarSync,
 };
 
-const initialExpenses = [
-  {
-    id: 1,
-    title: 'Monthly Budget',
-    amount: 1000,
-    type: 'budget',
-    subtitle: '+20.1% from last month',
-  },
-  {
-    id: 2,
-    title: 'Monthly Expenses',
-    amount: 1000,
-    type: 'expenses',
-    subtitle: '+20.1% from last month',
-  },
-  {
-    id: 3,
-    title: 'Savings',
-    amount: 1000,
-    type: 'savings',
-    subtitle: '+20.1% from last month',
-  },
-  {
-    id: 4,
-    title: 'Recurring Expenses',
-    amount: 1000,
-    type: 'other',
-    subtitle: '+20.1% from last month',
-  },
-];
-
 interface DashboardExpensesProps {
   preloadedExpensesCount: number;
 }
@@ -99,7 +68,7 @@ export function DashboardExpenses({
   const { userId } = useAuth();
   const expenses = useQuery(api.expenses.getExpenses, { userId: userId! });
   const [expensesState, setExpensesState] = useState(expenses);
-  const updateExpenseOrder = useMutation(api.expenses.updateOrder);
+  const updateExpenseOrder = useMutation(api.expenses.updateExpenseOrder);
 
   useEffect(() => {
     if (expenses) {
