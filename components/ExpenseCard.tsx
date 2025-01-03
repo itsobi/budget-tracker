@@ -7,6 +7,9 @@ import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
 import EditButton from '@/app/(app)/dashboard/_components/EditButton';
 import { Id } from '@/convex/_generated/dataModel';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { toast } from 'sonner';
 
 interface ExpenseCardProps {
   id: string;
@@ -28,6 +31,17 @@ export function ExpenseCard({
 
   const style = {
     transform: CSS.Translate.toString(transform),
+  };
+
+  const deleteExpenseMutation = useMutation(api.expenses.deleteExpense);
+
+  const handleDeleteExpense = async () => {
+    const response = await deleteExpenseMutation({ id: id as Id<'expenses'> });
+    if (response.success) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
+    }
   };
 
   return (
@@ -64,6 +78,7 @@ export function ExpenseCard({
             <div>
               <EditButton id={id} />
               <ConfirmDialog
+                onConfirm={handleDeleteExpense}
                 triggerComponent={
                   <Button
                     variant="ghost"

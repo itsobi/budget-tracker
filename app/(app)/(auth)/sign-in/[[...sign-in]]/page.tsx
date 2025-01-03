@@ -1,16 +1,20 @@
-import { SignIn } from '@clerk/nextjs';
-import { ChartLine } from 'lucide-react';
+import { ClerkLoaded, ClerkLoading, SignIn } from '@clerk/nextjs';
+import { ChartLine, Loader } from 'lucide-react';
 
-export default function Page() {
+export default function SignInPage() {
   return (
-    <div className="min-h-screen flex justify-center items-center">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="flex items-center gap-2 justify-center">
-          <ChartLine />
-          <h1 className="text-2xl font-bold">BudgetTracker</h1>
+    <>
+      <ClerkLoading>
+        <div className="h-screen flex flex-col justify-center items-center gap-2">
+          <Loader className="animate-spin text-muted-foreground" />
+          <p className="text-xs text-muted-foreground">Loading...</p>
         </div>
-        <SignIn />;
-      </div>
-    </div>
+      </ClerkLoading>
+      <ClerkLoaded>
+        <div className="h-screen flex justify-center items-center">
+          <SignIn />
+        </div>
+      </ClerkLoaded>
+    </>
   );
 }

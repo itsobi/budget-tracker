@@ -32,7 +32,6 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useAuth } from '@clerk/nextjs';
 import { Id } from '@/convex/_generated/dataModel';
-import { updateExpense } from '@/convex/expenses';
 
 const expenseTypes = [
   { value: 'education', label: 'Education' },
@@ -54,9 +53,10 @@ export function ExpenseSheet() {
 
   const { userId } = useAuth();
 
-  const existingExpenses = useQuery(api.expenses.getExpenses, {
-    userId: userId!,
-  });
+  const existingExpenses = useQuery(
+    api.expenses.getExpenses,
+    userId ? { userId } : 'skip'
+  );
 
   const existingExpense = useQuery(
     api.expenses.getExpense,

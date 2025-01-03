@@ -9,18 +9,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 
-import {
-  ArrowDown,
-  ArrowRightLeft,
-  ChartLine,
-  CircleDollarSign,
-  CircleGauge,
-  Coins,
-  LogOut,
-  MenuIcon,
-} from 'lucide-react';
-
-import { useMedia } from 'react-use';
+import { ArrowRightLeft, CircleGauge, LogOut, MenuIcon } from 'lucide-react';
 
 import { ThemeButton } from './ThemeButton';
 import Link from 'next/link';
@@ -29,7 +18,7 @@ import { usePathname } from 'next/navigation';
 import { Button } from './ui/button';
 import { UserButton, useUser } from '@clerk/nextjs';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const tabs = [
   {
@@ -49,18 +38,11 @@ export function Header() {
   const { user } = useUser();
 
   const [isOpen, setIsOpen] = useState(false);
-  const isLarge = useMedia('(min-width: 768px)', false);
 
   const name =
     user?.fullName ||
     user?.firstName ||
     user?.primaryEmailAddress?.emailAddress;
-
-  useEffect(() => {
-    if (isLarge) {
-      setIsOpen(false);
-    }
-  }, [isLarge]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-2 xl:px-0">

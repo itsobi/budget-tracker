@@ -42,9 +42,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <DashboardExpenses
-          preloadedExpensesCount={Number(preloadedExpensesCount._valueJSON)}
-        />
+        <DashboardExpenses />
       </div>
 
       <div className="mb-4">

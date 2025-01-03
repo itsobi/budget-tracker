@@ -51,15 +51,18 @@ export const getExpenses = query({
 export const getExpensesCount = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    // const identity = await ctx.auth.getUserIdentity();
-    // if (identity === null) {
-    //   throw new Error('Not authenticated');
-    // }
-    return await ctx.db
-      .query('expenses')
-      .filter((q) => q.eq(q.field('userId'), args.userId))
-      .collect()
-      .then((expenses) => expenses.length);
+    // Using this query on the server so i don't need to check for authentication
+
+    try {
+      return await ctx.db
+        .query('expenses')
+        .filter((q) => q.eq(q.field('userId'), args.userId))
+        .collect()
+        .then((expenses) => expenses.length);
+    } catch (error) {
+      console.error('Error fetching expense count:', error);
+      throw new Error('Failed to fetch expense count');
+    }
   },
 });
 
@@ -112,6 +115,32 @@ export const updateExpense = mutation({
       return {
         success: false,
         message: 'Failed to update expense. Please try again.',
+      };
+    }
+  },
+});
+
+export const deleteExpense = mutation({
+  args: {
+    id: v.id('expenses'),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) {
+      throw new Error('Not authenticated');
+    }
+
+    try {
+      await ctx.db.delete(args.id);
+      return {
+        success: true,
+        message: 'Expense deleted successfully',
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        success: false,
+        message: 'Failed to delete expense. Please try again.',
       };
     }
   },

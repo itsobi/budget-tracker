@@ -41,6 +41,7 @@ import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Id } from '@/convex/_generated/dataModel';
 
 const expenseTypeToIcon: Record<string, LucideIcon> = {
   housing: Home,
@@ -58,15 +59,12 @@ const expenseTypeToIcon: Record<string, LucideIcon> = {
   recurring: CalendarSync,
 };
 
-interface DashboardExpensesProps {
-  preloadedExpensesCount: number;
-}
-
-export function DashboardExpenses({
-  preloadedExpensesCount,
-}: DashboardExpensesProps) {
+export function DashboardExpenses({}) {
   const { userId } = useAuth();
-  const expenses = useQuery(api.expenses.getExpenses, { userId: userId! });
+  const expenses = useQuery(
+    api.expenses.getExpenses,
+    userId ? { userId: userId! } : 'skip'
+  );
   const [expensesState, setExpensesState] = useState(expenses);
   const updateExpenseOrder = useMutation(api.expenses.updateExpenseOrder);
 
@@ -102,32 +100,6 @@ export function DashboardExpenses({
     }
   };
 
-  if (!expensesState?.length) {
-    return (
-      <>
-        {[...Array(preloadedExpensesCount)].map((_, i) => (
-          <Card key={i} className="w-full">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <Skeleton className="h-4 w-[120px]" />
-                <Skeleton className="h-4 w-10" />
-              </div>
-            </CardHeader>
-            <CardContent className="">
-              <div className="flex justify-between items-center">
-                <Skeleton className="h-8 w-[300px]" />
-
-                <div>
-                  <Skeleton className="h-8 w-[140px]" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </>
-    );
-  }
-
   return (
     <DndContext
       sensors={sensors}
@@ -135,13 +107,13 @@ export function DashboardExpenses({
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={expensesState.map((e) => e._id)}
+        items={expensesState?.map((e) => e._id) ?? []}
         strategy={rectSortingStrategy}
       >
-        {expensesState.map((expense) => (
+        {expensesState?.map((expense) => (
           <ExpenseCard
             key={expense._id}
-            id={expense._id}
+            id={expense._id as Id<'expenses'>}
             title={expense.title}
             amount={expense.amount}
             Icon={expenseTypeToIcon[expense.type]}
