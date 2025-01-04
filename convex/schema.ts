@@ -11,4 +11,11 @@ export default defineSchema({
   })
     .index('by_user_id', ['userId'])
     .index('by_user_and_order', ['userId', 'order']),
+
+  transactions: defineTable({
+    title: v.string(),
+    type: v.string(),
+    amount: v.number(),
+    userId: v.string(),
+  }).index('by_user_id', ['userId']),
 });

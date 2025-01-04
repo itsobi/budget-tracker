@@ -47,11 +47,10 @@ const expenseTypes = [
 ];
 
 export function ExpenseSheet() {
+  const { userId } = useAuth();
   const { isOpen, close, expenseId } = useExpenseSheetStore();
   const [isMounted, setIsMounted] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-
-  const { userId } = useAuth();
 
   const existingExpenses = useQuery(
     api.expenses.getExpenses,

@@ -6,12 +6,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Download } from 'lucide-react';
+import { Download, Plus } from 'lucide-react';
 import { DashboardExpenses } from './_components/DashboardExpenses';
 import { AddExpenseButton } from './_components/AddExpenseButton';
 import { auth } from '@clerk/nextjs/server';
 import { preloadQuery } from 'convex/nextjs';
 import { api } from '@/convex/_generated/api';
+import CustomTooltip from '@/components/CustomTooltip';
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -28,16 +29,11 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <div className="flex items-center gap-2">
           <AddExpenseButton />
-          <TooltipProvider delayDuration={200}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant={'ghost'}>
-                  <Download />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Download</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <CustomTooltip description="Download">
+            <Button variant={'ghost'}>
+              <Download />
+            </Button>
+          </CustomTooltip>
         </div>
       </div>
 
