@@ -9,7 +9,13 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 
-import { ArrowRightLeft, CircleGauge, LogOut, MenuIcon } from 'lucide-react';
+import {
+  ArrowRightLeft,
+  CircleGauge,
+  LogOut,
+  MenuIcon,
+  Settings,
+} from 'lucide-react';
 
 import { ThemeButton } from './ThemeButton';
 import Link from 'next/link';
@@ -31,6 +37,11 @@ const tabs = [
     href: '/transactions',
     icon: ArrowRightLeft,
   },
+  {
+    label: 'Settings',
+    href: '/settings',
+    icon: Settings,
+  },
 ];
 
 export function Header() {
@@ -48,7 +59,9 @@ export function Header() {
     <div className="max-w-7xl mx-auto px-4 py-2 xl:px-0">
       <nav className="flex items-center justify-between">
         <div className="flex items-center">
-          <h1 className="text-xl font-bold italic mr-16">BudgetTracker</h1>
+          <Link href="/dashboard" className="text-xl font-bold italic mr-16">
+            BudgetTracker
+          </Link>
 
           <div className="hidden md:flex items-center gap-4">
             {tabs.map((tab) => (
@@ -94,14 +107,21 @@ export function Header() {
                 <div className="flex flex-col items-start h-[calc(100vh-8rem)]">
                   <div className="w-full">
                     {tabs.map((tab) => (
-                      <Link
-                        href={tab.href}
+                      <Button
                         key={tab.label}
-                        className="flex items-center gap-2 w-full text-sm text-muted-foreground hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-600 p-2 rounded"
+                        asChild
+                        variant="ghost"
+                        onClick={() => setIsOpen(false)}
+                        className="w-full justify-start"
                       >
-                        <tab.icon className="w-4 h-4" />
-                        <p className="text-lg">{tab.label}</p>
-                      </Link>
+                        <Link
+                          href={tab.href}
+                          className="flex items-center gap-2 w-full text-sm text-muted-foreground hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-600 p-2 rounded"
+                        >
+                          <tab.icon className="w-4 h-4" />
+                          <p className="text-lg">{tab.label}</p>
+                        </Link>
+                      </Button>
                     ))}
                   </div>
                   <div className="mt-auto w-full">

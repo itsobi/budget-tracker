@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as expenses from "../expenses.js";
+import type * as settings from "../settings.js";
 import type * as transactions from "../transactions.js";
 
 /**
@@ -26,6 +27,7 @@ import type * as transactions from "../transactions.js";
  */
 declare const fullApi: ApiFromModules<{
   expenses: typeof expenses;
+  settings: typeof settings;
   transactions: typeof transactions;
 }>;
 export declare const api: FilterApi<

@@ -36,11 +36,8 @@ import {
   sortableKeyboardCoordinates,
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
-import { useAuth } from '@clerk/nextjs';
 import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Id } from '@/convex/_generated/dataModel';
 
 const expenseTypeToIcon: Record<string, LucideIcon> = {
@@ -59,12 +56,12 @@ const expenseTypeToIcon: Record<string, LucideIcon> = {
   recurring: CalendarSync,
 };
 
-export function DashboardExpenses({}) {
-  const { userId } = useAuth();
-  const expenses = useQuery(
-    api.expenses.getExpenses,
-    userId ? { userId: userId! } : 'skip'
-  );
+interface DashboardExpensesProps {
+  userId: string;
+}
+
+export function DashboardExpenses({ userId }: DashboardExpensesProps) {
+  const expenses = useQuery(api.expenses.getExpenses, { userId });
   const [expensesState, setExpensesState] = useState(expenses);
   const updateExpenseOrder = useMutation(api.expenses.updateExpenseOrder);
 

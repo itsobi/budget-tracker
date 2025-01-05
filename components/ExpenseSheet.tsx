@@ -65,16 +65,10 @@ export function ExpenseSheet() {
   const createExpenseMutation = useMutation(api.expenses.createExpense);
   const updateExpenseMutation = useMutation(api.expenses.updateExpense);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!userId) return;
 
     const formData = new FormData(e.currentTarget);
 
@@ -110,7 +104,7 @@ export function ExpenseSheet() {
     } else {
       response = await createExpenseMutation({
         ...data,
-        userId: userId!,
+        userId: userId,
         order: existingExpenses?.length || 0,
       });
     }
@@ -163,9 +157,7 @@ export function ExpenseSheet() {
             >
               <SelectTrigger>
                 <SelectValue
-                  placeholder={
-                    expenseId ? existingExpense?.type : 'Select type'
-                  }
+                  placeholder={expenseId ? existingExpense?.type : ''}
                 />
               </SelectTrigger>
               <SelectContent>

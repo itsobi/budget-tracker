@@ -1,27 +1,18 @@
 import { TransactionsCard } from '@/components/TransactionsCard';
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Download, Plus } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { DashboardExpenses } from './_components/DashboardExpenses';
 import { AddExpenseButton } from './_components/AddExpenseButton';
 import { auth } from '@clerk/nextjs/server';
-import { preloadQuery } from 'convex/nextjs';
-import { api } from '@/convex/_generated/api';
 import CustomTooltip from '@/components/CustomTooltip';
+import { redirect } from 'next/navigation';
 
 export default async function DashboardPage() {
   const { userId } = await auth();
-  const preloadedExpensesCount = await preloadQuery(
-    api.expenses.getExpensesCount,
-    {
-      userId: userId!,
-    }
-  );
+
+  if (!userId) {
+    return redirect('/sign-in');
+  }
 
   return (
     <div>
@@ -38,11 +29,11 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <DashboardExpenses />
+        <DashboardExpenses userId={userId} />
       </div>
 
       <div className="mb-4">
-        <TransactionsCard />
+        <TransactionsCard userId={userId} />
       </div>
     </div>
   );

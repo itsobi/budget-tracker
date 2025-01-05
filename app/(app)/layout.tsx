@@ -4,11 +4,7 @@ import { Header } from '@/components/Header';
 import { TransactionSheet } from '@/components/TransactionSheet';
 import { Toaster } from '@/components/ui/sonner';
 
-export default async function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <ConvexClientProvider>
