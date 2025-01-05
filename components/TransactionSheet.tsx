@@ -21,7 +21,7 @@ import {
 import { useTransactionSheetStore } from '@/store/useTransactionSheetStore';
 import { useRef } from 'react';
 import { useAuth } from '@clerk/nextjs';
-import { useMutation } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { toast } from 'sonner';
 
@@ -45,23 +45,24 @@ export function TransactionSheet() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!userId) return;
+
     const formData = new FormData(e.currentTarget);
 
-    // Extract the values directly
     const title = formData.get('name') as string;
     const type = formData.get('type') as string;
     const amount = Number(formData.get('amount'));
 
-    // When editing, use existing values as fallback
-    // const finalTitle = title || existingExpense?.title;
-    // const finalType = type || existingExpense?.type;
-    // const finalAmount = amount || existingExpense?.amount;
+    if (!title || !type || !amount) {
+      toast.error('Please fill in all fields');
+      return;
+    }
 
     const response = await createTransaction({
       title,
       type,
       amount,
-      userId: userId!,
+      userId: userId,
     });
 
     if (response.success) {
@@ -86,7 +87,7 @@ export function TransactionSheet() {
         <Button variant="outline">Open</Button>
       </SheetTrigger>
       <SheetContent className="w-full">
-        <SheetHeader className="text-left ">
+        <SheetHeader className="text-left">
           <SheetTitle>Add Transaction</SheetTitle>
           <SheetDescription>
             Add a transaction to your budget dashboard.
@@ -99,23 +100,13 @@ export function TransactionSheet() {
         >
           <div className="space-y-1">
             <Label htmlFor="name">Name</Label>
-            <Input
-              name="name"
-              //   defaultValue={expenseId ? existingExpense?.title : ''}
-            />
+            <Input name="name" />
           </div>
           <div className="space-y-1">
             <Label htmlFor="type">Type</Label>
-            <Select
-              name="type"
-              // defaultValue={expenseId ? existingExpense?.type : undefined}
-            >
+            <Select name="type">
               <SelectTrigger>
-                <SelectValue
-                // placeholder={
-                //     expenseId ? existingExpense?.type : 'Select type'
-                // }
-                />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {transactionTypes.map((type) => (
@@ -128,11 +119,7 @@ export function TransactionSheet() {
           </div>
           <div className="space-y-1">
             <Label htmlFor="amount">Amount</Label>
-            <Input
-              name="amount"
-              type="number"
-              //   defaultValue={expenseId ? existingExpense?.amount.toString() : ''}
-            />
+            <Input name="amount" type="number" />
           </div>
           <Button type="submit" className="w-full">
             Add Transaction

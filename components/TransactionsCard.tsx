@@ -25,7 +25,6 @@ import { AddTransactionButton } from '@/app/(app)/dashboard/_components/AddTrans
 import { Transaction } from './Transaction';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
-import { useAuth } from '@clerk/nextjs';
 
 const transactionTypes: { type: string; icon: LucideIcon }[] = [
   { type: 'bill', icon: CreditCard },
@@ -37,11 +36,12 @@ const transactionTypes: { type: string; icon: LucideIcon }[] = [
   { type: 'other', icon: MoveUpRight },
 ];
 
-export function TransactionsCard() {
-  const { userId } = useAuth();
-  const transactions = useQuery(api.transactions.getTransactions, {
-    userId: userId!,
-  });
+interface TransactionsCardProps {
+  userId: string;
+}
+
+export function TransactionsCard({ userId }: TransactionsCardProps) {
+  const transactions = useQuery(api.transactions.getTransactions, { userId });
   return (
     <Card className="shadow-md dark:border-white/60">
       <CardHeader>
