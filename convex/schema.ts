@@ -21,9 +21,7 @@ export default defineSchema({
 
   settings: defineTable({
     userId: v.string(),
-    preferences: v.object({
-      budgetBreakdown: v.boolean(),
-      savings: v.boolean(),
-    }),
+    budgetBreakdown: v.optional(v.boolean()),
+    savings: v.optional(v.boolean()),
   }).index('by_user_id', ['userId']),
 });

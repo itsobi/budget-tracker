@@ -10,28 +10,15 @@ interface DashboardPreferencesProps {
 }
 
 export function DashboardPreferences({ userId }: DashboardPreferencesProps) {
-  const preferences = useQuery(api.settings.getSettings, { userId });
+  const settings = useQuery(api.settings.getSettings, { userId });
   const updateSettings = useMutation(api.settings.updateSettings);
 
   const handleChange = async (checked: boolean, name: string) => {
     try {
-      if (name === 'budgetBreakdown') {
-        updateSettings({
-          userId,
-          preferences: {
-            budgetBreakdown: checked,
-            savings: preferences?.preferences.savings || false,
-          },
-        });
-      } else if (name === 'savings') {
-        updateSettings({
-          userId,
-          preferences: {
-            budgetBreakdown: preferences?.preferences.budgetBreakdown || false,
-            savings: checked,
-          },
-        });
-      }
+      await updateSettings({
+        userId,
+        [name]: checked,
+      });
     } catch (error) {
       toast.error('Failed to update preferences');
     }
@@ -48,7 +35,7 @@ export function DashboardPreferences({ userId }: DashboardPreferencesProps) {
         </div>
         <Switch
           name="budgetBreakdown"
-          checked={preferences?.preferences.budgetBreakdown || false}
+          checked={settings?.budgetBreakdown || false}
           onCheckedChange={(checked) =>
             handleChange(checked, 'budgetBreakdown')
           }
@@ -63,7 +50,7 @@ export function DashboardPreferences({ userId }: DashboardPreferencesProps) {
         </div>
         <Switch
           name="savings"
-          checked={preferences?.preferences.savings || false}
+          checked={settings?.savings || false}
           onCheckedChange={(checked) => handleChange(checked, 'savings')}
         />
       </div>

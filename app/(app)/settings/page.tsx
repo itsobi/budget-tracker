@@ -27,7 +27,6 @@ export default async function SettingsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">
-          {/* TODO: Use server action for this */}
           <DashboardPreferences userId={userId} />
         </CardContent>
       </Card>

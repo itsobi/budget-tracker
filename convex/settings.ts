@@ -25,10 +25,8 @@ export const getSettings = query({
 export const updateSettings = mutation({
   args: {
     userId: v.string(),
-    preferences: v.object({
-      budgetBreakdown: v.boolean(),
-      savings: v.boolean(),
-    }),
+    budgetBreakdown: v.optional(v.boolean()),
+    savings: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -47,10 +45,8 @@ export const updateSettings = mutation({
       } else {
         await ctx.db.insert('settings', {
           userId: args.userId,
-          preferences: {
-            budgetBreakdown: args.preferences.budgetBreakdown,
-            savings: args.preferences.savings,
-          },
+          budgetBreakdown: args.budgetBreakdown ?? false,
+          savings: args.savings ?? false,
         });
         return { success: true };
       }
