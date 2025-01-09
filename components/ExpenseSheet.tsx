@@ -34,22 +34,17 @@ import { useAuth } from '@clerk/nextjs';
 import { Id } from '@/convex/_generated/dataModel';
 
 const expenseTypes = [
-  { value: 'education', label: 'Education' },
-  { value: 'entertainment', label: 'Entertainment' },
-  { value: 'food', label: 'Food' },
-  { value: 'healthcare', label: 'Healthcare' },
   { value: 'housing', label: 'Housing' },
-  { value: 'other', label: 'Other' },
-  { value: 'savings', label: 'Savings' },
-  { value: 'shopping', label: 'Shopping' },
-  { value: 'transportation', label: 'Transportation' },
   { value: 'utilities', label: 'Utilities' },
+  { value: 'transportation', label: 'Transportation' },
+  { value: 'food', label: 'Food' },
+  { value: 'savings', label: 'Savings' },
+  { value: 'other', label: 'Other' },
 ];
 
 export function ExpenseSheet() {
   const { userId } = useAuth();
   const { isOpen, close, expenseId } = useExpenseSheetStore();
-  const [isMounted, setIsMounted] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   const existingExpenses = useQuery(
@@ -132,9 +127,13 @@ export function ExpenseSheet() {
       </SheetTrigger>
       <SheetContent className="w-full">
         <SheetHeader className="text-left ">
-          <SheetTitle>Add Expense</SheetTitle>
+          <SheetTitle>
+            {expenseId ? 'Edit Fixed Expense' : 'Add Fixed Expense'}
+          </SheetTitle>
           <SheetDescription>
-            Add an expense to your budget dashboard.
+            {expenseId
+              ? 'Edit your expense.'
+              : 'Add an expense to your budget dashboard.'}
           </SheetDescription>
         </SheetHeader>
         <form
@@ -178,7 +177,7 @@ export function ExpenseSheet() {
             />
           </div>
           <Button type="submit" className="w-full">
-            {expenseId ? 'Update Expense' : 'Add Expense'}
+            {expenseId ? 'Update' : 'Add'}
           </Button>
         </form>
       </SheetContent>

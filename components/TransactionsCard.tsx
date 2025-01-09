@@ -3,10 +3,8 @@
 import {
   Car,
   CreditCard,
-  HandCoins,
   LucideIcon,
   MoveUpRight,
-  Plus,
   Popcorn,
   ShoppingBag,
   ShoppingCart,
@@ -19,7 +17,6 @@ import {
   CardHeader,
   CardTitle,
 } from './ui/card';
-import { Button } from './ui/button';
 import CustomTooltip from './CustomTooltip';
 import { AddTransactionButton } from '@/app/(app)/dashboard/_components/AddTransactionButton';
 import { Transaction } from './Transaction';
@@ -47,7 +44,7 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Recent Transactions</h2>
-          <CustomTooltip description="Add Transaction">
+          <CustomTooltip description="Add transaction">
             <div>
               <AddTransactionButton />
             </div>

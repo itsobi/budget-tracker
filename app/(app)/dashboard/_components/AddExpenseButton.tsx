@@ -8,7 +8,7 @@ import { Plus } from 'lucide-react';
 export function AddExpenseButton() {
   const { open } = useExpenseSheetStore();
   return (
-    <CustomTooltip description="Add Expense">
+    <CustomTooltip description="Add fixed expense">
       <Button variant={'ghost'} onClick={() => open(undefined)}>
         <Plus />
       </Button>

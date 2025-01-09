@@ -16,6 +16,7 @@ import {
   GraduationCap,
   HelpCircle,
   LucideIcon,
+  Coins,
 } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
@@ -37,8 +38,15 @@ import {
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
 import { api } from '@/convex/_generated/api';
-import { useMutation, useQuery } from 'convex/react';
+import {
+  Preloaded,
+  useMutation,
+  usePreloadedQuery,
+  useQuery,
+} from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useExpenseSheetStore } from '@/store/useExpenseSheetStore';
 
 const expenseTypeToIcon: Record<string, LucideIcon> = {
   housing: Home,
@@ -58,18 +66,16 @@ const expenseTypeToIcon: Record<string, LucideIcon> = {
 
 interface DashboardExpensesProps {
   userId: string;
+  preloadedExpenses: Preloaded<typeof api.expenses.getExpenses>;
 }
 
-export function DashboardExpenses({ userId }: DashboardExpensesProps) {
-  const expenses = useQuery(api.expenses.getExpenses, { userId });
-  const [expensesState, setExpensesState] = useState(expenses);
+export function DashboardExpenses({
+  userId,
+  preloadedExpenses,
+}: DashboardExpensesProps) {
+  const expenses = usePreloadedQuery(preloadedExpenses);
   const updateExpenseOrder = useMutation(api.expenses.updateExpenseOrder);
-
-  useEffect(() => {
-    if (expenses) {
-      setExpensesState(expenses);
-    }
-  }, [expenses]);
+  const { open } = useExpenseSheetStore();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -81,33 +87,56 @@ export function DashboardExpenses({ userId }: DashboardExpensesProps) {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (!over) return;
+    if (!over || !expenses) return;
 
     if (active.id !== over.id) {
-      setExpensesState((items) => {
-        if (!items) return items;
-        const oldIndex = items.findIndex((item) => item._id === active.id);
-        const newIndex = items.findIndex((item) => item._id === over.id);
-        const newItems = arrayMove(items, oldIndex, newIndex);
-        newItems.forEach((item, index) => {
-          updateExpenseOrder({ id: item._id, order: index });
-        });
-        return newItems;
+      const oldIndex = expenses.findIndex((item) => item._id === active.id);
+      const newIndex = expenses.findIndex((item) => item._id === over.id);
+      const newItems = arrayMove(expenses, oldIndex, newIndex);
+
+      // Update the order in the database for each item
+      newItems.forEach((item, index) => {
+        updateExpenseOrder({ id: item._id, order: index });
       });
     }
   };
+
+  if (!expenses) {
+    return (
+      <Card className="flex flex-col items-center justify-center p-6 text-center md:col-span-2">
+        <CardHeader>
+          <Coins className="h-12 w-12 text-muted-foreground mb-2" />
+          <CardTitle>No expenses yet</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">
+            Currently, you are not tracking any fixed expenses. Click{' '}
+            <span
+              onClick={() => open()}
+              className="underline cursor-pointer underline-offset-1"
+            >
+              here
+            </span>{' '}
+            or the "+" button at the top of the screen to add your first fixed
+            expense.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
+      id="dashboard-expenses"
     >
       <SortableContext
-        items={expensesState?.map((e) => e._id) ?? []}
+        items={expenses?.map((e) => e._id) ?? []}
         strategy={rectSortingStrategy}
       >
-        {expensesState?.map((expense) => (
+        {expenses?.map((expense) => (
           <ExpenseCard
             key={expense._id}
             id={expense._id as Id<'expenses'>}

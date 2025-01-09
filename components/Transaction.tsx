@@ -1,7 +1,7 @@
 import { Doc } from '@/convex/_generated/dataModel';
 import { LucideIcon } from 'lucide-react';
 
-const formatCurrency = (amount: number) =>
+export const formatCurrency = (amount: number) =>
   new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
