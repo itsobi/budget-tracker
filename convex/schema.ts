@@ -24,4 +24,9 @@ export default defineSchema({
     budgetBreakdown: v.optional(v.boolean()),
     savings: v.optional(v.boolean()),
   }).index('by_user_id', ['userId']),
+
+  budgetCap: defineTable({
+    userId: v.string(),
+    amount: v.number(),
+  }).index('by_user_id', ['userId']),
 });

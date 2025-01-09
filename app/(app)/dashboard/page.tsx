@@ -17,6 +17,10 @@ export default async function DashboardPage() {
     return redirect('/sign-in');
   }
 
+  const preloadedBudgetCap = await preloadQuery(api.budgetCap.getBudgetCap, {
+    userId,
+  });
+
   const preloadedExpenses = await preloadQuery(api.expenses.getExpenses, {
     userId,
   });
@@ -36,7 +40,10 @@ export default async function DashboardPage() {
       </div>
 
       <div className="mb-4">
-        <MonthlyBudgetCap />
+        <MonthlyBudgetCap
+          userId={userId}
+          preloadedBudgetCap={preloadedBudgetCap}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
