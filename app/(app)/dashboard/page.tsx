@@ -12,9 +12,8 @@ import { api } from '@/convex/_generated/api';
 
 export default async function DashboardPage() {
   const { userId } = await auth();
-  const token = await (await auth()).getToken();
 
-  if (!userId || !token) {
+  if (!userId) {
     return redirect('/sign-in');
   }
 
