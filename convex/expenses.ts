@@ -36,10 +36,10 @@ export const getExpenses = query({
     userId: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
-    }
+    // const identity = await ctx.auth.getUserIdentity();
+    // if (identity === null) {
+    //   throw new Error('Not authenticated');
+    // }
     return await ctx.db
       .query('expenses')
       .withIndex('by_user_and_order')

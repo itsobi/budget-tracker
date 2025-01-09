@@ -6,13 +6,21 @@ import { AddExpenseButton } from './_components/AddExpenseButton';
 import { auth } from '@clerk/nextjs/server';
 import CustomTooltip from '@/components/CustomTooltip';
 import { redirect } from 'next/navigation';
+import MonthlyBudgetCap from './_components/MonthlyBudgetCap';
+import { preloadQuery } from 'convex/nextjs';
+import { api } from '@/convex/_generated/api';
 
 export default async function DashboardPage() {
   const { userId } = await auth();
+  const token = await (await auth()).getToken();
 
-  if (!userId) {
+  if (!userId || !token) {
     return redirect('/sign-in');
   }
+
+  const preloadedExpenses = await preloadQuery(api.expenses.getExpenses, {
+    userId,
+  });
 
   return (
     <div>
@@ -28,8 +36,15 @@ export default async function DashboardPage() {
         </div>
       </div>
 
+      <div className="mb-4">
+        <MonthlyBudgetCap />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <DashboardExpenses userId={userId} />
+        <DashboardExpenses
+          userId={userId}
+          preloadedExpenses={preloadedExpenses}
+        />
       </div>
 
       <div className="mb-4">
