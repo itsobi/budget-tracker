@@ -61,7 +61,7 @@ export function Header() {
     <div
       className={cn(
         'max-w-7xl mx-auto px-4 py-2 xl:px-0',
-        pathname === '/sign-up' || (pathname === '/sign-in' && 'hidden')
+        (pathname === '/sign-up' || pathname === '/sign-in') && 'hidden'
       )}
     >
       <nav className="flex items-center justify-between">
