@@ -8,7 +8,7 @@ export function AddTransactionButton() {
   const { open } = useTransactionSheetStore();
   return (
     <Button variant={'ghost'} onClick={() => open(undefined)}>
-      <Receipt />
+      <Plus />
     </Button>
   );
 }

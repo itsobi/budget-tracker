@@ -42,14 +42,14 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
   return (
     <Card className="shadow-md dark:border-white/60">
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Recent Transactions</h2>
           <CustomTooltip description="Add transaction">
             <div>
               <AddTransactionButton />
             </div>
           </CustomTooltip>
-        </CardTitle>
+        </div>
         <CardDescription>
           You made {transactions?.length || 0} transaction
           {transactions?.length === 1 ? '' : 's'} this month.

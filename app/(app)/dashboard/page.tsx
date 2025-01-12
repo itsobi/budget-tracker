@@ -9,6 +9,7 @@ import { redirect } from 'next/navigation';
 import MonthlyBudgetCap from './_components/MonthlyBudgetCap';
 import { preloadQuery } from 'convex/nextjs';
 import { api } from '@/convex/_generated/api';
+import { SavingsCard } from '@/components/SavingsCard';
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -22,6 +23,10 @@ export default async function DashboardPage() {
   });
 
   const preloadedExpenses = await preloadQuery(api.expenses.getExpenses, {
+    userId,
+  });
+
+  const preloadedSavings = await preloadQuery(api.savings.getSavingsGoals, {
     userId,
   });
 
@@ -53,8 +58,9 @@ export default async function DashboardPage() {
         />
       </div>
 
-      <div className="mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TransactionsCard userId={userId} />
+        <SavingsCard preloadedSavings={preloadedSavings} />
       </div>
     </div>
   );

@@ -29,4 +29,12 @@ export default defineSchema({
     userId: v.string(),
     amount: v.number(),
   }).index('by_user_id', ['userId']),
+
+  savings: defineTable({
+    userId: v.string(),
+    title: v.string(),
+    type: v.string(),
+    goalAmount: v.number(),
+    currentAmount: v.number(),
+  }).index('by_user_id', ['userId']),
 });
