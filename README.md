@@ -1,5 +1,5 @@
 ## Budget Tracker
-Track you spending, savings goals, and transaction with this easy to use Budget Tracker.
+Track you spending, savings goals, and transactions with this easy to use Budget Tracker.
 
 ## Features
 - NextJS
