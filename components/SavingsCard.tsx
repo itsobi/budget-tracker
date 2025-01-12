@@ -1,20 +1,10 @@
 'use client';
 
-import {
-  Heart,
-  Car,
-  HelpCircle,
-  Plane,
-  Home,
-  LucideIcon,
-  PiggyBank,
-  Plus,
-} from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardDescription, CardHeader } from './ui/card';
 import CustomTooltip from './CustomTooltip';
 import { useSavingsSheetStore } from '@/store/useSavingsSheetStore';
-import { Progress } from './ui/progress';
 import { api } from '@/convex/_generated/api';
 import { Preloaded, usePreloadedQuery } from 'convex/react';
 import { SavingsGoal } from '@/app/(app)/dashboard/_components/SavingsGoal';

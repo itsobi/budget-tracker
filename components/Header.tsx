@@ -48,8 +48,6 @@ export function Header() {
   const pathname = usePathname();
   const { user } = useUser();
 
-  console.log(pathname);
-
   const [isOpen, setIsOpen] = useState(false);
 
   const name =
@@ -67,7 +65,7 @@ export function Header() {
       <nav className="flex items-center justify-between">
         <div className="flex items-center">
           <Link href="/dashboard" className="text-xl font-bold italic mr-16">
-            BudgetTracker
+            BT
           </Link>
 
           <div className="hidden md:flex items-center gap-4">

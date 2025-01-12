@@ -24,6 +24,8 @@ import { api } from '@/convex/_generated/api';
 import { toast } from 'sonner';
 import { useSavingsSheetStore } from '@/store/useSavingsSheetStore';
 import { useAuth } from '@clerk/nextjs';
+import { Id } from '@/convex/_generated/dataModel';
+import { updateSavingsGoal } from '@/convex/savings';
 
 const savingsTypes = [
   { value: 'home', label: 'Home' },
@@ -34,10 +36,24 @@ const savingsTypes = [
   { value: 'other', label: 'Other' },
 ];
 
+type SavingsFormData = {
+  title: string;
+  type: string;
+  goalAmount: number;
+  currentAmount: number;
+};
+
 export function SavingsSheet() {
   const { userId } = useAuth();
-  const { isOpen, close } = useSavingsSheetStore();
+  const { isOpen, close, savingsId } = useSavingsSheetStore();
   const formRef = useRef<HTMLFormElement>(null);
+
+  const existingSavings = useQuery(
+    api.savings.getSavingsGoal,
+    typeof savingsId === 'string' ? { id: savingsId as Id<'savings'> } : 'skip'
+  );
+
+  const updateSavingsGoalMutation = useMutation(api.savings.updateSavingsGoal);
 
   const createSavingsGoal = useMutation(api.savings.createSavingsGoal);
 
@@ -48,30 +64,56 @@ export function SavingsSheet() {
 
     const formData = new FormData(e.currentTarget);
 
+    // Extract the values directly
     const title = formData.get('name') as string;
     const type = formData.get('type') as string;
-    const goalAmount = Number(formData.get('goalAmount'));
-    const currentAmount = Number(formData.get('currentAmount'));
+    const goalAmount = formData.get('goalAmount');
+    const currentAmount = formData.get('currentAmount');
 
-    if (!title || !type || !goalAmount || !currentAmount) {
+    // When editing, use existing values as fallback
+    const finalTitle = title || existingSavings?.title;
+    const finalType = type || existingSavings?.type;
+    const finalGoalAmount = goalAmount || existingSavings?.goalAmount;
+    const finalCurrentAmount = currentAmount || existingSavings?.currentAmount;
+
+    // Validate required fields
+    if (!finalTitle || !finalType || !finalGoalAmount || !finalCurrentAmount) {
       toast.error('Please fill in all fields');
       return;
     }
 
-    const response = await createSavingsGoal({
-      userId,
+    const data = {
       title,
-      type,
-      goalAmount,
-      currentAmount,
-    });
+      type: type || existingSavings?.type || '',
+      goalAmount: Number(goalAmount),
+      currentAmount: Number(currentAmount),
+    };
 
-    if (response.success) {
-      toast.success(response.message);
+    let response;
+
+    try {
+      if (savingsId) {
+        response = await updateSavingsGoalMutation({
+          id: savingsId as Id<'savings'>,
+          ...data,
+        });
+      } else {
+        response = await createSavingsGoal({
+          userId,
+          ...data,
+        });
+      }
+
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+
       formRef.current?.reset();
       close();
-    } else {
-      toast.error(response.message);
+    } catch (error) {
+      toast.error('Failed to save changes');
     }
   };
 
@@ -89,9 +131,13 @@ export function SavingsSheet() {
       </SheetTrigger>
       <SheetContent className="w-full">
         <SheetHeader className="text-left">
-          <SheetTitle>Add Savings Goal</SheetTitle>
+          <SheetTitle>
+            {savingsId ? 'Edit Savings Goal' : 'Add Savings Goal'}
+          </SheetTitle>
           <SheetDescription>
-            Add a savings goal to your budget dashboard.
+            {savingsId
+              ? 'Edit your existing savings goal'
+              : 'Add a savings goal to your budget dashboard.'}
           </SheetDescription>
         </SheetHeader>
         <form
@@ -101,13 +147,21 @@ export function SavingsSheet() {
         >
           <div className="space-y-1">
             <Label htmlFor="name">Name</Label>
-            <Input name="name" />
+            <Input
+              name="name"
+              defaultValue={savingsId ? existingSavings?.title : ''}
+            />
           </div>
           <div className="space-y-1">
             <Label htmlFor="type">Type</Label>
-            <Select name="type">
+            <Select
+              name="type"
+              defaultValue={savingsId ? existingSavings?.type : undefined}
+            >
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue
+                  placeholder={savingsId ? existingSavings?.type : ''}
+                />
               </SelectTrigger>
               <SelectContent>
                 {savingsTypes.map((type) => (
@@ -120,14 +174,22 @@ export function SavingsSheet() {
           </div>
           <div className="space-y-1">
             <Label htmlFor="goalAmount">Goal Amount</Label>
-            <Input name="goalAmount" type="number" />
+            <Input
+              name="goalAmount"
+              type="number"
+              defaultValue={savingsId ? existingSavings?.goalAmount : ''}
+            />
           </div>
           <div className="space-y-1">
             <Label htmlFor="currentAmount">Current Amount</Label>
-            <Input name="currentAmount" type="number" />
+            <Input
+              name="currentAmount"
+              type="number"
+              defaultValue={savingsId ? existingSavings?.currentAmount : ''}
+            />
           </div>
           <Button type="submit" className="w-full">
-            Add Transaction
+            {savingsId ? 'Update Savings Goal' : 'Add Savings Goal'}
           </Button>
         </form>
       </SheetContent>

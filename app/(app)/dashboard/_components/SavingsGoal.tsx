@@ -1,6 +1,9 @@
 'use client;';
 
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { api } from '@/convex/_generated/api';
+import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
 import {
   Home,
@@ -10,7 +13,12 @@ import {
   Plane,
   Heart,
   PiggyBank,
+  Pencil,
+  Trash,
 } from 'lucide-react';
+import { toast } from 'sonner';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { useSavingsSheetStore } from '@/store/useSavingsSheetStore';
 
 const savingsTypeToIcon: Record<string, LucideIcon> = {
   home: Home,
@@ -36,12 +44,24 @@ interface SavingsGoalProps {
 }
 
 export function SavingsGoal({ savings }: SavingsGoalProps) {
-  const Icon = savingsTypeToIcon[savings.type];
+  const { open } = useSavingsSheetStore();
 
+  const deleteSavingsGoalMutation = useMutation(api.savings.deleteSavingsGoal);
+
+  const Icon = savingsTypeToIcon[savings.type];
   const progressPercentage = Math.min(
     (savings.currentAmount / savings.goalAmount) * 100,
     100
   );
+
+  const handleDeleteSavingsGoal = async () => {
+    const response = await deleteSavingsGoalMutation({ id: savings._id });
+    if (response.success) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-1">
@@ -50,10 +70,30 @@ export function SavingsGoal({ savings }: SavingsGoalProps) {
           <Icon size={18} />
           <p className="truncate">{savings.title}</p>
         </div>
-        <p>
-          ${savings.currentAmount.toLocaleString()} / $
-          {savings.goalAmount.toLocaleString()}
-        </p>
+        <div className="flex items-center gap-1">
+          <p>
+            ${savings.currentAmount.toLocaleString()} / $
+            {savings.goalAmount.toLocaleString()}
+          </p>
+          <Button onClick={() => open(savings._id)} variant="ghost" size="icon">
+            <Pencil />
+          </Button>
+          <ConfirmDialog
+            triggerComponent={
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-red-500 hover:text-white"
+              >
+                <Trash />
+              </Button>
+            }
+            title="Delete Savings Goal"
+            description="Are you sure you want to delete this savings goal?"
+            confirmText="Delete"
+            onConfirm={handleDeleteSavingsGoal}
+          />
+        </div>
       </div>
       <Progress value={progressPercentage} />
     </div>
