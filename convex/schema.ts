@@ -8,9 +8,12 @@ export default defineSchema({
     type: v.string(),
     amount: v.number(),
     order: v.number(),
+    month: v.string(),
+    year: v.number(),
   })
     .index('by_user_id', ['userId'])
-    .index('by_user_and_order', ['userId', 'order']),
+    .index('by_user_and_order', ['userId', 'order'])
+    .index('by_user_and_date', ['userId', 'month', 'year']),
 
   transactions: defineTable({
     userId: v.string(),

@@ -60,6 +60,9 @@ export function ExpenseSheet() {
   const createExpenseMutation = useMutation(api.expenses.createExpense);
   const updateExpenseMutation = useMutation(api.expenses.updateExpense);
 
+  const monthName = new Date().toLocaleString('default', { month: 'long' });
+  const year = new Date().getFullYear();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -84,9 +87,9 @@ export function ExpenseSheet() {
     }
 
     const data = {
-      title,
-      type: type || existingExpense?.type || '',
-      amount: Number(amount),
+      title: finalTitle,
+      type: finalType,
+      amount: Number(finalAmount),
     };
 
     let response;
@@ -98,9 +101,11 @@ export function ExpenseSheet() {
       });
     } else {
       response = await createExpenseMutation({
-        ...data,
         userId: userId,
         order: existingExpenses?.length || 0,
+        month: monthName,
+        year: year,
+        ...data,
       });
     }
 

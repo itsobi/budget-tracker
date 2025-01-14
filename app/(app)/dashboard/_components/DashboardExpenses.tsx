@@ -19,8 +19,6 @@ import {
   Coins,
 } from 'lucide-react';
 
-import { useEffect, useState } from 'react';
-
 import {
   DndContext,
   closestCenter,
@@ -101,12 +99,12 @@ export function DashboardExpenses({
     }
   };
 
-  if (!expenses) {
+  if (!expenses.length) {
     return (
       <Card className="flex flex-col items-center justify-center p-6 text-center md:col-span-2">
         <CardHeader>
           <Coins className="h-12 w-12 text-muted-foreground mb-2" />
-          <CardTitle>No expenses yet</CardTitle>
+          <CardTitle>No Fixed Expenses yet</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
@@ -117,8 +115,8 @@ export function DashboardExpenses({
             >
               here
             </span>{' '}
-            or the "+" button at the top of the screen to add your first fixed
-            expense.
+            or the "+" button at the top of the dashboard to add your first
+            fixed expense.
           </p>
         </CardContent>
       </Card>
