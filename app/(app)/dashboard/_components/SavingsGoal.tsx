@@ -68,12 +68,14 @@ export function SavingsGoal({ savings }: SavingsGoalProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           <Icon size={18} />
-          <p className="truncate">{savings.title}</p>
+          <p className="font-semibold truncate">{savings.title}</p>
         </div>
         <div className="flex items-center gap-1">
-          <p>
-            ${savings.currentAmount.toLocaleString()} / $
-            {savings.goalAmount.toLocaleString()}
+          <p className="text-sm">
+            <span className="text-muted-foreground">
+              ${savings.currentAmount.toLocaleString()}
+            </span>{' '}
+            / ${savings.goalAmount.toLocaleString()}
           </p>
           <Button onClick={() => open(savings._id)} variant="ghost" size="icon">
             <Pencil />

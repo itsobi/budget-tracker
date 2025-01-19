@@ -1,6 +1,5 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
-import { Doc } from './_generated/dataModel';
 
 export const createTransaction = mutation({
   args: {
@@ -8,6 +7,8 @@ export const createTransaction = mutation({
     amount: v.number(),
     type: v.string(),
     userId: v.string(),
+    month: v.string(),
+    year: v.number(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -36,7 +37,6 @@ export const getTransactionsCount = query({
     userId: v.string(),
   },
   handler: async (ctx, args) => {
-    // U
     const transactionIds = await ctx.db
       .query('transactions')
       .withIndex('by_user_id')
@@ -51,10 +51,6 @@ export const getTransactions = query({
     userId: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
-    }
     const transactions = await ctx.db
       .query('transactions')
       .withIndex('by_user_id')

@@ -111,12 +111,12 @@ export const updateExpense = mutation({
 
       return {
         success: true,
-        message: 'Expense updated successfully',
+        message: 'Fixed expense updated successfully',
       };
     } catch (error) {
       return {
         success: false,
-        message: 'Failed to update expense. Please try again.',
+        message: 'Failed to update fixed expense. Please try again.',
       };
     }
   },
@@ -136,13 +136,13 @@ export const deleteExpense = mutation({
       await ctx.db.delete(args.id);
       return {
         success: true,
-        message: 'Expense deleted successfully',
+        message: 'Fixed expense deleted successfully',
       };
     } catch (error) {
       console.error(error);
       return {
         success: false,
-        message: 'Failed to delete expense. Please try again.',
+        message: 'Failed to delete fixed expense. Please try again.',
       };
     }
   },

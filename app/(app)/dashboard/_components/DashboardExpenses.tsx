@@ -17,6 +17,7 @@ import {
   HelpCircle,
   LucideIcon,
   Coins,
+  Wallet,
 } from 'lucide-react';
 
 import {
@@ -103,7 +104,7 @@ export function DashboardExpenses({
     return (
       <Card className="flex flex-col items-center justify-center p-6 text-center md:col-span-2">
         <CardHeader>
-          <Coins className="h-12 w-12 text-muted-foreground mb-2" />
+          <Wallet className="h-12 w-12 text-muted-foreground mb-2" />
           <CardTitle>No Fixed Expenses yet</CardTitle>
         </CardHeader>
         <CardContent>

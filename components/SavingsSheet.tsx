@@ -28,12 +28,12 @@ import { Id } from '@/convex/_generated/dataModel';
 import { updateSavingsGoal } from '@/convex/savings';
 
 const savingsTypes = [
-  { value: 'home', label: 'Home' },
   { value: 'car', label: 'Car' },
-  { value: 'retirement', label: 'Retirement' },
   { value: 'emergency', label: 'Emergency' },
-  { value: 'vacation', label: 'Vacation' },
+  { value: 'home', label: 'Home' },
   { value: 'other', label: 'Other' },
+  { value: 'retirement', label: 'Retirement' },
+  { value: 'vacation', label: 'Vacation' },
 ];
 
 type SavingsFormData = {
@@ -83,10 +83,10 @@ export function SavingsSheet() {
     }
 
     const data = {
-      title,
-      type: type || existingSavings?.type || '',
-      goalAmount: Number(goalAmount),
-      currentAmount: Number(currentAmount),
+      title: finalTitle,
+      type: finalType,
+      goalAmount: Number(finalGoalAmount),
+      currentAmount: Number(finalCurrentAmount),
     };
 
     let response;

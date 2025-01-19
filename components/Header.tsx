@@ -24,7 +24,7 @@ import { usePathname } from 'next/navigation';
 import { Button } from './ui/button';
 import { UserButton, useUser } from '@clerk/nextjs';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const tabs = [
   {
@@ -54,6 +54,18 @@ export function Header() {
     user?.fullName ||
     user?.firstName ||
     user?.primaryEmailAddress?.emailAddress;
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setIsOpen(false);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <div

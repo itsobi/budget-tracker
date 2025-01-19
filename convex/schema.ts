@@ -20,7 +20,11 @@ export default defineSchema({
     title: v.string(),
     type: v.string(),
     amount: v.number(),
-  }).index('by_user_id', ['userId']),
+    month: v.string(),
+    year: v.number(),
+  })
+    .index('by_user_id', ['userId'])
+    .index('by_user_and_date', ['userId', 'month', 'year']),
 
   settings: defineTable({
     userId: v.string(),

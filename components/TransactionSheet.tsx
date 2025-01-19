@@ -27,12 +27,12 @@ import { toast } from 'sonner';
 
 const transactionTypes = [
   { value: 'bills', label: 'Bills' },
-  { value: 'groceries', label: 'Groceries' },
   { value: 'entertainment', label: 'Entertainment' },
+  { value: 'groceries', label: 'Groceries' },
+  { value: 'other', label: 'Other' },
+  { value: 'restaurant', label: 'Restaurant' },
   { value: 'shopping', label: 'Shopping' },
   { value: 'transportation', label: 'Transportation' },
-  { value: 'restaurant', label: 'Restaurant' },
-  { value: 'other', label: 'Other' },
 ];
 
 export function TransactionSheet() {
@@ -41,6 +41,9 @@ export function TransactionSheet() {
   const formRef = useRef<HTMLFormElement>(null);
 
   const createTransaction = useMutation(api.transactions.createTransaction);
+
+  const month = new Date().toLocaleString('default', { month: 'long' });
+  const year = new Date().getFullYear();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,6 +66,8 @@ export function TransactionSheet() {
       type,
       amount,
       userId: userId,
+      month: month,
+      year: year,
     });
 
     if (response.success) {

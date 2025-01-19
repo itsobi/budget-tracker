@@ -25,8 +25,7 @@ import {
 } from '@/components/ui/select';
 
 import { useExpenseSheetStore } from '@/store/useExpenseSheetStore';
-import { useEffect, useRef } from 'react';
-import { useState } from 'react';
+import { useRef } from 'react';
 import { toast } from 'sonner';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -34,12 +33,12 @@ import { useAuth } from '@clerk/nextjs';
 import { Id } from '@/convex/_generated/dataModel';
 
 const expenseTypes = [
-  { value: 'housing', label: 'Housing' },
-  { value: 'utilities', label: 'Utilities' },
-  { value: 'transportation', label: 'Transportation' },
   { value: 'food', label: 'Food' },
-  { value: 'savings', label: 'Savings' },
+  { value: 'housing', label: 'Housing' },
   { value: 'other', label: 'Other' },
+  { value: 'savings', label: 'Savings' },
+  { value: 'transportation', label: 'Transportation' },
+  { value: 'utilities', label: 'Utilities' },
 ];
 
 export function ExpenseSheet() {

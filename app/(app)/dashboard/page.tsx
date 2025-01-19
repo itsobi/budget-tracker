@@ -1,15 +1,14 @@
 import { TransactionsCard } from '@/components/TransactionsCard';
-import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
 import { DashboardExpenses } from './_components/DashboardExpenses';
 import { AddExpenseButton } from './_components/AddExpenseButton';
 import { auth } from '@clerk/nextjs/server';
-import CustomTooltip from '@/components/CustomTooltip';
 import { redirect } from 'next/navigation';
 import MonthlyBudgetCap from './_components/MonthlyBudgetCap';
 import { preloadQuery } from 'convex/nextjs';
 import { api } from '@/convex/_generated/api';
 import { SavingsCard } from '@/components/SavingsCard';
+import { MonthlyOverviewChart } from '@/components/MonthlyOverviewChart';
+import { DownloadButton } from './_components/DownloadButton';
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -30,17 +29,21 @@ export default async function DashboardPage() {
     userId,
   });
 
+  const preloadedTransactions = await preloadQuery(
+    api.transactions.getTransactions,
+    {
+      userId,
+    }
+  );
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <div className="flex items-center gap-2">
           <AddExpenseButton />
-          <CustomTooltip description="Download">
-            <Button variant={'ghost'}>
-              <Download />
-            </Button>
-          </CustomTooltip>
+          <DownloadButton />
+          {/* <YearSelectMenu /> */}
         </div>
       </div>
 
@@ -58,9 +61,13 @@ export default async function DashboardPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <TransactionsCard userId={userId} />
         <SavingsCard preloadedSavings={preloadedSavings} />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <MonthlyOverviewChart preloadedTransactions={preloadedTransactions} />
       </div>
     </div>
   );
