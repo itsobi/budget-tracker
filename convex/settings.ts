@@ -6,10 +6,6 @@ export const getSettings = query({
     userId: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error('User not authenticated');
-    }
     try {
       return await ctx.db
         .query('settings')

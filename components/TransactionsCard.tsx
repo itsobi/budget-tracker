@@ -22,6 +22,7 @@ import { AddTransactionButton } from '@/app/(app)/dashboard/_components/AddTrans
 import { Transaction } from './Transaction';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
+import Link from 'next/link';
 
 const transactionTypes: { type: string; icon: LucideIcon }[] = [
   { type: 'bill', icon: CreditCard },
@@ -51,12 +52,12 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
           </CustomTooltip>
         </div>
         <CardDescription>
-          You made {transactions?.length || 0} transaction
+          You&apos;ve made {transactions?.length || 0} transaction
           {transactions?.length === 1 ? '' : 's'} this month.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {transactions?.map((transaction) => {
+        {transactions?.slice(0, 4).map((transaction) => {
           const transactionType = transactionTypes.find(
             (type) => type.type === transaction.type
           );
@@ -69,6 +70,14 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
             />
           );
         })}
+        {transactions?.length && transactions?.length > 4 && (
+          <Link
+            href="/transactions"
+            className="flex justify-center text-xs text-muted-foreground hover:underline"
+          >
+            View all transactions
+          </Link>
+        )}
       </CardContent>
     </Card>
   );

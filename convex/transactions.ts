@@ -55,7 +55,9 @@ export const getTransactions = query({
       .query('transactions')
       .withIndex('by_user_id')
       .filter((q) => q.eq(q.field('userId'), args.userId))
+      .order('desc')
       .collect();
+
     return transactions;
   },
 });
