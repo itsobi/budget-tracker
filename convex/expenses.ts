@@ -8,8 +8,7 @@ export const createExpense = mutation({
     type: v.string(),
     userId: v.string(),
     order: v.number(),
-    month: v.string(),
-    year: v.number(),
+    date: v.string(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();

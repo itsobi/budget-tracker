@@ -7,8 +7,7 @@ export const createTransaction = mutation({
     amount: v.number(),
     type: v.string(),
     userId: v.string(),
-    month: v.string(),
-    year: v.number(),
+    date: v.string(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();

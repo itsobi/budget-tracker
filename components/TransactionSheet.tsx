@@ -42,8 +42,9 @@ export function TransactionSheet() {
 
   const createTransaction = useMutation(api.transactions.createTransaction);
 
-  const month = new Date().toLocaleString('default', { month: 'long' });
-  const year = new Date().getFullYear();
+  const today = new Date();
+  // date string in the format YYYY-MM-DD
+  const dateString = today.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,8 +67,7 @@ export function TransactionSheet() {
       type,
       amount,
       userId: userId,
-      month: month,
-      year: year,
+      date: dateString,
     });
 
     if (response.success) {

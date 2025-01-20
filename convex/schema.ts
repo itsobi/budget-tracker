@@ -8,23 +8,21 @@ export default defineSchema({
     type: v.string(),
     amount: v.number(),
     order: v.number(),
-    month: v.string(),
-    year: v.number(),
+    date: v.string(),
   })
     .index('by_user_id', ['userId'])
     .index('by_user_and_order', ['userId', 'order'])
-    .index('by_user_and_date', ['userId', 'month', 'year']),
+    .index('by_user_and_date', ['userId', 'date']),
 
   transactions: defineTable({
     userId: v.string(),
     title: v.string(),
     type: v.string(),
     amount: v.number(),
-    month: v.string(),
-    year: v.number(),
+    date: v.string(),
   })
     .index('by_user_id', ['userId'])
-    .index('by_user_and_date', ['userId', 'month', 'year']),
+    .index('by_user_and_date', ['userId', 'date']),
 
   settings: defineTable({
     userId: v.string(),
