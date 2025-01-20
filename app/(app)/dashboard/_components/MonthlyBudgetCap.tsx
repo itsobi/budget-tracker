@@ -77,10 +77,6 @@ export default function MonthlyBudgetCap({
           {formatCurrency(budgetCap?.amount || 0)}
         </p>
       )}
-
-      <p className="text-xs text-muted-foreground">
-        Total budget for all expenses this month
-      </p>
     </div>
   );
 }

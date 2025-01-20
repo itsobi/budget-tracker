@@ -77,15 +77,24 @@ export function MonthlyOverviewChart({
 
   const transactions = usePreloadedQuery(preloadedTransactions);
 
-  const chartData = transactions.map((transaction) => ({
-    type: transaction.type,
-    amount: transaction.amount,
-    fill: chartConfig[transaction.type as keyof typeof chartConfig].color,
+  const chartData = Object.entries(
+    transactions.reduce(
+      (acc, transaction) => {
+        const type = transaction.type;
+        acc[type] = (acc[type] || 0) + transaction.amount;
+        return acc;
+      },
+      {} as Record<string, number>
+    )
+  ).map(([type, amount]) => ({
+    type,
+    amount,
+    fill: chartConfig[type as keyof typeof chartConfig].color,
   }));
 
   return (
     <Card className="rounded-md shadow-md dark:border-white/60">
-      <CardHeader className="flex items-center">
+      <CardHeader>
         <CardTitle className="mb-2 lg:mb-0">Monthly Overview</CardTitle>
         <div className="lg:hidden flex items-start gap-2 text-xs text-muted-foreground flex-wrap">
           {chartData.map((item) => (

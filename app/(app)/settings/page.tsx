@@ -10,6 +10,7 @@ import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { preloadQuery } from 'convex/nextjs';
 import { api } from '@/convex/_generated/api';
+import PageHeader from '@/components/PageHeader';
 
 export default async function SettingsPage() {
   const { userId } = await auth();
@@ -23,8 +24,9 @@ export default async function SettingsPage() {
   });
 
   return (
-    <form className="space-y-8">
-      <Card>
+    <div className="space-y-8">
+      <PageHeader title="Settings" />
+      <Card className="shadow-md">
         <CardHeader>
           <CardTitle>Dashboard Preferences</CardTitle>
           <CardDescription>
@@ -38,6 +40,6 @@ export default async function SettingsPage() {
           />
         </CardContent>
       </Card>
-    </form>
+    </div>
   );
 }

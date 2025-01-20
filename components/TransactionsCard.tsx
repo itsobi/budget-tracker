@@ -57,7 +57,7 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {transactions?.slice(0, 4).map((transaction) => {
+        {transactions?.slice(0, 3).map((transaction) => {
           const transactionType = transactionTypes.find(
             (type) => type.type === transaction.type
           );
@@ -70,14 +70,14 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
             />
           );
         })}
-        {transactions?.length && transactions?.length > 4 && (
+        {transactions?.length && transactions?.length > 3 ? (
           <Link
             href="/transactions"
             className="flex justify-center text-xs text-muted-foreground hover:underline"
           >
             View all transactions
           </Link>
-        )}
+        ) : null}
       </CardContent>
     </Card>
   );

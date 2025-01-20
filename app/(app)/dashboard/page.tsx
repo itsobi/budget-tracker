@@ -9,6 +9,7 @@ import { api } from '@/convex/_generated/api';
 import { SavingsCard } from '@/components/SavingsCard';
 import { MonthlyOverviewChart } from '@/components/MonthlyOverviewChart';
 import { DownloadButton } from './_components/DownloadButton';
+import PageHeader from '@/components/PageHeader';
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -38,14 +39,15 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <div className="flex items-center gap-2">
-          <AddExpenseButton />
-          <DownloadButton />
-          {/* <YearSelectMenu /> */}
-        </div>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        actions={
+          <>
+            <AddExpenseButton />
+            <DownloadButton />
+          </>
+        }
+      />
 
       <div className="mb-4">
         <MonthlyBudgetCap

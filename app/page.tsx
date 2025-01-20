@@ -7,7 +7,7 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col">
       <header className="py-6 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold italic">BudgetTracker</div>
+          <div className="text-2xl font-bold italic">TrackIt</div>
           <nav>
             <ul className="flex items-center space-x-4">
               <li>
@@ -35,7 +35,9 @@ export default function LandingPage() {
               – no distractions, no fluff.
             </p>
             <Button asChild size="lg">
-              <Link href="/sign-up">Start Budgeting Now</Link>
+              <Link href="/sign-up" className="font-semibold">
+                Start Budgeting Now
+              </Link>
             </Button>
           </div>
         </section>
@@ -46,7 +48,7 @@ export default function LandingPage() {
         >
           <div className="container mx-auto">
             <h2 className="text-3xl font-bold mb-12 text-center">
-              Why Choose BudgetTracker?
+              Why Choose TrackIt?
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               <FeatureCard
@@ -74,7 +76,9 @@ export default function LandingPage() {
               Simplify your budgeting process and achieve your financial goals!
             </p>
             <Button asChild size="lg">
-              <Link href="/signup">Create Your Free Account</Link>
+              <Link href="/signup" className="font-semibold">
+                Create Your Free Account
+              </Link>
             </Button>
           </div>
         </section>
@@ -82,7 +86,7 @@ export default function LandingPage() {
 
       <footer className="py-6 px-4 sm:px-6 lg:px-8 bg-muted dark:bg-zinc">
         <div className="container mx-auto text-center text-sm">
-          &copy; {new Date().getFullYear()} BudgetTracker. All rights reserved.
+          &copy; {new Date().getFullYear()} TrackIt. All rights reserved.
         </div>
       </footer>
     </div>
