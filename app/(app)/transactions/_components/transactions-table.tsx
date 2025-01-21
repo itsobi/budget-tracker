@@ -23,16 +23,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { Trash2 } from 'lucide-react';
+import { api } from '@/convex/_generated/api';
+import { useQuery } from 'convex/react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,6 +43,7 @@ export function TransactionsTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
   const table = useReactTable({
     data,
     columns,
@@ -77,32 +74,15 @@ export function TransactionsTable<TData, TValue>({
           }
           className="max-w-sm"
         /> */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <Button variant="ghost">
+            <span className="text-red-500">
+              Delete {table.getFilteredSelectedRowModel().rows.length}
+            </span>
+            <Trash2 className="text-red-500" />
+          </Button>
+        )}
       </div>
       <div className="rounded-md border shadow-md">
         <Table>

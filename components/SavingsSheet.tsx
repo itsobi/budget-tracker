@@ -36,19 +36,12 @@ const savingsTypes = [
   { value: 'vacation', label: 'Vacation' },
 ];
 
-type SavingsFormData = {
-  title: string;
-  type: string;
-  goalAmount: number;
-  currentAmount: number;
-};
-
 export function SavingsSheet() {
   const { userId } = useAuth();
   const { isOpen, close, savingsId } = useSavingsSheetStore();
   const formRef = useRef<HTMLFormElement>(null);
 
-  const existingSavings = useQuery(
+  const existingSaving = useQuery(
     api.savings.getSavingsGoal,
     typeof savingsId === 'string' ? { id: savingsId as Id<'savings'> } : 'skip'
   );
@@ -71,10 +64,10 @@ export function SavingsSheet() {
     const currentAmount = formData.get('currentAmount');
 
     // When editing, use existing values as fallback
-    const finalTitle = title || existingSavings?.title;
-    const finalType = type || existingSavings?.type;
-    const finalGoalAmount = goalAmount || existingSavings?.goalAmount;
-    const finalCurrentAmount = currentAmount || existingSavings?.currentAmount;
+    const finalTitle = title || existingSaving?.title;
+    const finalType = type || existingSaving?.type;
+    const finalGoalAmount = goalAmount || existingSaving?.goalAmount;
+    const finalCurrentAmount = currentAmount || existingSaving?.currentAmount;
 
     // Validate required fields
     if (!finalTitle || !finalType || !finalGoalAmount || !finalCurrentAmount) {
@@ -137,7 +130,7 @@ export function SavingsSheet() {
           <SheetDescription>
             {savingsId
               ? 'Edit your existing savings goal'
-              : 'Add a savings goal to your budget dashboard.'}
+              : 'Add a savings goal to your budget dashboard'}
           </SheetDescription>
         </SheetHeader>
         <form
@@ -149,18 +142,18 @@ export function SavingsSheet() {
             <Label htmlFor="name">Name</Label>
             <Input
               name="name"
-              defaultValue={savingsId ? existingSavings?.title : ''}
+              defaultValue={savingsId ? existingSaving?.title : ''}
             />
           </div>
           <div className="space-y-1">
             <Label htmlFor="type">Type</Label>
             <Select
               name="type"
-              defaultValue={savingsId ? existingSavings?.type : undefined}
+              defaultValue={savingsId ? existingSaving?.type : undefined}
             >
               <SelectTrigger>
                 <SelectValue
-                  placeholder={savingsId ? existingSavings?.type : ''}
+                  placeholder={savingsId ? existingSaving?.type : ''}
                 />
               </SelectTrigger>
               <SelectContent>
@@ -177,7 +170,7 @@ export function SavingsSheet() {
             <Input
               name="goalAmount"
               type="number"
-              defaultValue={savingsId ? existingSavings?.goalAmount : ''}
+              defaultValue={savingsId ? existingSaving?.goalAmount : ''}
             />
           </div>
           <div className="space-y-1">
@@ -185,7 +178,7 @@ export function SavingsSheet() {
             <Input
               name="currentAmount"
               type="number"
-              defaultValue={savingsId ? existingSavings?.currentAmount : ''}
+              defaultValue={savingsId ? existingSaving?.currentAmount : ''}
             />
           </div>
           <Button type="submit" className="w-full">

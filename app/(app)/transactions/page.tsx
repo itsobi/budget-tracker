@@ -1,35 +1,40 @@
+'use client';
+
 import PageHeader from '@/components/PageHeader';
 import { TransactionsTable } from './_components/transactions-table';
-import { columns, Transaction } from './_components/columns';
+import { columns, TransactionType } from './_components/columns';
+import { redirect, useRouter } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
+import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { preloadQuery } from 'convex/nextjs';
-import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
+import { LoadingScreen } from '@/components/LoadingScreen';
 
-export default async function TransactionsPage() {
-  const { userId } = await auth();
+export default function TransactionsPage() {
+  const { userId } = useAuth();
+  const router = useRouter();
 
-  if (!userId) {
-    redirect('/sign-in');
+  useEffect(() => {
+    if (!userId) {
+      router.replace('/sign-in');
+    }
+  }, [userId, router]);
+
+  const transactions = useQuery(api.transactions.getTransactions, {
+    userId: userId!,
+  });
+
+  if (!transactions) {
+    return <LoadingScreen />;
   }
 
-  const preloadedTransactions = await preloadQuery(
-    api.transactions.getTransactions,
-    {
-      userId: userId,
-    }
-  );
-
-  // @ts-ignore
-  const data = preloadedTransactions._valueJSON?.map(
-    (transaction: Transaction) => ({
-      id: transaction._id,
-      type: transaction.type,
-      title: transaction.title,
-      amount: transaction.amount,
-      date: transaction.date,
-    })
-  );
+  const data = transactions.map((transaction) => ({
+    id: transaction._id,
+    type: transaction.type as TransactionType,
+    title: transaction.title,
+    amount: transaction.amount,
+    date: transaction.date,
+  }));
 
   return (
     <div>

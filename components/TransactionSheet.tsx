@@ -24,6 +24,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { toast } from 'sonner';
+import { Id } from '@/convex/_generated/dataModel';
 
 const transactionTypes = [
   { value: 'bills', label: 'Bills' },
@@ -37,8 +38,17 @@ const transactionTypes = [
 
 export function TransactionSheet() {
   const { userId } = useAuth();
-  const { isOpen, close } = useTransactionSheetStore();
+  const { isOpen, close, transactionId } = useTransactionSheetStore();
   const formRef = useRef<HTMLFormElement>(null);
+
+  const existingTransaction = useQuery(
+    api.transactions.getTransaction,
+    typeof transactionId === 'string'
+      ? { id: transactionId as Id<'transactions'> }
+      : 'skip'
+  );
+
+  const updateTransaction = useMutation(api.transactions.updateTransaction);
 
   const createTransaction = useMutation(api.transactions.createTransaction);
 
@@ -57,18 +67,37 @@ export function TransactionSheet() {
     const type = formData.get('type') as string;
     const amount = Number(formData.get('amount'));
 
-    if (!title || !type || !amount) {
+    const finalTitle = title || existingTransaction?.title;
+    const finalType = type || existingTransaction?.type;
+    const finalAmount = amount || existingTransaction?.amount;
+
+    if (!finalTitle || !finalType || !finalAmount) {
       toast.error('Please fill in all fields');
       return;
     }
 
-    const response = await createTransaction({
-      title,
-      type,
-      amount,
-      userId: userId,
+    const data = {
+      title: finalTitle,
+      type: finalType,
+      amount: finalAmount,
       date: dateString,
-    });
+    };
+
+    let response;
+
+    if (transactionId) {
+      response = await updateTransaction({
+        id: transactionId as Id<'transactions'>,
+        title: finalTitle,
+        type: finalType,
+        amount: finalAmount,
+      });
+    } else {
+      response = await createTransaction({
+        userId,
+        ...data,
+      });
+    }
 
     if (response.success) {
       toast.success(response.message);
@@ -93,9 +122,13 @@ export function TransactionSheet() {
       </SheetTrigger>
       <SheetContent className="w-full">
         <SheetHeader className="text-left">
-          <SheetTitle>Add Transaction</SheetTitle>
+          <SheetTitle>
+            {transactionId ? 'Edit Transaction' : 'Add Transaction'}
+          </SheetTitle>
           <SheetDescription>
-            Add a transaction to your budget dashboard.
+            {transactionId
+              ? 'Edit your existing transaction'
+              : 'Add a transaction to your budget dashboard'}
           </SheetDescription>
         </SheetHeader>
         <form
@@ -105,13 +138,21 @@ export function TransactionSheet() {
         >
           <div className="space-y-1">
             <Label htmlFor="name">Name</Label>
-            <Input name="name" />
+            <Input
+              name="name"
+              defaultValue={transactionId ? existingTransaction?.title : ''}
+            />
           </div>
           <div className="space-y-1">
             <Label htmlFor="type">Type</Label>
-            <Select name="type">
+            <Select
+              name="type"
+              defaultValue={transactionId ? existingTransaction?.type : ''}
+            >
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue
+                  placeholder={transactionId ? existingTransaction?.type : ''}
+                />
               </SelectTrigger>
               <SelectContent>
                 {transactionTypes.map((type) => (
@@ -124,10 +165,14 @@ export function TransactionSheet() {
           </div>
           <div className="space-y-1">
             <Label htmlFor="amount">Amount</Label>
-            <Input name="amount" type="number" />
+            <Input
+              name="amount"
+              type="number"
+              defaultValue={transactionId ? existingTransaction?.amount : ''}
+            />
           </div>
           <Button type="submit" className="w-full">
-            Add Transaction
+            {transactionId ? 'Update Transaction' : 'Add Transaction'}
           </Button>
         </form>
       </SheetContent>
