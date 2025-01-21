@@ -132,3 +132,22 @@ export const deleteTransaction = mutation({
     }
   },
 });
+
+export const deleteTransactions = mutation({
+  args: {
+    ids: v.array(v.id('transactions')),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) {
+      throw new Error('Not authenticated');
+    }
+    try {
+      for (const id of args.ids) {
+        await ctx.db.delete(id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  },
+});

@@ -1,14 +1,14 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 
-export const getSettings = query({
+export const getPreferences = query({
   args: {
     userId: v.string(),
   },
   handler: async (ctx, args) => {
     try {
       return await ctx.db
-        .query('settings')
+        .query('preferences')
         .withIndex('by_user_id', (q) => q.eq('userId', args.userId))
         .first();
     } catch (error) {
@@ -18,9 +18,10 @@ export const getSettings = query({
   },
 });
 
-export const updateSettings = mutation({
+export const updatePreferences = mutation({
   args: {
     userId: v.string(),
+    fixedExpenses: v.optional(v.boolean()),
     budgetBreakdown: v.optional(v.boolean()),
     savings: v.optional(v.boolean()),
   },
@@ -31,7 +32,7 @@ export const updateSettings = mutation({
     }
     try {
       const existingSettings = await ctx.db
-        .query('settings')
+        .query('preferences')
         .withIndex('by_user_id', (q) => q.eq('userId', args.userId))
         .first();
 
@@ -39,8 +40,9 @@ export const updateSettings = mutation({
         await ctx.db.patch(existingSettings._id, args);
         return { success: true };
       } else {
-        await ctx.db.insert('settings', {
+        await ctx.db.insert('preferences', {
           userId: args.userId,
+          fixedExpenses: args.fixedExpenses ?? false,
           budgetBreakdown: args.budgetBreakdown ?? false,
           savings: args.savings ?? false,
         });

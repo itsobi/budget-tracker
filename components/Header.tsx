@@ -38,8 +38,8 @@ const tabs = [
     icon: ArrowRightLeft,
   },
   {
-    label: 'Settings',
-    href: '/settings',
+    label: 'Preferences',
+    href: '/preferences',
     icon: Settings,
   },
 ];

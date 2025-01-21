@@ -28,21 +28,34 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Trash2 } from 'lucide-react';
 import { api } from '@/convex/_generated/api';
-import { useQuery } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
+import { toast } from 'sonner';
+import { deleteTransactions } from '@/convex/transactions';
+import { TransactionType } from './columns';
+import { Id } from '@/convex/_generated/dataModel';
+
+type Transaction = {
+  id: Id<'transactions'>;
+  type: TransactionType;
+  title: string;
+  amount: number;
+  date: string;
+};
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function TransactionsTable<TData, TValue>({
+export function TransactionsTable<TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<Transaction, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const deleteTransactions = useMutation(api.transactions.deleteTransactions);
 
   const table = useReactTable({
     data,
@@ -63,6 +76,21 @@ export function TransactionsTable<TData, TValue>({
     },
   });
 
+  const handleDelete = async () => {
+    toast.promise(
+      deleteTransactions({
+        ids: table
+          .getFilteredSelectedRowModel()
+          .rows.map((row) => row.original.id as Id<'transactions'>),
+      }),
+      {
+        loading: 'Deleting transaction(s)...',
+        success: 'Transaction(s) deleted successfully',
+        error: 'Failed to delete transaction(s)',
+      }
+    );
+  };
+
   return (
     <div>
       <div className="flex items-center py-4">
@@ -76,7 +104,7 @@ export function TransactionsTable<TData, TValue>({
         /> */}
 
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <Button variant="ghost">
+          <Button variant="ghost" onClick={handleDelete}>
             <span className="text-red-500">
               Delete {table.getFilteredSelectedRowModel().rows.length}
             </span>

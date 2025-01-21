@@ -7,19 +7,19 @@ import { toast } from 'sonner';
 
 interface DashboardPreferencesProps {
   userId: string;
-  preloadedSettings: Preloaded<typeof api.settings.getSettings>;
+  preloadedPreferences: Preloaded<typeof api.preferences.getPreferences>;
 }
 
 export function DashboardPreferences({
   userId,
-  preloadedSettings,
+  preloadedPreferences,
 }: DashboardPreferencesProps) {
-  const settings = usePreloadedQuery(preloadedSettings);
-  const updateSettings = useMutation(api.settings.updateSettings);
+  const preferences = usePreloadedQuery(preloadedPreferences);
+  const updatePreferences = useMutation(api.preferences.updatePreferences);
 
   const handleChange = async (checked: boolean, name: string) => {
     try {
-      await updateSettings({
+      await updatePreferences({
         userId,
         [name]: checked,
       });
@@ -32,6 +32,19 @@ export function DashboardPreferences({
     <div className="grid gap-6">
       <div className="flex items-center justify-between">
         <div className="space-y-0.5">
+          <h4 className="font-semibold">Fixed Expenses</h4>
+          <p className="text-sm text-muted-foreground">
+            Displays your fixed expenses.
+          </p>
+        </div>
+        <Switch
+          name="fixedExpenses"
+          checked={preferences?.fixedExpenses || false}
+          onCheckedChange={(checked) => handleChange(checked, 'fixedExpenses')}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="space-y-0.5">
           <h4 className="font-semibold">Budget Breakdown</h4>
           <p className="text-sm text-muted-foreground">
             Displays your budget allocation across different categories.
@@ -39,7 +52,7 @@ export function DashboardPreferences({
         </div>
         <Switch
           name="budgetBreakdown"
-          checked={settings?.budgetBreakdown || false}
+          checked={preferences?.budgetBreakdown || false}
           onCheckedChange={(checked) =>
             handleChange(checked, 'budgetBreakdown')
           }
@@ -54,7 +67,7 @@ export function DashboardPreferences({
         </div>
         <Switch
           name="savings"
-          checked={settings?.savings || false}
+          checked={preferences?.savings || false}
           onCheckedChange={(checked) => handleChange(checked, 'savings')}
         />
       </div>
