@@ -42,15 +42,15 @@ type Transaction = {
   date: string;
 };
 
-interface DataTableProps<TData, TValue> {
+interface TransactionsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function TransactionsTable<TValue>({
+export function TransactionsTable<TData, TValue>({
   columns,
   data,
-}: DataTableProps<Transaction, TValue>) {
+}: TransactionsTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -81,6 +81,7 @@ export function TransactionsTable<TValue>({
       deleteTransactions({
         ids: table
           .getFilteredSelectedRowModel()
+          // @ts-ignore
           .rows.map((row) => row.original.id as Id<'transactions'>),
       }),
       {

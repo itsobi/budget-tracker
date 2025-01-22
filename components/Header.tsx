@@ -77,7 +77,7 @@ export function Header() {
       <nav className="flex items-center justify-between">
         <div className="flex items-center">
           <Link href="/dashboard" className="text-xl font-bold italic mr-16">
-            TrackIt
+            Track iT
           </Link>
 
           <div className="hidden md:flex items-center gap-4">

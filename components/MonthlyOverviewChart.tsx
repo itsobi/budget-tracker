@@ -8,7 +8,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from './ui/chart';
-import { Card, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Preloaded, usePreloadedQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useMediaQuery } from '@/lib/hooks';
@@ -68,15 +68,17 @@ const chartConfig = {
 
 interface MonthlyOverviewChartProps {
   preloadedTransactions: Preloaded<typeof api.transactions.getTransactions>;
+  preloadedPreferences: Preloaded<typeof api.preferences.getPreferences>;
 }
 
 export function MonthlyOverviewChart({
   preloadedTransactions,
+  preloadedPreferences,
 }: MonthlyOverviewChartProps) {
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const transactions = usePreloadedQuery(preloadedTransactions);
-
+  const preferences = usePreloadedQuery(preloadedPreferences);
   const chartData = Object.entries(
     transactions.reduce(
       (acc, transaction) => {
@@ -92,71 +94,68 @@ export function MonthlyOverviewChart({
     fill: chartConfig[type as keyof typeof chartConfig].color,
   }));
 
-  return (
-    <Card className="rounded-md shadow-md dark:border-white/60">
-      <CardHeader>
-        <CardTitle className="mb-2 lg:mb-0">Monthly Overview</CardTitle>
-        <div className="lg:hidden flex items-start gap-2 text-xs text-muted-foreground flex-wrap">
-          {chartData.map((item) => (
-            <div key={item.type} className="flex items-center gap-0.5">
-              <div
-                className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: item.fill }}
-              />
-              <p className="capitalize">{item.type}</p>
-            </div>
-          ))}
-        </div>
-      </CardHeader>
-      <div className="flex items-center">
-        <ChartContainer config={chartConfig} className="flex-1 min-h-[200px]">
-          <BarChart accessibilityLayer data={chartData} margin={{ top: 20 }}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="type"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) =>
-                value.length > 6 ? value.slice(0, 3) + '.' : value
-              }
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent formatter={formatDollar} />}
-            />
-            <Bar dataKey="amount" radius={8} fill="var(--color-amount)">
-              {isMobile && (
-                <LabelList
-                  position="top"
-                  offset={12}
-                  className="fill-foreground"
-                  fontSize={12}
-                  formatter={(value: number) =>
-                    new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'USD',
-                    }).format(value)
-                  }
-                />
-              )}
-            </Bar>
-          </BarChart>
-        </ChartContainer>
-        <div className="hidden lg:block p-2 text-xs text-muted-foreground">
-          <div className="flex flex-col gap-1">
+  if (!preferences || preferences?.monthlyOverview) {
+    return (
+      <Card className="rounded-md shadow-md dark:border-white/60">
+        <CardHeader>
+          <CardTitle className="mb-2 lg:mb-0">Monthly Overview</CardTitle>
+          <div className="flex items-start gap-2 text-xs text-muted-foreground flex-wrap">
             {chartData.map((item) => (
-              <div key={item.type} className="flex items-center gap-2">
+              <div key={item.type} className="flex items-center gap-0.5">
                 <div
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: item.fill }}
                 />
-                <span className="capitalize">{item.type}</span>
+                <p className="capitalize">{item.type}</p>
               </div>
             ))}
           </div>
-        </div>
-      </div>
-    </Card>
-  );
+        </CardHeader>
+        {chartData.length > 0 ? (
+          <ChartContainer config={chartConfig} className="flex-1 min-h-[200px]">
+            <BarChart accessibilityLayer data={chartData} margin={{ top: 20 }}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="type"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) =>
+                  value.length > 6 ? value.slice(0, 3) + '.' : value
+                }
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent formatter={formatDollar} />}
+              />
+              <Bar dataKey="amount" radius={8} fill="var(--color-amount)">
+                {isMobile && (
+                  <LabelList
+                    position="insideTop"
+                    offset={12}
+                    className="fill-foreground"
+                    fontSize={12}
+                    formatter={(value: number) =>
+                      new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                      }).format(value)
+                    }
+                  />
+                )}
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+        ) : (
+          <CardContent>
+            <div className="flex items-center justify-center h-full">
+              <p className="text-muted-foreground">No transactions found</p>
+            </div>
+          </CardContent>
+        )}
+      </Card>
+    );
+  }
+
+  return null;
 }

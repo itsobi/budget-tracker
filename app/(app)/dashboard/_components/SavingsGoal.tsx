@@ -64,7 +64,10 @@ export function SavingsGoal({ savings }: SavingsGoalProps) {
   };
 
   return (
-    <div className="flex flex-col gap-1">
+    <div
+      onClick={() => open(savings._id)}
+      className="flex flex-col gap-1 cursor-pointer hover:bg-accent rounded-md p-4"
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           <Icon size={18} />
@@ -77,24 +80,23 @@ export function SavingsGoal({ savings }: SavingsGoalProps) {
             </span>{' '}
             / ${savings.goalAmount.toLocaleString()}
           </p>
-          <Button onClick={() => open(savings._id)} variant="ghost" size="icon">
-            <Pencil />
-          </Button>
-          <ConfirmDialog
-            triggerComponent={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-red-500 hover:text-white"
-              >
-                <Trash />
-              </Button>
-            }
-            title="Delete Savings Goal"
-            description="Are you sure you want to delete this savings goal?"
-            confirmText="Delete"
-            onConfirm={handleDeleteSavingsGoal}
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            <ConfirmDialog
+              triggerComponent={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hover:bg-red-500 hover:text-white"
+                >
+                  <Trash />
+                </Button>
+              }
+              title="Delete Savings Goal"
+              description="Are you sure you want to delete this savings goal?"
+              confirmText="Delete"
+              onConfirm={handleDeleteSavingsGoal}
+            />
+          </div>
         </div>
       </div>
       <Progress value={progressPercentage} />

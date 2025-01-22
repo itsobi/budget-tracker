@@ -37,6 +37,13 @@ export default async function DashboardPage() {
     }
   );
 
+  const preloadedPreferences = await preloadQuery(
+    api.preferences.getPreferences,
+    {
+      userId,
+    }
+  );
+
   return (
     <div>
       <PageHeader
@@ -65,11 +72,17 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <TransactionsCard userId={userId} />
-        <SavingsCard preloadedSavings={preloadedSavings} />
+        <MonthlyOverviewChart
+          preloadedTransactions={preloadedTransactions}
+          preloadedPreferences={preloadedPreferences}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <MonthlyOverviewChart preloadedTransactions={preloadedTransactions} />
+        <SavingsCard
+          preloadedSavings={preloadedSavings}
+          preloadedPreferences={preloadedPreferences}
+        />
       </div>
     </div>
   );

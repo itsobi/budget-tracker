@@ -7,7 +7,7 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col">
       <header className="py-6 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold italic">TrackIt</div>
+          <div className="text-2xl font-bold italic">Track iT</div>
           <nav>
             <ul className="flex items-center space-x-4">
               <li>
@@ -53,7 +53,7 @@ export default function LandingPage() {
             <div className="grid md:grid-cols-3 gap-8">
               <FeatureCard
                 title="Simple Interface"
-                description="No complicated menus or confusing charts. Upload your receipts and we'll do the rest."
+                description="No complicated menus or confusing charts. Upload your receipts, savings goals, and fixed expenses and we'll do the rest."
               />
               <FeatureCard
                 title="Quick Setup"

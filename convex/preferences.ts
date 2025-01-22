@@ -21,8 +21,7 @@ export const getPreferences = query({
 export const updatePreferences = mutation({
   args: {
     userId: v.string(),
-    fixedExpenses: v.optional(v.boolean()),
-    budgetBreakdown: v.optional(v.boolean()),
+    monthlyOverview: v.optional(v.boolean()),
     savings: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
@@ -42,9 +41,8 @@ export const updatePreferences = mutation({
       } else {
         await ctx.db.insert('preferences', {
           userId: args.userId,
-          fixedExpenses: args.fixedExpenses ?? false,
-          budgetBreakdown: args.budgetBreakdown ?? false,
-          savings: args.savings ?? false,
+          monthlyOverview: args.monthlyOverview ?? true,
+          savings: args.savings ?? true,
         });
         return { success: true };
       }

@@ -32,29 +32,16 @@ export function DashboardPreferences({
     <div className="grid gap-6">
       <div className="flex items-center justify-between">
         <div className="space-y-0.5">
-          <h4 className="font-semibold">Fixed Expenses</h4>
+          <h4 className="font-semibold">Monthly Overview</h4>
           <p className="text-sm text-muted-foreground">
-            Displays your fixed expenses.
+            Displays your spending across different categories.
           </p>
         </div>
         <Switch
-          name="fixedExpenses"
-          checked={preferences?.fixedExpenses || false}
-          onCheckedChange={(checked) => handleChange(checked, 'fixedExpenses')}
-        />
-      </div>
-      <div className="flex items-center justify-between">
-        <div className="space-y-0.5">
-          <h4 className="font-semibold">Budget Breakdown</h4>
-          <p className="text-sm text-muted-foreground">
-            Displays your budget allocation across different categories.
-          </p>
-        </div>
-        <Switch
-          name="budgetBreakdown"
-          checked={preferences?.budgetBreakdown || false}
+          name="monthlyOverview"
+          checked={preferences?.monthlyOverview ?? true}
           onCheckedChange={(checked) =>
-            handleChange(checked, 'budgetBreakdown')
+            handleChange(checked, 'monthlyOverview')
           }
         />
       </div>
@@ -67,7 +54,7 @@ export function DashboardPreferences({
         </div>
         <Switch
           name="savings"
-          checked={preferences?.savings || false}
+          checked={preferences?.savings ?? true}
           onCheckedChange={(checked) => handleChange(checked, 'savings')}
         />
       </div>

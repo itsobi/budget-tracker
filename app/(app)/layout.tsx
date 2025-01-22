@@ -12,7 +12,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <ExpenseSheet />
         <TransactionSheet />
         <SavingsSheet />
-        <div className="min-h-screen flex flex-col">
+        <div className={`min-h-screen flex flex-col`}>
           <div className="shadow-sm dark:border-b border-zinc mb-4">
             <Header />
           </div>
