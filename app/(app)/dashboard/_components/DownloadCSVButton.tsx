@@ -2,9 +2,9 @@ import CustomTooltip from '@/components/CustomTooltip';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 
-export function DownloadButton() {
+export function DownloadCSVButton() {
   return (
-    <CustomTooltip description="Download">
+    <CustomTooltip description="Download CSV">
       <Button variant={'ghost'}>
         <Download />
       </Button>

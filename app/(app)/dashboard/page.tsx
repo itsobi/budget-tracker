@@ -8,8 +8,8 @@ import { preloadQuery } from 'convex/nextjs';
 import { api } from '@/convex/_generated/api';
 import { SavingsCard } from '@/components/SavingsCard';
 import { MonthlyOverviewChart } from '@/components/MonthlyOverviewChart';
-import { DownloadButton } from './_components/DownloadButton';
 import PageHeader from '@/components/PageHeader';
+import { UploadReceiptButton } from '@/components/UploadReceiptButton';
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -51,7 +51,7 @@ export default async function DashboardPage() {
         actions={
           <>
             <AddExpenseButton />
-            <DownloadButton />
+            <UploadReceiptButton />
           </>
         }
       />

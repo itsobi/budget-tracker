@@ -22,8 +22,6 @@ export function SavingsCard({
   const savings = usePreloadedQuery(preloadedSavings);
   const preferences = usePreloadedQuery(preloadedPreferences);
 
-  console.log(preferences);
-
   if (!preferences || preferences?.savings) {
     return (
       <Card className="shadow-md dark:border-white/60">

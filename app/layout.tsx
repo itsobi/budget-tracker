@@ -2,16 +2,16 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/components/ThemProvider';
-import { Lato } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 
 export const metadata: Metadata = {
   title: 'Track iT',
   description: 'No BS budgeting. Plug & play.',
 };
 
-const lato = Lato({
+const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['400', '700'],
+  weight: ['100', '200', '400', '500', '600', '700'],
   display: 'swap',
 });
 
@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={lato.className} suppressHydrationWarning>
+      <html lang="en" className={poppins.className} suppressHydrationWarning>
         <body>
           <ThemeProvider
             attribute="class"

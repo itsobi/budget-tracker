@@ -3,12 +3,13 @@
 import PageHeader from '@/components/PageHeader';
 import { TransactionsTable } from './_components/transactions-table';
 import { columns, TransactionType } from './_components/columns';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useEffect } from 'react';
 import { LoadingScreen } from '@/components/LoadingScreen';
+import { DownloadCSVButton } from '../dashboard/_components/DownloadCSVButton';
 
 export default function TransactionsPage() {
   const { userId } = useAuth();
@@ -38,7 +39,7 @@ export default function TransactionsPage() {
 
   return (
     <div>
-      <PageHeader title="Transactions" />
+      <PageHeader title="Transactions" actions={<DownloadCSVButton />} />
       <TransactionsTable columns={columns} data={data} />
     </div>
   );

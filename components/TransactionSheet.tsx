@@ -26,7 +26,7 @@ import { api } from '@/convex/_generated/api';
 import { toast } from 'sonner';
 import { Id } from '@/convex/_generated/dataModel';
 
-const transactionTypes = [
+export const transactionTypes = [
   { value: 'bills', label: 'Bills' },
   { value: 'entertainment', label: 'Entertainment' },
   { value: 'groceries', label: 'Groceries' },
