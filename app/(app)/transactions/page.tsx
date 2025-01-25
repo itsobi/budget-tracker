@@ -3,33 +3,27 @@
 import PageHeader from '@/components/PageHeader';
 import { TransactionsTable } from './_components/transactions-table';
 import { columns, TransactionType } from './_components/columns';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { useEffect } from 'react';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { DownloadCSVButton } from '../dashboard/_components/DownloadCSVButton';
+import { useYearAndMonth } from '@/lib/hooks';
 
 export default function TransactionsPage() {
   const { userId } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!userId) {
-      router.replace('/sign-in');
-    }
-  }, [userId, router]);
+  const yearAndMonth = useYearAndMonth();
 
   const transactions = useQuery(api.transactions.getTransactions, {
-    userId: userId!,
+    userId: userId ?? '',
+    yearAndMonth,
   });
 
   if (!transactions) {
     return <LoadingScreen />;
   }
 
-  const data = transactions.map((transaction) => ({
+  const data = transactions?.transactions?.map((transaction) => ({
     id: transaction._id,
     type: transaction.type as TransactionType,
     title: transaction.title,

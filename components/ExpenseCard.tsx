@@ -64,7 +64,7 @@ export function ExpenseCard({
         </div>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <h2 className="text-sm font-normal">{title}</h2>
+            <h2 className="text-lg">{title}</h2>
             <Icon />
           </CardTitle>
         </CardHeader>

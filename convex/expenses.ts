@@ -51,11 +51,8 @@ export const getExpenses = query({
   args: {
     userId: v.string(),
   },
+  // Using this query on the server so no check for authentication
   handler: async (ctx, args) => {
-    // const identity = await ctx.auth.getUserIdentity();
-    // if (identity === null) {
-    //   throw new Error('Not authenticated');
-    // }
     return await ctx.db
       .query('expenses')
       .withIndex('by_user_and_order')
@@ -67,7 +64,7 @@ export const getExpenses = query({
 export const getExpensesCount = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    // Using this query on the server so i don't need to check for authentication
+    // Using this query on the server so no check for authentication
 
     try {
       return await ctx.db

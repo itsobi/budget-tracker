@@ -9,6 +9,7 @@ export const createTransaction = mutation({
     type: v.string(),
     userId: v.string(),
     date: v.string(),
+    yearAndMonth: v.string(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -46,33 +47,28 @@ export const createTransaction = mutation({
   },
 });
 
-export const getTransactionsCount = query({
-  args: {
-    userId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const transactionIds = await ctx.db
-      .query('transactions')
-      .withIndex('by_user_id')
-      .filter((q) => q.eq(q.field('userId'), args.userId))
-      .collect();
-    return transactionIds.length;
-  },
-});
-
 export const getTransactions = query({
   args: {
     userId: v.string(),
+    yearAndMonth: v.string(),
   },
   handler: async (ctx, args) => {
     const transactions = await ctx.db
       .query('transactions')
-      .withIndex('by_user_id')
-      .filter((q) => q.eq(q.field('userId'), args.userId))
+      // .withIndex('by_user_id_and_date')
+      // .filter((q) => q.eq(q.field('userId',), args.userId))
+      .withIndex('by_user_id_and_date', (q) =>
+        q.eq('userId', args.userId).eq('yearAndMonth', args.yearAndMonth)
+      )
       .order('desc')
       .collect();
 
-    return transactions;
+    const totalAmount = transactions.reduce((acc, transaction) => {
+      return acc + transaction.amount;
+    }, 0);
+    const count = transactions.length;
+
+    return { transactions, totalAmount, count };
   },
 });
 

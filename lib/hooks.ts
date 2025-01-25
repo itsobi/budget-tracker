@@ -23,4 +23,9 @@ const useMediaQuery = (query: string): boolean => {
   return matches;
 };
 
-export { useMediaQuery };
+const useYearAndMonth = () => {
+  const yearAndMonth = new Date().toISOString().split('T')[0].slice(0, 7);
+  return yearAndMonth;
+};
+
+export { useMediaQuery, useYearAndMonth };

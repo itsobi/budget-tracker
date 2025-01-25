@@ -9,9 +9,9 @@ import {
   ChartTooltipContent,
 } from './ui/chart';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Preloaded, usePreloadedQuery } from 'convex/react';
+import { Preloaded, usePreloadedQuery, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { useMediaQuery } from '@/lib/hooks';
+import { useMediaQuery, useYearAndMonth } from '@/lib/hooks';
 
 const formatDollar = (
   value: string | number | (string | number)[],
@@ -67,27 +67,32 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface MonthlyOverviewChartProps {
-  preloadedTransactions: Preloaded<typeof api.transactions.getTransactions>;
+  // preloadedTransactions: Preloaded<typeof api.transactions.getTransactions>;
+  userId: string;
   preloadedPreferences: Preloaded<typeof api.preferences.getPreferences>;
 }
 
 export function MonthlyOverviewChart({
-  preloadedTransactions,
+  userId,
+  // preloadedTransactions,
   preloadedPreferences,
 }: MonthlyOverviewChartProps) {
   const isMobile = useMediaQuery('(max-width: 768px)');
-
-  const transactions = usePreloadedQuery(preloadedTransactions);
+  const yearAndMonth = useYearAndMonth();
+  const transactions = useQuery(api.transactions.getTransactions, {
+    userId,
+    yearAndMonth: yearAndMonth,
+  });
   const preferences = usePreloadedQuery(preloadedPreferences);
   const chartData = Object.entries(
-    transactions.reduce(
+    transactions?.transactions?.reduce(
       (acc, transaction) => {
         const type = transaction.type;
         acc[type] = (acc[type] || 0) + transaction.amount;
         return acc;
       },
       {} as Record<string, number>
-    )
+    ) ?? {}
   ).map(([type, amount]) => ({
     type,
     amount,

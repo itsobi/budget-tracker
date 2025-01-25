@@ -10,9 +10,11 @@ import { SavingsCard } from '@/components/SavingsCard';
 import { MonthlyOverviewChart } from '@/components/MonthlyOverviewChart';
 import PageHeader from '@/components/PageHeader';
 import { UploadReceiptButton } from '@/components/UploadReceiptButton';
+import { useYearAndMonth } from '@/lib/hooks';
 
 export default async function DashboardPage() {
   const { userId } = await auth();
+  const yearAndMonth = new Date().toISOString().split('T')[0].slice(0, 7);
 
   if (!userId) {
     return redirect('/sign-in');
@@ -29,13 +31,6 @@ export default async function DashboardPage() {
   const preloadedSavings = await preloadQuery(api.savings.getSavingsGoals, {
     userId,
   });
-
-  const preloadedTransactions = await preloadQuery(
-    api.transactions.getTransactions,
-    {
-      userId,
-    }
-  );
 
   const preloadedPreferences = await preloadQuery(
     api.preferences.getPreferences,
@@ -73,7 +68,7 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <TransactionsCard userId={userId} />
         <MonthlyOverviewChart
-          preloadedTransactions={preloadedTransactions}
+          userId={userId}
           preloadedPreferences={preloadedPreferences}
         />
       </div>

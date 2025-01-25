@@ -72,6 +72,7 @@ export function AddReceiptDialog() {
       type: transactionType,
       userId: userId,
       date: new Date().toISOString().split('T')[0],
+      yearAndMonth: new Date().toISOString().slice(0, 7),
     });
 
     if (response.success) {

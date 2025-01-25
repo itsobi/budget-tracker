@@ -86,7 +86,7 @@ export function ExpenseSheet() {
     }
 
     const data = {
-      title: finalTitle,
+      title: finalTitle.trim(),
       type: finalType,
       amount: Number(finalAmount),
     };
@@ -176,6 +176,7 @@ export function ExpenseSheet() {
             <Input
               name="amount"
               type="number"
+              step="0.01"
               defaultValue={expenseId ? existingExpense?.amount.toString() : ''}
             />
           </div>

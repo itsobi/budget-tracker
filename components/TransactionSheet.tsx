@@ -81,6 +81,7 @@ export function TransactionSheet() {
       type: finalType,
       amount: finalAmount,
       date: dateString,
+      yearAndMonth: new Date().toISOString().slice(0, 7),
     };
 
     let response;
@@ -88,7 +89,7 @@ export function TransactionSheet() {
     if (transactionId) {
       response = await updateTransaction({
         id: transactionId as Id<'transactions'>,
-        title: finalTitle,
+        title: finalTitle.trim(),
         type: finalType,
         amount: finalAmount,
       });
@@ -168,6 +169,7 @@ export function TransactionSheet() {
             <Input
               name="amount"
               type="number"
+              step="0.01"
               defaultValue={transactionId ? existingTransaction?.amount : ''}
             />
           </div>

@@ -24,6 +24,7 @@ import { Transaction } from './Transaction';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import Link from 'next/link';
+import { useYearAndMonth } from '@/lib/hooks';
 
 const transactionTypes: { type: string; icon: LucideIcon }[] = [
   { type: 'bill', icon: CreditCard },
@@ -40,12 +41,13 @@ interface TransactionsCardProps {
 }
 
 export function TransactionsCard({ userId }: TransactionsCardProps) {
-  const transactions = useQuery(api.transactions.getTransactions, { userId });
+  const yearAndMonth = useYearAndMonth();
+  const data = useQuery(api.transactions.getTransactions, {
+    userId,
+    yearAndMonth,
+  });
 
-  const totalAmount = transactions?.reduce(
-    (acc, transaction) => acc + transaction.amount,
-    0
-  );
+  const totalAmount = data?.totalAmount;
 
   const totalAmountFormatted = totalAmount?.toLocaleString('en-US', {
     style: 'currency',
@@ -65,12 +67,12 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
         </div>
 
         <CardDescription>
-          You&apos;ve made {transactions?.length || 0} transaction
-          {transactions?.length === 1 ? '' : 's'} this month.
+          You&apos;ve made {data?.count || 0} transaction
+          {data?.count === 1 ? '' : 's'} this month.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {transactions?.slice(0, 3).map((transaction) => {
+        {data?.transactions.slice(0, 3).map((transaction) => {
           const transactionType = transactionTypes.find(
             (type) => type.type === transaction.type
           );
@@ -83,7 +85,7 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
             />
           );
         })}
-        {transactions?.length && transactions?.length > 3 ? (
+        {data?.count && data?.count > 3 ? (
           <Link
             href="/transactions"
             className="flex justify-center text-xs text-muted-foreground hover:underline"
@@ -93,8 +95,8 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
         ) : null}
       </CardContent>
       <CardFooter>
-        {transactions?.length ? (
-          <div className="w-full flex justify-end p-2">
+        {data?.count ? (
+          <div className="w-full flex justify-end p-4">
             <p className="font-semibold">Total: {totalAmountFormatted}</p>
           </div>
         ) : null}

@@ -25,7 +25,6 @@ import { toast } from 'sonner';
 import { useSavingsSheetStore } from '@/store/useSavingsSheetStore';
 import { useAuth } from '@clerk/nextjs';
 import { Id } from '@/convex/_generated/dataModel';
-import { updateSavingsGoal } from '@/convex/savings';
 
 const savingsTypes = [
   { value: 'car', label: 'Car' },
@@ -76,7 +75,7 @@ export function SavingsSheet() {
     }
 
     const data = {
-      title: finalTitle,
+      title: finalTitle.trim(),
       type: finalType,
       goalAmount: Number(finalGoalAmount),
       currentAmount: Number(finalCurrentAmount),
@@ -106,6 +105,7 @@ export function SavingsSheet() {
       formRef.current?.reset();
       close();
     } catch (error) {
+      console.log(error);
       toast.error('Failed to save changes');
     }
   };
@@ -175,6 +175,7 @@ export function SavingsSheet() {
             <Input
               name="goalAmount"
               type="number"
+              step="0.01"
               defaultValue={savingsId ? existingSaving?.goalAmount : ''}
             />
           </div>
