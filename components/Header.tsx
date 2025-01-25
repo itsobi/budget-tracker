@@ -22,7 +22,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import { Button } from './ui/button';
-import { UserButton, useUser } from '@clerk/nextjs';
+import { SignOutButton, UserButton, useUser } from '@clerk/nextjs';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useEffect, useState } from 'react';
 
@@ -112,7 +112,7 @@ export function Header() {
                 <SheetTitle className="flex justify-start pb-4 border-b dark:border-zinc-600">
                   <div className="flex items-center gap-2">
                     <Avatar>
-                      <AvatarImage src={user?.imageUrl || ''} />
+                      <AvatarImage src={user?.imageUrl} />
                       <AvatarFallback>
                         {name?.charAt(0).toUpperCase()}
                       </AvatarFallback>
@@ -142,10 +142,12 @@ export function Header() {
                     ))}
                   </div>
                   <div className="mt-auto w-full">
-                    <Button className="w-full mt-4">
-                      <LogOut />
-                      Sign out
-                    </Button>
+                    <SignOutButton>
+                      <Button className="w-full mt-4">
+                        <LogOut />
+                        Sign out
+                      </Button>
+                    </SignOutButton>
                   </div>
                 </div>
               </SheetHeader>

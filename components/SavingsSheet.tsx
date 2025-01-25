@@ -153,7 +153,12 @@ export function SavingsSheet() {
             >
               <SelectTrigger>
                 <SelectValue
-                  placeholder={savingsId ? existingSaving?.type : ''}
+                  placeholder={
+                    savingsId
+                      ? (existingSaving?.type ?? '').charAt(0).toUpperCase() +
+                        (existingSaving?.type ?? '').slice(1)
+                      : ''
+                  }
                 />
               </SelectTrigger>
               <SelectContent>

@@ -36,7 +36,7 @@ export default function LandingPage() {
             </p>
             <Button asChild size="lg">
               <Link href="/sign-up" className="font-semibold">
-                Start Budgeting Now
+                Start Tracking Now
               </Link>
             </Button>
           </div>

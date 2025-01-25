@@ -14,6 +14,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from './ui/card';
@@ -40,6 +41,17 @@ interface TransactionsCardProps {
 
 export function TransactionsCard({ userId }: TransactionsCardProps) {
   const transactions = useQuery(api.transactions.getTransactions, { userId });
+
+  const totalAmount = transactions?.reduce(
+    (acc, transaction) => acc + transaction.amount,
+    0
+  );
+
+  const totalAmountFormatted = totalAmount?.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
   return (
     <Card className="shadow-md dark:border-white/60">
       <CardHeader>
@@ -51,6 +63,7 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
             </div>
           </CustomTooltip>
         </div>
+
         <CardDescription>
           You&apos;ve made {transactions?.length || 0} transaction
           {transactions?.length === 1 ? '' : 's'} this month.
@@ -79,6 +92,13 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
           </Link>
         ) : null}
       </CardContent>
+      <CardFooter>
+        {transactions?.length ? (
+          <div className="w-full flex justify-end p-2">
+            <p className="font-semibold">Total: {totalAmountFormatted}</p>
+          </div>
+        ) : null}
+      </CardFooter>
     </Card>
   );
 }

@@ -1,5 +1,6 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import { rateLimiter } from './rateLimiter';
 
 export const createExpense = mutation({
   args: {
@@ -15,11 +16,25 @@ export const createExpense = mutation({
     if (identity === null) {
       throw new Error('Not authenticated');
     }
+
+    const userId = identity.subject;
+
+    const { ok } = await rateLimiter.limit(ctx, 'createExpense', {
+      key: userId,
+    });
+
+    if (!ok) {
+      return {
+        success: false,
+        message: 'Rate limit exceeded. Please try again later.',
+      };
+    }
+
     try {
       const expenseId = await ctx.db.insert('expenses', args);
       return {
         success: true,
-        message: 'Expense created successfully',
+        message: 'Expense created successfully!',
         expenseId,
       };
     } catch (error) {
@@ -102,6 +117,19 @@ export const updateExpense = mutation({
       throw new Error('Not authenticated');
     }
 
+    const userId = identity.subject;
+
+    const { ok } = await rateLimiter.limit(ctx, 'updateExpense', {
+      key: userId,
+    });
+
+    if (!ok) {
+      return {
+        success: false,
+        message: 'Rate limit exceeded. Please try again later.',
+      };
+    }
+
     // Remove the id from the args before patching
     const { id, ...updateFields } = args;
 
@@ -110,12 +138,12 @@ export const updateExpense = mutation({
 
       return {
         success: true,
-        message: 'Fixed expense updated successfully',
+        message: 'Fixed expense updated successfully!',
       };
     } catch (error) {
       return {
         success: false,
-        message: 'Failed to update fixed expense. Please try again.',
+        message: 'Failed to update fixed expense.',
       };
     }
   },
@@ -131,17 +159,30 @@ export const deleteExpense = mutation({
       throw new Error('Not authenticated');
     }
 
+    const userId = identity.subject;
+
+    const { ok } = await rateLimiter.limit(ctx, 'deleteExpense', {
+      key: userId,
+    });
+
+    if (!ok) {
+      return {
+        success: false,
+        message: 'Rate limit exceeded. Please try again later.',
+      };
+    }
+
     try {
       await ctx.db.delete(args.id);
       return {
         success: true,
-        message: 'Fixed expense deleted successfully',
+        message: 'Fixed expense deleted successfully!',
       };
     } catch (error) {
       console.error(error);
       return {
         success: false,
-        message: 'Failed to delete fixed expense. Please try again.',
+        message: 'Failed to delete fixed expense.',
       };
     }
   },

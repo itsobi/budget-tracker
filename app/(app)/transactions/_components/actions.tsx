@@ -8,6 +8,7 @@ import { Id } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { toast } from 'sonner';
 
 interface ActionsProps {
   transaction: Transaction;
@@ -16,6 +17,17 @@ interface ActionsProps {
 export function Actions({ transaction }: ActionsProps) {
   const { open } = useTransactionSheetStore();
   const deleteTransaction = useMutation(api.transactions.deleteTransaction);
+
+  const handleDelete = async () => {
+    const response = await deleteTransaction({
+      id: transaction.id as Id<'transactions'>,
+    });
+    if (response.success) {
+      toast.success('Transaction deleted successfully!');
+    } else {
+      toast.error('Failed to delete transaction.');
+    }
+  };
 
   return (
     <div className="flex items-center gap-2.5">
@@ -30,9 +42,7 @@ export function Actions({ transaction }: ActionsProps) {
         }
         confirmText="Delete"
         description="Are you sure you want to delete this transaction?"
-        onConfirm={() =>
-          deleteTransaction({ id: transaction.id as Id<'transactions'> })
-        }
+        onConfirm={handleDelete}
       />
     </div>
   );

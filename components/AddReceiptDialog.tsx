@@ -71,7 +71,7 @@ export function AddReceiptDialog() {
       amount: receipt.total,
       type: transactionType,
       userId: userId,
-      date: new Date().toISOString(),
+      date: new Date().toISOString().split('T')[0],
     });
 
     if (response.success) {
