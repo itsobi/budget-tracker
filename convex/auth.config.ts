@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: 'https://wired-ape-23.clerk.accounts.dev',
+      domain: process.env.CONVEX_SITE_URL,
       applicationID: 'convex',
     },
   ],

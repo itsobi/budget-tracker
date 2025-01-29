@@ -14,8 +14,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <TransactionSheet />
         <SavingsSheet />
         <AddReceiptDialog />
-        <div className={`min-h-screen flex flex-col`}>
-          <div className="shadow-sm dark:border-b border-zinc mb-4">
+        <div className={`h-screen flex flex-col`}>
+          <div className="shadow-sm dark:border-b border-zinc">
             <Header />
           </div>
           <div className="w-full max-w-7xl mx-auto px-4 xl:px-0">

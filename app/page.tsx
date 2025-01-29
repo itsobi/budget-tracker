@@ -7,11 +7,11 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col">
       <header className="py-6 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold italic">Track iT</div>
+          <div className="text-2xl font-bold italic">TracKiT</div>
           <nav>
             <ul className="flex items-center space-x-4">
               <li>
-                <Link href="/sign-in" className="text-sm hover:underline">
+                <Link href="/auth" className="text-sm hover:underline">
                   Login
                 </Link>
               </li>
@@ -35,7 +35,7 @@ export default function LandingPage() {
               – no distractions, no fluff.
             </p>
             <Button asChild size="lg">
-              <Link href="/sign-up" className="font-semibold">
+              <Link href="/auth" className="font-semibold">
                 Start Tracking Now
               </Link>
             </Button>
@@ -76,7 +76,7 @@ export default function LandingPage() {
               Simplify your budgeting process and achieve your financial goals!
             </p>
             <Button asChild size="lg">
-              <Link href="/signup" className="font-semibold">
+              <Link href="/auth" className="font-semibold">
                 Create Your Free Account
               </Link>
             </Button>

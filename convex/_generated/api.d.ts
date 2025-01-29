@@ -8,8 +8,11 @@
  * @module
  */
 
+import type * as auth from "../auth.js";
 import type * as budgetCap from "../budgetCap.js";
 import type * as expenses from "../expenses.js";
+import type * as helpers from "../helpers.js";
+import type * as http from "../http.js";
 import type * as preferences from "../preferences.js";
 import type * as rateLimiter from "../rateLimiter.js";
 import type * as savings from "../savings.js";
@@ -29,8 +32,11 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  auth: typeof auth;
   budgetCap: typeof budgetCap;
   expenses: typeof expenses;
+  helpers: typeof helpers;
+  http: typeof http;
   preferences: typeof preferences;
   rateLimiter: typeof rateLimiter;
   savings: typeof savings;
