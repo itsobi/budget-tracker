@@ -115,17 +115,18 @@ export function MonthlyOverviewChart({
         </CardHeader>
         {chartData.length > 0 ? (
           <ChartContainer config={chartConfig} className="flex-1 min-h-[200px]">
-            <BarChart accessibilityLayer data={chartData} margin={{ top: 20 }}>
+            <BarChart
+              accessibilityLayer
+              data={chartData}
+              margin={{ bottom: 10 }}
+            >
               <CartesianGrid vertical={false} />
-              <XAxis
+              {/* <XAxis
                 dataKey="type"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={(value) =>
-                  value.length > 6 ? value.slice(0, 3) + '.' : value
-                }
-              />
+              /> */}
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent formatter={formatDollar} />}

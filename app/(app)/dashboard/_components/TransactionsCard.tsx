@@ -56,7 +56,7 @@ export function TransactionsCard({
   });
 
   return (
-    <Card className="shadow-md dark:border-white/60 h-fit">
+    <Card className="shadow-md dark:border-white/60">
       <CardHeader>
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Recent Transactions</h2>

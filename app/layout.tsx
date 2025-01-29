@@ -1,20 +1,13 @@
-import type { Metadata } from 'next';
 import './globals.css';
-import { ClerkProvider } from '@clerk/nextjs';
+import { GeistSans } from 'geist/font/sans';
+import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/ThemProvider';
-import { Poppins } from 'next/font/google';
 import { ConvexAuthNextjsServerProvider } from '@convex-dev/auth/nextjs/server';
 
 export const metadata: Metadata = {
   title: 'TracKiT',
   description: 'No BS budgeting. Plug & play.',
 };
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['100', '200', '400', '500', '600', '700'],
-  display: 'swap',
-});
 
 export default function RootLayout({
   children,
@@ -23,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <ConvexAuthNextjsServerProvider>
-      <html lang="en" className={poppins.className} suppressHydrationWarning>
+      <html lang="en" className={GeistSans.className} suppressHydrationWarning>
         <body>
           <ThemeProvider
             attribute="class"

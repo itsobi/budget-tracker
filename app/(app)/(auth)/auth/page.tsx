@@ -4,21 +4,9 @@ import { Button } from '@/components/ui/button';
 import { GoogleLogo } from '@/components/logos/GoogleLogo';
 import { GitHubLogo } from '@/components/logos/GitHubLogo';
 import { useAuthActions } from '@convex-dev/auth/react';
-import { useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 export default function SignInPage() {
   const { signIn } = useAuthActions();
-  const router = useRouter();
-  const userId = useQuery(api.helpers.getUserId);
-
-  useEffect(() => {
-    if (userId) {
-      router.push('/dashboard');
-    }
-  }, [userId]);
 
   return (
     <main className="h-screen flex justify-center pt-20">
