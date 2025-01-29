@@ -33,7 +33,7 @@ export const createSavingsGoal = mutation({
       const savingsId = await ctx.db.insert('savings', args);
       return {
         success: true,
-        message: 'Savings goal added successfully!',
+        message: 'Savings goal added successfully! 💪',
         savingsId,
       };
     } catch (error) {
@@ -78,7 +78,7 @@ export const updateSavingsGoal = mutation({
       await ctx.db.patch(id, updateFields);
       return {
         success: true,
-        message: 'Savings goal updated successfully!',
+        message: 'Savings goal updated successfully! 💪',
       };
     } catch (error) {
       console.log(error);

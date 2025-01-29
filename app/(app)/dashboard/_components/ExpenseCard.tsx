@@ -1,7 +1,12 @@
 import { Grip, Pencil, Trash } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { ConfirmDialog } from './ConfirmDialog';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '../../../../components/ui/card';
+import { Button } from '../../../../components/ui/button';
+import { ConfirmDialog } from '../../../../components/ConfirmDialog';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';

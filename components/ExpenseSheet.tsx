@@ -29,7 +29,6 @@ import { useRef } from 'react';
 import { toast } from 'sonner';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { useAuth } from '@clerk/nextjs';
 import { Id } from '@/convex/_generated/dataModel';
 
 const expenseTypes = [
@@ -42,9 +41,9 @@ const expenseTypes = [
 ];
 
 export function ExpenseSheet() {
-  const { userId } = useAuth();
   const { isOpen, close, expenseId } = useExpenseSheetStore();
   const formRef = useRef<HTMLFormElement>(null);
+  const userId = useQuery(api.helpers.getUserId);
 
   const existingExpenses = useQuery(
     api.expenses.getExpenses,

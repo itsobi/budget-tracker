@@ -20,7 +20,6 @@ import {
 } from './ui/select';
 import { useTransactionSheetStore } from '@/store/useTransactionSheetStore';
 import { useRef } from 'react';
-import { useAuth } from '@clerk/nextjs';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { toast } from 'sonner';
@@ -37,8 +36,8 @@ export const transactionTypes = [
 ];
 
 export function TransactionSheet() {
-  const { userId } = useAuth();
   const { isOpen, close, transactionId } = useTransactionSheetStore();
+  const userId = useQuery(api.helpers.getUserId);
   const formRef = useRef<HTMLFormElement>(null);
 
   const existingTransaction = useQuery(
@@ -47,6 +46,8 @@ export function TransactionSheet() {
       ? { id: transactionId as Id<'transactions'> }
       : 'skip'
   );
+
+  console.log(existingTransaction);
 
   const updateTransaction = useMutation(api.transactions.updateTransaction);
 

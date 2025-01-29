@@ -18,7 +18,6 @@ export const createTransaction = mutation({
     }
 
     const userId = identity.subject;
-
     const { ok } = await rateLimiter.limit(ctx, 'createTransaction', {
       key: userId,
     });
@@ -34,7 +33,7 @@ export const createTransaction = mutation({
       const transactionId = await ctx.db.insert('transactions', args);
       return {
         success: true,
-        message: 'Transaction created successfully!',
+        message: 'Transaction created successfully! 💪',
         transactionId,
       };
     } catch (error) {
@@ -55,8 +54,6 @@ export const getTransactions = query({
   handler: async (ctx, args) => {
     const transactions = await ctx.db
       .query('transactions')
-      // .withIndex('by_user_id_and_date')
-      // .filter((q) => q.eq(q.field('userId',), args.userId))
       .withIndex('by_user_id_and_date', (q) =>
         q.eq('userId', args.userId).eq('yearAndMonth', args.yearAndMonth)
       )
@@ -82,9 +79,7 @@ export const getTransaction = query({
       throw new Error('Not authenticated');
     }
     const transaction = await ctx.db.get(args.id);
-    if (transaction?.userId !== identity.subject) {
-      throw new Error('Not authorized');
-    }
+
     return transaction;
   },
 });
@@ -120,7 +115,7 @@ export const updateTransaction = mutation({
       await ctx.db.patch(id, updateFields);
       return {
         success: true,
-        message: 'Transaction updated successfully!',
+        message: 'Transaction updated successfully! 💪',
       };
     } catch (error) {
       console.error(error);
@@ -135,6 +130,7 @@ export const updateTransaction = mutation({
 export const deleteTransaction = mutation({
   args: {
     id: v.id('transactions'),
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -180,6 +176,7 @@ export const deleteTransactions = mutation({
     if (identity === null) {
       throw new Error('Not authenticated');
     }
+
     try {
       for (const id of args.ids) {
         await ctx.db.delete(id);

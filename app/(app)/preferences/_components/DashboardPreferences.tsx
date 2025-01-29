@@ -2,25 +2,21 @@
 
 import { Switch } from '@/components/ui/switch';
 import { api } from '@/convex/_generated/api';
-import { Preloaded, useMutation, usePreloadedQuery } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { toast } from 'sonner';
 
-interface DashboardPreferencesProps {
-  userId: string;
-  preloadedPreferences: Preloaded<typeof api.preferences.getPreferences>;
-}
+export function DashboardPreferences() {
+  const userId = useQuery(api.helpers.getUserId);
+  const preferences = useQuery(api.preferences.getPreferences, {
+    userId: userId ?? '',
+  });
 
-export function DashboardPreferences({
-  userId,
-  preloadedPreferences,
-}: DashboardPreferencesProps) {
-  const preferences = usePreloadedQuery(preloadedPreferences);
   const updatePreferences = useMutation(api.preferences.updatePreferences);
 
   const handleChange = async (checked: boolean, name: string) => {
     try {
       await updatePreferences({
-        userId,
+        userId: userId ?? '',
         [name]: checked,
       });
     } catch (error) {

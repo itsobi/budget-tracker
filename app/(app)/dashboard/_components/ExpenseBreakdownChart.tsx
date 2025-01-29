@@ -9,8 +9,8 @@ import {
   ChartLegend,
   ChartTooltip,
   ChartTooltipContent,
-} from './ui/chart';
-import { Card, CardHeader, CardTitle } from './ui/card';
+} from '../../../../components/ui/chart';
+import { Card, CardHeader, CardTitle } from '../../../../components/ui/card';
 import { Preloaded, usePreloadedQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 

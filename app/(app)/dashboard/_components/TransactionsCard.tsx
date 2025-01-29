@@ -17,14 +17,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from './ui/card';
-import CustomTooltip from './CustomTooltip';
+} from '../../../../components/ui/card';
+import CustomTooltip from '../../../../components/CustomTooltip';
 import { AddTransactionButton } from '@/app/(app)/dashboard/_components/AddTransactionButton';
 import { Transaction } from './Transaction';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import Link from 'next/link';
 import { useYearAndMonth } from '@/lib/hooks';
+import { Id } from '@/convex/_generated/dataModel';
 
 const transactionTypes: { type: string; icon: LucideIcon }[] = [
   { type: 'bill', icon: CreditCard },
@@ -36,14 +37,14 @@ const transactionTypes: { type: string; icon: LucideIcon }[] = [
   { type: 'other', icon: MoveUpRight },
 ];
 
-interface TransactionsCardProps {
-  userId: string;
-}
-
-export function TransactionsCard({ userId }: TransactionsCardProps) {
+export function TransactionsCard({
+  userId,
+}: {
+  userId: Id<'users'> | null | undefined;
+}) {
   const yearAndMonth = useYearAndMonth();
   const data = useQuery(api.transactions.getTransactions, {
-    userId,
+    userId: userId ?? '',
     yearAndMonth,
   });
 
@@ -55,7 +56,7 @@ export function TransactionsCard({ userId }: TransactionsCardProps) {
   });
 
   return (
-    <Card className="shadow-md dark:border-white/60">
+    <Card className="shadow-md dark:border-white/60 h-fit">
       <CardHeader>
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Recent Transactions</h2>

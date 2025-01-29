@@ -29,7 +29,6 @@ import { api } from '@/convex/_generated/api';
 import { useAuth } from '@clerk/nextjs';
 
 export function AddReceiptDialog() {
-  const { userId } = useAuth();
   const { isOpen, open, close } = useReceiptDialogStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -62,15 +61,12 @@ export function AddReceiptDialog() {
       return;
     }
 
-    if (!userId) {
-      return;
-    }
-
     const response = await createTransaction({
       title: receipt.storeName,
       amount: receipt.total,
       type: transactionType,
-      userId: userId,
+      // FIXME:
+      userId: '123',
       date: new Date().toISOString().split('T')[0],
       yearAndMonth: new Date().toISOString().slice(0, 7),
     });

@@ -20,11 +20,14 @@ import {
 import { ThemeButton } from './ThemeButton';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from './ui/button';
-import { SignOutButton, UserButton, useUser } from '@clerk/nextjs';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useEffect, useState } from 'react';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { AvatarDropdown } from './AvatarDropdown';
+import { useAuthActions } from '@convex-dev/auth/react';
 
 const tabs = [
   {
@@ -45,15 +48,15 @@ const tabs = [
 ];
 
 export function Header() {
+  const currentUser = useQuery(api.helpers.currentUser);
   const pathname = usePathname();
-  const { user } = useUser();
-
   const [isOpen, setIsOpen] = useState(false);
+  const { signOut } = useAuthActions();
 
-  const name =
-    user?.fullName ||
-    user?.firstName ||
-    user?.primaryEmailAddress?.emailAddress;
+  const handleSignOut = () => {
+    setIsOpen(false);
+    void signOut();
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -67,6 +70,8 @@ export function Header() {
     };
   }, []);
 
+  if (!currentUser || pathname === '/auth') return <></>;
+
   return (
     <div
       className={cn(
@@ -77,7 +82,7 @@ export function Header() {
       <nav className="flex items-center justify-between">
         <div className="flex items-center">
           <Link href="/dashboard" className="text-xl font-bold italic mr-16">
-            Track iT
+            TracKiT
           </Link>
 
           <div className="hidden md:flex items-center gap-4">
@@ -99,7 +104,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <ThemeButton />
 
-          <UserButton />
+          <AvatarDropdown user={currentUser} />
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger className="md:hidden" asChild>
@@ -112,13 +117,13 @@ export function Header() {
                 <SheetTitle className="flex justify-start pb-4 border-b dark:border-zinc-600">
                   <div className="flex items-center gap-2">
                     <Avatar>
-                      <AvatarImage src={user?.imageUrl} />
+                      <AvatarImage src={currentUser?.image} />
                       <AvatarFallback>
-                        {name?.charAt(0).toUpperCase()}
+                        {currentUser?.name?.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
 
-                    <span className="italic">{name}</span>
+                    <span className="italic">{currentUser?.name}</span>
                   </div>
                 </SheetTitle>
                 <div className="flex flex-col items-start h-[calc(100vh-8rem)]">
@@ -142,12 +147,10 @@ export function Header() {
                     ))}
                   </div>
                   <div className="mt-auto w-full">
-                    <SignOutButton>
-                      <Button className="w-full mt-4">
-                        <LogOut />
-                        Sign out
-                      </Button>
-                    </SignOutButton>
+                    <Button onClick={handleSignOut} className="w-full">
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </Button>
                   </div>
                 </div>
               </SheetHeader>

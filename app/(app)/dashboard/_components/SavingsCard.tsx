@@ -1,26 +1,28 @@
 'use client';
 
 import { Plus } from 'lucide-react';
-import { Button } from './ui/button';
-import { Card, CardDescription, CardHeader } from './ui/card';
-import CustomTooltip from './CustomTooltip';
+import { Button } from '@/components/ui/button';
+import { Card, CardDescription, CardHeader } from '@/components/ui/card';
+import CustomTooltip from '@/components/CustomTooltip';
 import { useSavingsSheetStore } from '@/store/useSavingsSheetStore';
 import { api } from '@/convex/_generated/api';
-import { Preloaded, usePreloadedQuery } from 'convex/react';
 import { SavingsGoal } from '@/app/(app)/dashboard/_components/SavingsGoal';
-
-interface SavingsCardProps {
-  preloadedSavings: Preloaded<typeof api.savings.getSavingsGoals>;
-  preloadedPreferences: Preloaded<typeof api.preferences.getPreferences>;
-}
+import { Id } from '@/convex/_generated/dataModel';
+import { useQuery } from 'convex/react';
 
 export function SavingsCard({
-  preloadedSavings,
-  preloadedPreferences,
-}: SavingsCardProps) {
+  userId,
+}: {
+  userId: Id<'users'> | null | undefined;
+}) {
   const { open } = useSavingsSheetStore();
-  const savings = usePreloadedQuery(preloadedSavings);
-  const preferences = usePreloadedQuery(preloadedPreferences);
+  const savings = useQuery(api.savings.getSavingsGoals, {
+    userId: userId ?? '',
+  });
+
+  const preferences = useQuery(api.preferences.getPreferences, {
+    userId: userId ?? '',
+  });
 
   if (!preferences || preferences?.savings) {
     return (
@@ -38,7 +40,7 @@ export function SavingsCard({
         </CardHeader>
 
         <div className="p-4 flex flex-col gap-4">
-          {savings.map((savings) => (
+          {savings?.map((savings) => (
             <SavingsGoal key={savings._id} savings={savings} />
           ))}
         </div>

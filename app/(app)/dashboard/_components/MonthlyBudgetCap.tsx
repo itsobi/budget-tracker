@@ -1,57 +1,76 @@
 'use client';
 
-import { formatCurrency } from '@/components/Transaction';
 import { api } from '@/convex/_generated/api';
-import { Preloaded, useMutation, usePreloadedQuery } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { formatCurrency } from './Transaction';
+import { Id } from '@/convex/_generated/dataModel';
 
-interface MonthlyBudgetCapProps {
-  userId: string;
-  preloadedBudgetCap: Preloaded<typeof api.budgetCap.getBudgetCap>;
+interface Props {
+  userId: Id<'users'> | null | undefined;
 }
 
 export default function MonthlyBudgetCap({
   userId,
-  preloadedBudgetCap,
-}: MonthlyBudgetCapProps) {
+}: {
+  userId: Id<'users'> | null | undefined;
+}) {
+  const budgetCap = useQuery(
+    api.budgetCap.getBudgetCap,
+    userId ? { userId } : 'skip'
+  );
+
   const [isEditing, setIsEditing] = useState(false);
-  const budgetCap = usePreloadedQuery(preloadedBudgetCap);
-  const [budget, setBudget] = useState(budgetCap?.amount.toString() || '');
+
   const setBudgetCap = useMutation(api.budgetCap.setBudgetCap);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsEditing(true);
     e.preventDefault();
 
-    if (!budget || budget.trim() === '') {
+    const formData = new FormData(e.currentTarget);
+    const newBudget = formData.get('budget') as string;
+
+    if (!newBudget || newBudget.trim() === '') {
+      setIsEditing(false);
       toast.error('Please enter a budget amount');
       return;
     }
 
-    const budgetNumber = Number(budget);
-    if (budgetNumber === budgetCap?.amount) {
-      console.log('Budget is the same');
+    if (Number(newBudget) === budgetCap?.amount) {
       setIsEditing(false);
+      console.log('Budget is the same');
       return;
     }
 
-    if (Number(budget) < 0 || Number(budget) === 0) {
+    if (Number(newBudget) <= 0) {
+      setIsEditing(false);
       toast.error('Budget cannot be negative or zero');
       return;
     }
 
-    const response = await setBudgetCap({
-      userId: userId,
-      amount: Number(budget),
-    });
-
-    if (response.success) {
-      toast.success('Budget cap set successfully');
-    } else {
-      toast.error('Failed to set budget cap');
+    if (Number(newBudget) < 0 || Number(newBudget) === 0) {
+      toast.error('Budget cannot be negative or zero');
+      return;
     }
 
-    setIsEditing(false);
+    try {
+      const response = await setBudgetCap({
+        userId: userId ?? '',
+        amount: Number(newBudget),
+      });
+
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error('Failed to set budget cap');
+    } finally {
+      setIsEditing(false);
+    }
   };
 
   return (
@@ -61,12 +80,17 @@ export default function MonthlyBudgetCap({
       {isEditing ? (
         <form onSubmit={handleSubmit}>
           <input
+            name="budget"
             type="number"
-            value={budget}
-            onChange={(e) => setBudget(e.target.value)}
+            // value={budget}
+            // onChange={(e) => setBudget(e.target.value)}
+            defaultValue={budgetCap?.amount.toString() || ''}
             className="w-fit text-2xl font-bold px-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             autoFocus
-            onBlur={() => setIsEditing(false)}
+            onBlur={(e) => {
+              e.currentTarget.form?.requestSubmit();
+              setIsEditing(false);
+            }}
           />
         </form>
       ) : (

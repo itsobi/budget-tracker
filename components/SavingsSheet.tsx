@@ -23,7 +23,6 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { toast } from 'sonner';
 import { useSavingsSheetStore } from '@/store/useSavingsSheetStore';
-import { useAuth } from '@clerk/nextjs';
 import { Id } from '@/convex/_generated/dataModel';
 
 const savingsTypes = [
@@ -36,7 +35,7 @@ const savingsTypes = [
 ];
 
 export function SavingsSheet() {
-  const { userId } = useAuth();
+  const userId = useQuery(api.helpers.getUserId);
   const { isOpen, close, savingsId } = useSavingsSheetStore();
   const formRef = useRef<HTMLFormElement>(null);
 

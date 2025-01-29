@@ -3,7 +3,6 @@
 import PageHeader from '@/components/PageHeader';
 import { TransactionsTable } from './_components/transactions-table';
 import { columns, TransactionType } from './_components/columns';
-import { useAuth } from '@clerk/nextjs';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { LoadingScreen } from '@/components/LoadingScreen';
@@ -11,7 +10,7 @@ import { DownloadCSVButton } from '../dashboard/_components/DownloadCSVButton';
 import { useYearAndMonth } from '@/lib/hooks';
 
 export default function TransactionsPage() {
-  const { userId } = useAuth();
+  const userId = useQuery(api.helpers.getUserId);
   const yearAndMonth = useYearAndMonth();
 
   const transactions = useQuery(api.transactions.getTransactions, {

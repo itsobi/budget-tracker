@@ -6,26 +6,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { DashboardPreferences } from './_components/DashboardPreferences';
-import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
-import { preloadQuery } from 'convex/nextjs';
-import { api } from '@/convex/_generated/api';
 import PageHeader from '@/components/PageHeader';
 
 export default async function PreferencesPage() {
-  const { userId } = await auth();
-
-  if (!userId) {
-    return redirect('/sign-in');
-  }
-
-  const preloadedPreferences = await preloadQuery(
-    api.preferences.getPreferences,
-    {
-      userId,
-    }
-  );
-
   return (
     <div className="space-y-8">
       <PageHeader title="Preferences" />
@@ -37,10 +20,7 @@ export default async function PreferencesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">
-          <DashboardPreferences
-            userId={userId}
-            preloadedPreferences={preloadedPreferences}
-          />
+          <DashboardPreferences />
         </CardContent>
       </Card>
     </div>

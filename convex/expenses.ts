@@ -34,7 +34,7 @@ export const createExpense = mutation({
       const expenseId = await ctx.db.insert('expenses', args);
       return {
         success: true,
-        message: 'Expense created successfully!',
+        message: 'Expense created successfully! 💪',
         expenseId,
       };
     } catch (error) {
@@ -135,7 +135,7 @@ export const updateExpense = mutation({
 
       return {
         success: true,
-        message: 'Fixed expense updated successfully!',
+        message: 'Fixed expense updated successfully! 💪',
       };
     } catch (error) {
       return {

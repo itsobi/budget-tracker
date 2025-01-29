@@ -42,7 +42,7 @@ export const setBudgetCap = mutation({
 
       return {
         success: true,
-        message: 'Budget cap set successfully',
+        message: 'Budget cap set successfully! 💪',
       };
     } catch (error) {
       console.error(error);

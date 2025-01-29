@@ -51,6 +51,7 @@ export function TransactionsTable<TData, TValue>({
   columns,
   data,
 }: TransactionsTableProps<TData, TValue>) {
+  const userId = useQuery(api.helpers.getUserId);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

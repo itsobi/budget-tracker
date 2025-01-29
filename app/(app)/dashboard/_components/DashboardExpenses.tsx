@@ -1,6 +1,5 @@
 'use client';
 
-import { ExpenseCard } from '@/components/ExpenseCard';
 import {
   CalendarSync,
   CreditCard,
@@ -37,15 +36,11 @@ import {
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
 import { api } from '@/convex/_generated/api';
-import {
-  Preloaded,
-  useMutation,
-  usePreloadedQuery,
-  useQuery,
-} from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useExpenseSheetStore } from '@/store/useExpenseSheetStore';
+import { ExpenseCard } from './ExpenseCard';
 
 const expenseTypeToIcon: Record<string, LucideIcon> = {
   housing: Home,
@@ -63,16 +58,15 @@ const expenseTypeToIcon: Record<string, LucideIcon> = {
   recurring: CalendarSync,
 };
 
-interface DashboardExpensesProps {
-  userId: string;
-  preloadedExpenses: Preloaded<typeof api.expenses.getExpenses>;
-}
-
 export function DashboardExpenses({
   userId,
-  preloadedExpenses,
-}: DashboardExpensesProps) {
-  const expenses = usePreloadedQuery(preloadedExpenses);
+}: {
+  userId: Id<'users'> | null | undefined;
+}) {
+  const expenses = useQuery(
+    api.expenses.getExpenses,
+    userId ? { userId } : 'skip'
+  );
   const updateExpenseOrder = useMutation(api.expenses.updateExpenseOrder);
   const { open } = useExpenseSheetStore();
 
@@ -100,7 +94,28 @@ export function DashboardExpenses({
     }
   };
 
-  if (!expenses.length) {
+  if (!expenses) {
+    return (
+      <>
+        {[...Array(Math.floor(Math.random() * 4) + 1)].map((_, index) => (
+          <Card key={index} className="flex items-center p-6 space-x-4">
+            <div className="space-y-8 flex-1">
+              <div className="flex justify-between items-center">
+                <div className="h-4 w-16 bg-muted rounded animate-pulse" />
+                <div className="h-4 w-10 bg-muted rounded animate-pulse" />
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="h-8 w-24 bg-muted rounded animate-pulse" />
+                <div className="h-4 w-16 bg-muted rounded animate-pulse" />
+              </div>
+            </div>
+          </Card>
+        ))}
+      </>
+    );
+  }
+
+  if (!expenses?.length) {
     return (
       <Card className="flex flex-col items-center justify-center p-6 text-center md:col-span-2">
         <CardHeader>

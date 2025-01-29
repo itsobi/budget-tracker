@@ -2,16 +2,17 @@
 
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts';
 
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from './ui/chart';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Preloaded, usePreloadedQuery, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useMediaQuery, useYearAndMonth } from '@/lib/hooks';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  ChartConfig,
+  ChartTooltip,
+  ChartContainer,
+  ChartTooltipContent,
+} from '@/components/ui/chart';
+import { Id } from '@/convex/_generated/dataModel';
 
 const formatDollar = (
   value: string | number | (string | number)[],
@@ -66,24 +67,20 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-interface MonthlyOverviewChartProps {
-  // preloadedTransactions: Preloaded<typeof api.transactions.getTransactions>;
-  userId: string;
-  preloadedPreferences: Preloaded<typeof api.preferences.getPreferences>;
-}
-
 export function MonthlyOverviewChart({
   userId,
-  // preloadedTransactions,
-  preloadedPreferences,
-}: MonthlyOverviewChartProps) {
+}: {
+  userId: Id<'users'> | null | undefined;
+}) {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const yearAndMonth = useYearAndMonth();
   const transactions = useQuery(api.transactions.getTransactions, {
-    userId,
+    userId: userId ?? '',
     yearAndMonth: yearAndMonth,
   });
-  const preferences = usePreloadedQuery(preloadedPreferences);
+  const preferences = useQuery(api.preferences.getPreferences, {
+    userId: userId ?? '',
+  });
   const chartData = Object.entries(
     transactions?.transactions?.reduce(
       (acc, transaction) => {
