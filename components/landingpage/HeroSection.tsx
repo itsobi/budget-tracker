@@ -1,8 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { Button } from '../ui/button';
 import { motion } from 'motion/react';
+import { AnimatedCTAButton } from '../AnimatedCTAButton';
 
 export default function HeroSection() {
   return (
@@ -20,13 +19,7 @@ export default function HeroSection() {
           Track your spending effortlessly and take control of your finances –
           no distractions, no fluff.
         </p>
-        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-          <Button asChild size="lg">
-            <Link href="/auth" className="font-semibold">
-              Start Tracking Now
-            </Link>
-          </Button>
-        </motion.button>
+        <AnimatedCTAButton text="Start Tracking Now" href="/auth" />
       </motion.div>
     </section>
   );

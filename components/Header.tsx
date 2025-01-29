@@ -15,6 +15,7 @@ import {
   LogOut,
   MenuIcon,
   Settings,
+  Sparkles,
 } from 'lucide-react';
 
 import { ThemeButton } from './ThemeButton';
@@ -28,6 +29,7 @@ import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { AvatarDropdown } from './AvatarDropdown';
 import { useAuthActions } from '@convex-dev/auth/react';
+import { motion } from 'motion/react';
 
 const tabs = [
   {
@@ -44,6 +46,11 @@ const tabs = [
     label: 'Preferences',
     href: '/preferences',
     icon: Settings,
+  },
+  {
+    label: 'Pro',
+    href: '/pro',
+    icon: Sparkles,
   },
 ];
 
@@ -70,33 +77,32 @@ export function Header() {
     };
   }, []);
 
-  if (!currentUser || pathname === '/auth') return <></>;
-
   return (
-    <div
-      className={cn(
-        'max-w-7xl mx-auto px-4 py-2 xl:px-0',
-        (pathname === '/sign-up' || pathname === '/sign-in') && 'hidden'
-      )}
-    >
+    <div className="max-w-7xl mx-auto px-4 py-2 xl:px-0 relative">
       <nav className="flex items-center justify-between">
         <div className="flex items-center">
           <Link href="/dashboard" className="text-xl font-bold italic mr-16">
             TracKiT
           </Link>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 relative">
             {tabs.map((tab) => (
               <Link
                 href={tab.href}
                 key={tab.label}
                 className={cn(
-                  'flex items-center gap-2 text-sm text-muted-foreground hover:text-black dark:hover:text-white',
-                  pathname === tab.href &&
-                    'text-black dark:text-white underline underline-offset-4'
+                  'flex items-center gap-2 text-sm text-muted-foreground hover:text-black dark:hover:text-white relative',
+                  pathname === tab.href && 'text-black dark:text-white'
                 )}
               >
                 {tab.label}
+                {pathname === tab.href && (
+                  <motion.div
+                    className="absolute -bottom-1 left-0 right-0 h-[2px] bg-foreground"
+                    layoutId="underline"
+                    transition={{ type: 'spring', bounce: 0.25, duration: 0.2 }}
+                  />
+                )}
               </Link>
             ))}
           </div>

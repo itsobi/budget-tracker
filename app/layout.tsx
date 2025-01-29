@@ -1,13 +1,18 @@
 import './globals.css';
-import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/ThemProvider';
 import { ConvexAuthNextjsServerProvider } from '@convex-dev/auth/nextjs/server';
+import { Lato } from 'next/font/google';
 
 export const metadata: Metadata = {
   title: 'TracKiT',
   description: 'No BS budgeting. Plug & play.',
 };
+
+const lato = Lato({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+});
 
 export default function RootLayout({
   children,
@@ -16,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <ConvexAuthNextjsServerProvider>
-      <html lang="en" className={GeistSans.className} suppressHydrationWarning>
+      <html lang="en" className={lato.className} suppressHydrationWarning>
         <body>
           <ThemeProvider
             attribute="class"

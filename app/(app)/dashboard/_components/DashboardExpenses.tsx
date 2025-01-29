@@ -1,23 +1,6 @@
 'use client';
 
-import {
-  CalendarSync,
-  CreditCard,
-  DollarSign,
-  PiggyBank,
-  Home,
-  Car,
-  Utensils,
-  Plug,
-  Heart,
-  Tv,
-  ShoppingBag,
-  GraduationCap,
-  HelpCircle,
-  LucideIcon,
-  Coins,
-  Wallet,
-} from 'lucide-react';
+import { Wallet } from 'lucide-react';
 
 import {
   DndContext,
@@ -42,20 +25,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useExpenseSheetStore } from '@/store/useExpenseSheetStore';
 import { ExpenseCard } from './ExpenseCard';
 
-const expenseTypeToIcon: Record<string, LucideIcon> = {
-  housing: Home,
-  transportation: Car,
-  food: Utensils,
-  utilities: Plug,
-  healthcare: Heart,
-  entertainment: Tv,
-  shopping: ShoppingBag,
-  education: GraduationCap,
-  savings: PiggyBank,
-  other: HelpCircle,
-  budget: DollarSign,
-  expenses: CreditCard,
-  recurring: CalendarSync,
+const expenseTypeToEmoji: Record<string, string> = {
+  housing: '🏠',
+  transportation: '🚗',
+  food: '🍔',
+  utilities: '🔌',
+  healthcare: '🏥',
+  entertainment: '🎥',
+  shopping: '🛍️',
+  education: '🎓',
+  savings: '🏦',
+  other: '💡',
+  budget: '💰',
+  expenses: '💳',
+  recurring: '📅',
 };
 
 export function DashboardExpenses({
@@ -156,7 +139,7 @@ export function DashboardExpenses({
             id={expense._id as Id<'expenses'>}
             title={expense.title}
             amount={expense.amount}
-            Icon={expenseTypeToIcon[expense.type]}
+            emoji={expenseTypeToEmoji[expense.type]}
             // subtitle={expense.subtitle}
           />
         ))}

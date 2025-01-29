@@ -2,6 +2,6 @@
 
 export function Footer() {
   return (
-    <span>&copy; {new Date().getFullYear()} TrackIt. All rights reserved.</span>
+    <span>&copy; {new Date().getFullYear()} TracKiT. All rights reserved.</span>
   );
 }

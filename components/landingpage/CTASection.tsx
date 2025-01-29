@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { motion } from 'motion/react';
+import { AnimatedCTAButton } from '../AnimatedCTAButton';
 
 export function CTASection() {
   return (
@@ -18,13 +19,7 @@ export function CTASection() {
       <p className="text-xl mb-12 text-muted-foreground max-w-2xl mx-auto">
         Simplify your budgeting process and achieve your financial goals!
       </p>
-      <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-        <Button asChild size="lg">
-          <Link href="/auth" className="font-semibold">
-            Create Your Free Account
-          </Link>
-        </Button>
-      </motion.button>
+      <AnimatedCTAButton text="Create Your Free Account" href="/auth" />
     </motion.div>
   );
 }

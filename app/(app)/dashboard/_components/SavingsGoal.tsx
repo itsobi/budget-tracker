@@ -13,20 +13,19 @@ import {
   Plane,
   Heart,
   PiggyBank,
-  Pencil,
   Trash,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { useSavingsSheetStore } from '@/store/useSavingsSheetStore';
 
-const savingsTypeToIcon: Record<string, LucideIcon> = {
-  home: Home,
-  car: Car,
-  retirement: PiggyBank,
-  emergency: Heart,
-  vacation: Plane,
-  other: HelpCircle,
+const savingsTypeToEmoji: Record<string, string> = {
+  home: '🏠',
+  car: '🚗',
+  retirement: '🏦',
+  emergency: '🚑',
+  vacation: '🛫',
+  other: '💡',
 };
 
 type Savings = {
@@ -48,7 +47,7 @@ export function SavingsGoal({ savings }: SavingsGoalProps) {
 
   const deleteSavingsGoalMutation = useMutation(api.savings.deleteSavingsGoal);
 
-  const Icon = savingsTypeToIcon[savings.type];
+  const emoji = savingsTypeToEmoji[savings.type];
   const progressPercentage = Math.min(
     (savings.currentAmount / savings.goalAmount) * 100,
     100
@@ -70,7 +69,7 @@ export function SavingsGoal({ savings }: SavingsGoalProps) {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
-          <Icon size={18} />
+          <span className="text-xl lg:text-2xl">{emoji}</span>
           <p className="font-semibold truncate">{savings.title}</p>
         </div>
         <div className="flex items-center gap-1">

@@ -20,7 +20,7 @@ interface ExpenseCardProps {
   id: string;
   title: string;
   amount: number;
-  Icon: React.ElementType;
+  emoji: string;
   // subtitle: string;
 }
 
@@ -28,7 +28,7 @@ export function ExpenseCard({
   id,
   title,
   amount,
-  Icon,
+  emoji,
   // subtitle,
 }: ExpenseCardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -70,7 +70,7 @@ export function ExpenseCard({
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <h2 className="text-lg">{title}</h2>
-            <Icon />
+            <span className="text-2xl">{emoji}</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="">

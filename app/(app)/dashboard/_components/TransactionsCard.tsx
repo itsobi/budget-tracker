@@ -1,16 +1,6 @@
 'use client';
 
 import {
-  Car,
-  CreditCard,
-  LucideIcon,
-  MoveUpRight,
-  Popcorn,
-  ShoppingBag,
-  ShoppingCart,
-  Utensils,
-} from 'lucide-react';
-import {
   Card,
   CardContent,
   CardDescription,
@@ -27,14 +17,14 @@ import Link from 'next/link';
 import { useYearAndMonth } from '@/lib/hooks';
 import { Id } from '@/convex/_generated/dataModel';
 
-const transactionTypes: { type: string; icon: LucideIcon }[] = [
-  { type: 'bill', icon: CreditCard },
-  { type: 'groceries', icon: ShoppingCart },
-  { type: 'entertainment', icon: Popcorn },
-  { type: 'shopping', icon: ShoppingBag },
-  { type: 'transport', icon: Car },
-  { type: 'restaurant', icon: Utensils },
-  { type: 'other', icon: MoveUpRight },
+const transactionTypes: { type: string; emoji: string }[] = [
+  { type: 'bill', emoji: '💳' },
+  { type: 'groceries', emoji: '🛒' },
+  { type: 'entertainment', emoji: '🎥' },
+  { type: 'shopping', emoji: '🛍️' },
+  { type: 'transport', emoji: '🚗' },
+  { type: 'restaurant', emoji: '🍽️' },
+  { type: 'other', emoji: '💡' },
 ];
 
 export function TransactionsCard({
@@ -77,12 +67,12 @@ export function TransactionsCard({
           const transactionType = transactionTypes.find(
             (type) => type.type === transaction.type
           );
-          const Icon = transactionType?.icon || MoveUpRight;
+          const emoji = transactionType?.emoji || '💡';
           return (
             <Transaction
               key={transaction._id}
               transaction={transaction}
-              Icon={Icon}
+              emoji={emoji}
             />
           );
         })}

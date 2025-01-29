@@ -66,6 +66,13 @@ export function ExpenseSheet() {
 
     if (!userId) return;
 
+    if (existingExpenses?.length && existingExpenses.length >= 4) {
+      toast.error(
+        'You can only have 4 fixed expenses. Subscribe to the Pro plan to add more.'
+      );
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
 
     // Extract the values directly

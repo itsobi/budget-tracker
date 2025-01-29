@@ -29,7 +29,7 @@ export default function LandingPage() {
       <main className="flex-grow">
         <HeroSection />
 
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted dark:bg-zinc">
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
           <CardSection />
         </section>
 
@@ -40,7 +40,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="py-6 px-4 sm:px-6 lg:px-8 bg-muted dark:bg-zinc">
+      <footer className="py-6 px-4 sm:px-6 lg:px-8 border-t">
         <div className="container mx-auto text-center text-sm">
           <Footer />
         </div>

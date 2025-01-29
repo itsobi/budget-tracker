@@ -11,6 +11,7 @@ import { UploadReceiptButton } from '@/components/UploadReceiptButton';
 import { MonthlyOverviewChart } from './_components/MonthlyOverviewChart';
 import { TransactionsCard } from './_components/TransactionsCard';
 import { useQuery } from 'convex/react';
+import { AnimatedCTAButton } from '@/components/AnimatedCTAButton';
 
 export default function DashboardPage() {
   const userId = useQuery(api.helpers.getUserId);
@@ -19,6 +20,11 @@ export default function DashboardPage() {
     <div>
       <PageHeader
         title="Dashboard"
+        middleButton={
+          <div className="hidden md:block">
+            <AnimatedCTAButton text="Upgrade to Pro" href="/pro" />
+          </div>
+        }
         actions={
           <>
             <AddExpenseButton />

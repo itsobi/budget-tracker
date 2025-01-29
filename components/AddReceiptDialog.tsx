@@ -24,12 +24,12 @@ import {
 } from './ui/select';
 import { Label } from './ui/label';
 import { transactionTypes } from './TransactionSheet';
-import { useMutation } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { useAuth } from '@clerk/nextjs';
 
 export function AddReceiptDialog() {
   const { isOpen, open, close } = useReceiptDialogStore();
+  const userId = useQuery(api.helpers.getUserId);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [receipt, setReceipt] = useState<{
@@ -65,8 +65,7 @@ export function AddReceiptDialog() {
       title: receipt.storeName,
       amount: receipt.total,
       type: transactionType,
-      // FIXME:
-      userId: '123',
+      userId: userId ?? '',
       date: new Date().toISOString().split('T')[0],
       yearAndMonth: new Date().toISOString().slice(0, 7),
     });
