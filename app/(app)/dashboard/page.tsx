@@ -12,10 +12,12 @@ import { MonthlyOverviewChart } from './_components/MonthlyOverviewChart';
 import { TransactionsCard } from './_components/TransactionsCard';
 import { useQuery } from 'convex/react';
 import { AnimatedCTAButton } from '@/components/AnimatedCTAButton';
+import { Button } from '@/components/ui/button';
+import { useSummaryDialog } from '@/store/useSumaryDialog';
 
 export default function DashboardPage() {
   const userId = useQuery(api.helpers.getUserId);
-
+  const { open } = useSummaryDialog();
   return (
     <div>
       <PageHeader
@@ -33,8 +35,11 @@ export default function DashboardPage() {
         }
       />
 
-      <div className="mb-4">
+      <div className="flex items-center justify-between mb-4">
         <MonthlyBudgetCap userId={userId} />
+        <Button className="font-bold" onClick={() => open()}>
+          Show Summary
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

@@ -47,8 +47,6 @@ export function TransactionSheet() {
       : 'skip'
   );
 
-  console.log(existingTransaction);
-
   const updateTransaction = useMutation(api.transactions.updateTransaction);
 
   const createTransaction = useMutation(api.transactions.createTransaction);

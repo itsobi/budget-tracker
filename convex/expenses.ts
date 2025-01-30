@@ -51,20 +51,37 @@ export const getExpenses = query({
   args: {
     userId: v.string(),
   },
-  // Using this query on the server so no check for authentication
   handler: async (ctx, args) => {
-    return await ctx.db
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) {
+      throw new Error('Not authenticated');
+    }
+
+    const data = await ctx.db
       .query('expenses')
       .withIndex('by_user_and_order')
       .filter((q) => q.eq(q.field('userId'), args.userId))
       .collect();
+
+    const expensesTotal = data.reduce(
+      (acc, expense) => acc + expense.amount,
+      0
+    );
+
+    return {
+      data,
+      expensesTotal,
+    };
   },
 });
 
 export const getExpensesCount = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    // Using this query on the server so no check for authentication
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) {
+      throw new Error('Not authenticated');
+    }
 
     try {
       return await ctx.db

@@ -66,9 +66,11 @@ export function DashboardExpenses({
     if (!over || !expenses) return;
 
     if (active.id !== over.id) {
-      const oldIndex = expenses.findIndex((item) => item._id === active.id);
-      const newIndex = expenses.findIndex((item) => item._id === over.id);
-      const newItems = arrayMove(expenses, oldIndex, newIndex);
+      const oldIndex = expenses.data.findIndex(
+        (item) => item._id === active.id
+      );
+      const newIndex = expenses.data.findIndex((item) => item._id === over.id);
+      const newItems = arrayMove(expenses.data, oldIndex, newIndex);
 
       // Update the order in the database for each item
       newItems.forEach((item, index) => {
@@ -98,7 +100,7 @@ export function DashboardExpenses({
     );
   }
 
-  if (!expenses?.length) {
+  if (!expenses.data?.length) {
     return (
       <Card className="flex flex-col items-center justify-center p-6 text-center md:col-span-2">
         <CardHeader>
@@ -130,10 +132,10 @@ export function DashboardExpenses({
       id="dashboard-expenses"
     >
       <SortableContext
-        items={expenses?.map((e) => e._id) ?? []}
+        items={expenses.data.map((e) => e._id) ?? []}
         strategy={rectSortingStrategy}
       >
-        {expenses?.map((expense) => (
+        {expenses.data.map((expense) => (
           <ExpenseCard
             key={expense._id}
             id={expense._id as Id<'expenses'>}
