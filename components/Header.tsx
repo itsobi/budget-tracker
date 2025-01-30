@@ -13,6 +13,7 @@ import {
   ArrowRightLeft,
   CircleGauge,
   LogOut,
+  Mail,
   MenuIcon,
   Settings,
   Sparkles,
@@ -51,6 +52,11 @@ const tabs = [
     label: 'Pro',
     href: '/pro',
     icon: Sparkles,
+  },
+  {
+    label: 'Contact',
+    href: '/contact',
+    icon: Mail,
   },
 ];
 
