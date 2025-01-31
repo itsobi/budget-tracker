@@ -17,6 +17,7 @@ import type * as preferences from "../preferences.js";
 import type * as rateLimiter from "../rateLimiter.js";
 import type * as savings from "../savings.js";
 import type * as transactions from "../transactions.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   rateLimiter: typeof rateLimiter;
   savings: typeof savings;
   transactions: typeof transactions;
+  users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 

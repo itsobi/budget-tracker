@@ -66,7 +66,7 @@ export function ExpenseSheet() {
 
     if (!userId) return;
 
-    if (existingExpenses?.length && existingExpenses.length >= 4) {
+    if (existingExpenses?.data.length && existingExpenses.data.length >= 4) {
       toast.error(
         'You can only have 4 fixed expenses. Subscribe to the Pro plan to add more.'
       );
@@ -107,7 +107,7 @@ export function ExpenseSheet() {
     } else {
       response = await createExpenseMutation({
         userId: userId,
-        order: existingExpenses?.length || 0,
+        order: existingExpenses?.data.length || 0,
         date: dateString,
         ...data,
       });

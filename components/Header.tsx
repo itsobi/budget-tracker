@@ -83,6 +83,8 @@ export function Header() {
     };
   }, []);
 
+  if (!currentUser) return <></>;
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-2 xl:px-0 relative">
       <nav className="flex items-center justify-between">
