@@ -1,5 +1,3 @@
-import { AnimatedCTAButton } from './AnimatedCTAButton';
-
 interface PageHeaderProps {
   title: string;
   middleButton?: React.ReactNode;
@@ -12,7 +10,7 @@ export default function PageHeader({
   middleButton,
 }: PageHeaderProps) {
   return (
-    <div className="flex justify-between items-center my-2">
+    <div className="flex justify-between items-center my-2 w-full">
       <h1 className="text-2xl font-bold">{title}</h1>
       {middleButton && middleButton}
       <div className="flex items-center gap-2">{actions}</div>

@@ -6,8 +6,8 @@ export default function ContactPage() {
     <div>
       <PageHeader title="Contact" />
 
-      <div className="flex justify-center mt-10 md:mt-0">
-        <div className="w-[800px]">
+      <div className="flex justify-center">
+        <div className="w-[800px] pt-10 lg:pt-0">
           <ContactForm />
         </div>
       </div>

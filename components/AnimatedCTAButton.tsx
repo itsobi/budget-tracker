@@ -14,7 +14,7 @@ export function AnimatedCTAButton({ text, href }: AnimatedCTAButtonProps) {
   const router = useRouter();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1 }}
       whileHover={{ scale: 1.05 }}
