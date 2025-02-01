@@ -25,12 +25,10 @@ import {
 
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
 import { Trash2 } from 'lucide-react';
 import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
 import { toast } from 'sonner';
-import { deleteTransactions } from '@/convex/transactions';
 import { TransactionType } from './columns';
 import { Id } from '@/convex/_generated/dataModel';
 
@@ -84,6 +82,7 @@ export function TransactionsTable<TData, TValue>({
           .getFilteredSelectedRowModel()
           // @ts-ignore
           .rows.map((row) => row.original.id as Id<'transactions'>),
+        userId: userId ?? '',
       }),
       {
         loading: 'Deleting transaction(s)...',

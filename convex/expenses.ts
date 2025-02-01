@@ -166,6 +166,7 @@ export const updateExpense = mutation({
 export const deleteExpense = mutation({
   args: {
     id: v.id('expenses'),
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -174,6 +175,10 @@ export const deleteExpense = mutation({
     }
 
     const userId = identity.subject;
+
+    if (userId.split('|')[0] !== args.userId) {
+      throw new Error('Not authorized');
+    }
 
     const { ok } = await rateLimiter.limit(ctx, 'deleteExpense', {
       key: userId,

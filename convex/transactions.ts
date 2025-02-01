@@ -140,6 +140,10 @@ export const deleteTransaction = mutation({
 
     const userId = identity.subject;
 
+    if (userId.split('|')[0] !== args.userId) {
+      throw new Error('Not authorized');
+    }
+
     const { ok } = await rateLimiter.limit(ctx, 'deleteTransaction', {
       key: userId,
     });
@@ -170,11 +174,18 @@ export const deleteTransaction = mutation({
 export const deleteTransactions = mutation({
   args: {
     ids: v.array(v.id('transactions')),
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (identity === null) {
       throw new Error('Not authenticated');
+    }
+
+    const userId = identity.subject;
+
+    if (userId.split('|')[0] !== args.userId) {
+      throw new Error('Not authorized');
     }
 
     try {
