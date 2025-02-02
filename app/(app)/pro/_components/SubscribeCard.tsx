@@ -31,8 +31,9 @@ const features = [
   },
 ];
 
-export function SubscribeCard() {
+export function SubscribeCard({ isMember }: { isMember: boolean | undefined }) {
   const userId = useQuery(api.helpers.getUserId);
+
   return (
     <Card className="w-[350px] shadow-md dark:border-2">
       <CardHeader>
@@ -61,17 +62,19 @@ export function SubscribeCard() {
         </div>
       </CardContent>
 
-      <CardFooter className="flex justify-center">
-        <form action="/api/checkout" method="POST" className="w-full">
-          <input type="hidden" name="userId" value={userId ?? ''} />
-          <Button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold transition-all duration-500 hover:scale-105"
-          >
-            Upgrade
-          </Button>
-        </form>
-      </CardFooter>
+      {!isMember && (
+        <CardFooter className="flex justify-center">
+          <form action="/api/checkout" method="POST" className="w-full">
+            <input type="hidden" name="userId" value={userId ?? ''} />
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold transition-all duration-500 hover:scale-105"
+            >
+              Upgrade
+            </Button>
+          </form>
+        </CardFooter>
+      )}
     </Card>
   );
 }

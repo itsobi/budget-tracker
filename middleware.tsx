@@ -4,7 +4,7 @@ import {
   nextjsMiddlewareRedirect,
 } from '@convex-dev/auth/nextjs/server';
 
-const isPublicRoute = createRouteMatcher(['/', '/auth']);
+const isPublicRoute = createRouteMatcher(['/auth']);
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
   '/transactions(.*)',

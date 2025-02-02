@@ -1,5 +1,6 @@
 'use client';
 
+import { AnimatedCTAButton } from '@/components/AnimatedCTAButton';
 import {
   Card,
   CardContent,
@@ -17,6 +18,8 @@ export function DashboardPreferences() {
   const preferences = useQuery(api.preferences.getPreferences, {
     userId: userId ?? '',
   });
+  const isMember = useQuery(api.helpers.isMember);
+  console.log(isMember);
 
   const updatePreferences = useMutation(api.preferences.updatePreferences);
 
@@ -31,8 +34,8 @@ export function DashboardPreferences() {
     }
   };
 
-  return (
-    <>
+  if (isMember) {
+    return (
       <Card className="shadow-md">
         <CardHeader>
           <CardTitle>Dashboard Preferences</CardTitle>
@@ -73,6 +76,22 @@ export function DashboardPreferences() {
           </div>
         </CardContent>
       </Card>
-    </>
-  );
+    );
+  } else {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-center">
+          <AnimatedCTAButton text="Upgrade to Pro" href="/pro" />
+        </div>
+        <Card className="shadow-md">
+          <CardHeader>
+            <CardTitle>Dashboard Preferences</CardTitle>
+            <CardDescription>
+              Upgrade to Pro to unlock widget customization!
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
 }

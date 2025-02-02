@@ -18,13 +18,16 @@ import { useSummaryDialog } from '@/store/useSumaryDialog';
 export default function DashboardPage() {
   const userId = useQuery(api.helpers.getUserId);
   const { open } = useSummaryDialog();
+  const isMember = useQuery(api.helpers.isMember);
   return (
     <div>
       <PageHeader
         title="Dashboard"
         middleButton={
           <div className="hidden md:block">
-            <AnimatedCTAButton text="Upgrade to Pro" href="/pro" />
+            {!isMember && (
+              <AnimatedCTAButton text="Upgrade to Pro" href="/pro" />
+            )}
           </div>
         }
         actions={

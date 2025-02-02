@@ -22,7 +22,7 @@ import {
 import { ThemeButton } from './ThemeButton';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useEffect, useState } from 'react';
@@ -49,19 +49,20 @@ const tabs = [
     icon: Settings,
   },
   {
-    label: 'Pro',
-    href: '/pro',
-    icon: Sparkles,
-  },
-  {
     label: 'Contact',
     href: '/contact',
     icon: Mail,
+  },
+  {
+    label: 'Pro',
+    href: '/pro',
+    icon: Sparkles,
   },
 ];
 
 export function Header() {
   const currentUser = useQuery(api.helpers.currentUser);
+  const isMember = useQuery(api.helpers.isMember);
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const { signOut } = useAuthActions();
@@ -118,7 +119,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <ThemeButton />
 
-          <AvatarDropdown user={currentUser} />
+          <AvatarDropdown user={currentUser} isMember={isMember} />
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger className="md:hidden" asChild>

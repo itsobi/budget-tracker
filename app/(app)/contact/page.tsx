@@ -1,7 +1,7 @@
 import PageHeader from '@/components/PageHeader';
 import { ContactForm } from './_components/ContactForm';
 
-export default function ContactPage() {
+export default async function ContactPage() {
   return (
     <div>
       <PageHeader title="Contact" />
