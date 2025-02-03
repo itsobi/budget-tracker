@@ -34,7 +34,6 @@ interface AvatarDropdownProps {
 }
 
 export function AvatarDropdown({ user, isMember }: AvatarDropdownProps) {
-  console.log(user);
   const [open, setOpen] = useState(false);
   const { signOut } = useAuthActions();
 

@@ -90,6 +90,28 @@ export function DashboardPreferences() {
               Upgrade to Pro to unlock widget customization!
             </CardDescription>
           </CardHeader>
+          <CardContent className="grid gap-6">
+            <div className="grid gap-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <h4 className="font-semibold">Monthly Overview</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Displays your spending across different categories.
+                  </p>
+                </div>
+                <Switch disabled />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <h4 className="font-semibold">Savings Goals</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Displays your savings progress.
+                  </p>
+                </div>
+                <Switch disabled />
+              </div>
+            </div>
+          </CardContent>
         </Card>
       </div>
     );

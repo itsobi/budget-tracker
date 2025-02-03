@@ -18,7 +18,7 @@ const features = [
     text: '☑️ Unlimited Fixed Expenses, Transactions, and Savings',
   },
   {
-    text: '☑️ CSV dashboard exports',
+    text: '☑️ Data exports directly to your downloads folder',
   },
   {
     text: '☑️ Show/hide dashboard widgets',

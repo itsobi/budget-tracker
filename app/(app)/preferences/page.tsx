@@ -5,7 +5,7 @@ export default async function PreferencesPage() {
   return (
     <div>
       <PageHeader title="Preferences" />
-      <div className="pt-10 lg:pt-0">
+      <div>
         <DashboardPreferences />
       </div>
     </div>

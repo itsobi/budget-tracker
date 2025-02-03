@@ -6,11 +6,13 @@ import { columns, TransactionType } from './_components/columns';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { LoadingScreen } from '@/components/LoadingScreen';
-import { DownloadCSVButton } from '../dashboard/_components/DownloadCSVButton';
+import { DownloadReportButton } from '../dashboard/_components/DownloadReportButton';
 import { useYearAndMonth } from '@/lib/hooks';
+import { AnimatedCTAButton } from '@/components/AnimatedCTAButton';
 
 export default function TransactionsPage() {
   const userId = useQuery(api.helpers.getUserId);
+  const isMember = useQuery(api.helpers.isMember);
   const yearAndMonth = useYearAndMonth();
 
   const transactions = useQuery(api.transactions.getTransactions, {
@@ -32,7 +34,18 @@ export default function TransactionsPage() {
 
   return (
     <div>
-      <PageHeader title="Transactions" actions={<DownloadCSVButton />} />
+      <PageHeader
+        title="Transactions"
+        actions={isMember && <DownloadReportButton data={data} />}
+      />
+      {!isMember && (
+        <div className="flex justify-center">
+          <AnimatedCTAButton
+            text="Upgrade to Pro to download reports"
+            href="/pro"
+          />
+        </div>
+      )}
       <TransactionsTable columns={columns} data={data} />
     </div>
   );
