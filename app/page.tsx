@@ -2,6 +2,7 @@ import { CardSection } from '@/components/landingpage/CardSection';
 import { CTASection } from '@/components/landingpage/CTASection';
 import { Footer } from '@/components/landingpage/Footer';
 import HeroSection from '@/components/landingpage/HeroSection';
+import { ImageCarousel } from '@/components/landingpage/ImageCarousel';
 import { ThemeButton } from '@/components/ThemeButton';
 import Link from 'next/link';
 
@@ -27,7 +28,13 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-grow">
-        <HeroSection />
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <HeroSection />
+        </section>
+
+        <section>
+          <ImageCarousel />
+        </section>
 
         <section className="py-20 px-4 sm:px-6 lg:px-8">
           <CardSection />

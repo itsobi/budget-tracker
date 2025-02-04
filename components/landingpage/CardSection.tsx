@@ -35,14 +35,17 @@ function FeatureCard({
 
 export function CardSection() {
   const letters = 'Why Choose TracKiT?'.split('');
+  const titleRef = useRef(null);
+  const isInView = useInView(titleRef, { once: true });
+
   return (
-    <div className="container mx-auto">
+    <div ref={titleRef} className="container mx-auto">
       <div className="text-3xl font-bold mb-12 text-center">
         {letters.map((letter, index) => (
           <motion.span
             key={index}
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{
               duration: 0.5,
               delay: index * 0.1,
