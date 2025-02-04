@@ -15,8 +15,8 @@ import CSVLogo from '@/svg/csv-logo';
 import XLSXLogo from '@/svg/xlsx-logo';
 import { TransactionType } from '../../transactions/_components/columns';
 import { Id } from '@/convex/_generated/dataModel';
-import { downloadReport } from '@/lib/actions/downloadReport';
 import { toast } from 'sonner';
+import { downloadReport } from '@/lib/downloadReport';
 
 export type TransactionData = {
   id: Id<'transactions'>;
