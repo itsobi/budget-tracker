@@ -20,7 +20,7 @@ export const sendEmail = async (formData: FormData) => {
     from: 'Acme <onboarding@resend.dev>',
     to: ['obi.j.obialo@gmail.com'],
     subject: 'TracKiT Contact Form',
-    text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+    text: `Name: ${name.trim()}\nEmail: ${email.trim()}\nMessage: ${message.trim()}`,
   });
 
   if (error) {
