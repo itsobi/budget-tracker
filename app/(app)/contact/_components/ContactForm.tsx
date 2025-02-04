@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -15,9 +14,24 @@ import { Textarea } from '@/components/ui/textarea';
 import { AnimatedCTAButton } from '@/components/AnimatedCTAButton';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { sendEmail } from '@/lib/actions/sendEmail';
+import { toast } from 'sonner';
 
 export function ContactForm() {
   const isMember = useQuery(api.helpers.isMember);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const response = await sendEmail(formData);
+
+    if (!response.success) {
+      return;
+    }
+    form.reset();
+  };
+
   if (isMember) {
     return (
       <div>
@@ -30,26 +44,33 @@ export function ContactForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
+            <form
+              onSubmit={(e) =>
+                toast.promise(() => handleSubmit(e), {
+                  loading: 'Sending email... 📧',
+                  success: 'Email sent successfully 💪',
+                  error: 'Error sending email ❌',
+                })
+              }
+            >
               <div className="flex flex-col gap-2">
                 <div>
                   <Label htmlFor="name">Name</Label>
-                  <Input id="name" name="name" disabled={!isMember} />
+                  <Input id="name" name="name" required />
                 </div>
                 <div>
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" name="email" disabled={!isMember} />
+                  <Input id="email" name="email" type="email" required />
                 </div>
 
                 <div>
                   <Label htmlFor="message">Message</Label>
-                  <Textarea id="message" name="message" disabled={!isMember} />
+                  <Textarea id="message" name="message" required />
                 </div>
               </div>
               <Button
                 type="submit"
                 className="w-full mt-4 font-bold bg-gradient-to-r from-blue-600 to-cyan-500 transition-all duration-500 hover:scale-105"
-                disabled={!isMember}
               >
                 Send
               </Button>
