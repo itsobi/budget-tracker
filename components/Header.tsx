@@ -87,7 +87,12 @@ export function Header() {
   if (!currentUser) return <></>;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-2 xl:px-0 relative">
+    <div
+      className={cn(
+        'max-w-7xl mx-auto px-4 py-2 xl:px-0 relative',
+        pathname === '/auth' && 'hidden'
+      )}
+    >
       <nav className="flex items-center justify-between">
         <div className="flex items-center">
           <Link href="/dashboard" className="text-xl font-bold italic mr-16">
