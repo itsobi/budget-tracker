@@ -11,7 +11,7 @@ export function SubscribePage() {
   return (
     <div className="flex flex-col items-center mt-10 md:mt-0">
       <div className="text-4xl lg:text-6xl font-bold">
-        {isMember ? 'TracKiT Pro' : 'Upgrade to TracKiT Pro'}
+        {isMember ? 'TracKiT Member' : 'Become a TracKiT Member'}
       </div>
 
       <p className="text-lg text-muted-foreground mt-1">

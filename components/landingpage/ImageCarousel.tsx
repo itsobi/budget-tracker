@@ -35,7 +35,7 @@ export function ImageCarousel() {
                   alt={image.alt}
                   width={600}
                   height={400}
-                  className="rounded-lg shadow-lg object-cover h-[200px] md:h-[300px] w-full"
+                  className="rounded shadow-lg object-cover h-auto w-auto md:h-[300px] md:w-full"
                 />
               </div>
             ))}
@@ -51,7 +51,7 @@ export function ImageCarousel() {
                   alt={image.alt}
                   width={600}
                   height={400}
-                  className="rounded-lg shadow-lg object-cover h-[200px] md:h-[300px] w-full"
+                  className="rounded shadow-lg object-cover h-auto w-auto md:h-[300px] md:w-full"
                 />
               </div>
             ))}

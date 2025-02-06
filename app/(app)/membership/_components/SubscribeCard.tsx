@@ -38,7 +38,7 @@ export function SubscribeCard({ isMember }: { isMember: boolean | undefined }) {
     <Card className="w-[350px] shadow-md dark:border-2">
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
-          <div className="flex items-center gap-1">⭐ Pro</div>
+          <div className="flex items-center gap-1">⭐ Member</div>
 
           <div className="flex justify-center items-center border rounded-full p-1 bg-gradient-to-r from-blue-600 to-cyan-500">
             <Check className="w-4 h-4 text-white" />
