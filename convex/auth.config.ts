@@ -1,10 +1,9 @@
+import { APP_URL } from '@/lib/constants';
+
 export default {
   providers: [
     {
-      domain:
-        process.env.NODE_ENV === 'development'
-          ? process.env.NEXT_PUBLIC_DEV_CONVEX_SITE_URL
-          : process.env.NEXT_PUBLIC_CONVEX_URL,
+      domain: APP_URL,
       applicationID: 'convex',
     },
   ],
