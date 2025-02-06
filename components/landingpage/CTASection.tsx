@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-import { Button } from '../ui/button';
 import { motion } from 'motion/react';
 import { AnimatedCTAButton } from '../AnimatedCTAButton';
 

@@ -29,16 +29,7 @@ import { Trash2 } from 'lucide-react';
 import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
 import { toast } from 'sonner';
-import { TransactionType } from './columns';
 import { Id } from '@/convex/_generated/dataModel';
-
-type Transaction = {
-  id: Id<'transactions'>;
-  type: TransactionType;
-  title: string;
-  amount: number;
-  date: string;
-};
 
 interface TransactionsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -80,7 +71,7 @@ export function TransactionsTable<TData, TValue>({
       deleteTransactions({
         ids: table
           .getFilteredSelectedRowModel()
-          // @ts-ignore
+          // @ts-expect-error - TODO: fix this
           .rows.map((row) => row.original.id as Id<'transactions'>),
         userId: userId ?? '',
       }),

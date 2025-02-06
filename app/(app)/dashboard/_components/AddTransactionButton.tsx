@@ -2,7 +2,7 @@
 
 import { useTransactionSheetStore } from '@/store/useTransactionSheetStore';
 import { Button } from '@/components/ui/button';
-import { Plus, Receipt } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 export function AddTransactionButton() {
   const { open } = useTransactionSheetStore();

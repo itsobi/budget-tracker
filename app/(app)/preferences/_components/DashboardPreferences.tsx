@@ -30,6 +30,7 @@ export function DashboardPreferences() {
         [name]: checked,
       });
     } catch (error) {
+      console.error(error);
       toast.error('Failed to update preferences');
     }
   };
@@ -40,7 +41,7 @@ export function DashboardPreferences() {
         <CardHeader>
           <CardTitle>Dashboard Preferences</CardTitle>
           <CardDescription>
-            Select which charts you'd like to see in your dashboard.
+            Select which charts you&apos;d like to see in your dashboard.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">

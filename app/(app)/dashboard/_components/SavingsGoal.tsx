@@ -5,16 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
-import {
-  Home,
-  Car,
-  LucideIcon,
-  HelpCircle,
-  Plane,
-  Heart,
-  PiggyBank,
-  Trash,
-} from 'lucide-react';
+import { Trash } from 'lucide-react';
 import { toast } from 'sonner';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { useSavingsSheetStore } from '@/store/useSavingsSheetStore';

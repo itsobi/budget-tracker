@@ -39,8 +39,8 @@ export function ContactForm() {
           <CardHeader>
             <CardTitle>Contact us 📧</CardTitle>
             <CardDescription>
-              Complete the form below about feature request or issue, and we'll
-              get back to you within 2 hours!
+              Complete the form below about feature request or issue, and
+              we&apos;ll get back to you within 2 hours!
             </CardDescription>
           </CardHeader>
           <CardContent>

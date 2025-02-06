@@ -116,8 +116,8 @@ export function DashboardExpenses({
             >
               here
             </span>{' '}
-            or the "+" button at the top of the dashboard to add your first
-            fixed expense.
+            or the &quot;+&quot; button at the top of the dashboard to add your
+            first fixed expense.
           </p>
         </CardContent>
       </Card>

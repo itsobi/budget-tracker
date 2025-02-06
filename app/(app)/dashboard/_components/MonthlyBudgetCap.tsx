@@ -7,10 +7,6 @@ import { toast } from 'sonner';
 import { formatCurrency } from './Transaction';
 import { Id } from '@/convex/_generated/dataModel';
 
-interface Props {
-  userId: Id<'users'> | null | undefined;
-}
-
 export default function MonthlyBudgetCap({
   userId,
 }: {
@@ -67,6 +63,7 @@ export default function MonthlyBudgetCap({
         toast.error(response.message);
       }
     } catch (error) {
+      console.error(error);
       toast.error('Failed to set budget cap');
     } finally {
       setIsEditing(false);

@@ -11,8 +11,6 @@ import {
   ChartTooltipContent,
 } from '../../../../components/ui/chart';
 import { Card, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Preloaded, usePreloadedQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
 
 const formatDollar = (
   value: string | number | (string | number)[],
@@ -56,18 +54,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-interface ExpenseBreakdownChartProps {
-  preloadedTransactions: Preloaded<typeof api.transactions.getTransactions>;
-  preloadedExpenses: Preloaded<typeof api.expenses.getExpenses>;
-}
-
-export function ExpenseBreakdownChart({
-  preloadedTransactions,
-  preloadedExpenses,
-}: ExpenseBreakdownChartProps) {
-  const transactions = usePreloadedQuery(preloadedTransactions);
-  const expenses = usePreloadedQuery(preloadedExpenses);
-
+export function ExpenseBreakdownChart({}) {
   return (
     <Card className="rounded-md shadow-md dark:border-white/60">
       <CardHeader>

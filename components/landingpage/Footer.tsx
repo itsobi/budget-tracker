@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-
 export function Footer() {
   return (
     <div className="flex flex-col gap-2 md:flex-row md:gap-0 items-center justify-between">

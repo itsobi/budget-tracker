@@ -13,7 +13,7 @@ export const downloadReport = async (
   }
 
   // Remove id column from data before generating report
-  const dataWithoutId = data.map(({ id, ...rest }) => rest);
+  const dataWithoutId = data.map(({ id, ...rest }) => rest); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   try {
     const worksheet = XLSX.utils.json_to_sheet(dataWithoutId);
@@ -43,6 +43,7 @@ export const downloadReport = async (
       };
     }
   } catch (error) {
+    console.error(error);
     return {
       success: false,
       message: 'Error downloading report',

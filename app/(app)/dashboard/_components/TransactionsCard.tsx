@@ -6,7 +6,6 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from '../../../../components/ui/card';
 import CustomTooltip from '../../../../components/CustomTooltip';
 import { AddTransactionButton } from '@/app/(app)/dashboard/_components/AddTransactionButton';

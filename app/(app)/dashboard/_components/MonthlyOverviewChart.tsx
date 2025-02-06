@@ -1,8 +1,8 @@
 'use client';
 
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, LabelList } from 'recharts';
 
-import { Preloaded, usePreloadedQuery, useQuery } from 'convex/react';
+import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useMediaQuery, useYearAndMonth } from '@/lib/hooks';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

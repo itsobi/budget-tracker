@@ -1,4 +1,4 @@
-import { Grip, Pencil, Trash } from 'lucide-react';
+import { Grip, Trash } from 'lucide-react';
 import {
   Card,
   CardContent,
