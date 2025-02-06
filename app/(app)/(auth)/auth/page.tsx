@@ -12,7 +12,7 @@ export default function SignInPage() {
     <main className="h-screen flex justify-center pt-20">
       <div className="flex flex-col gap-2 border h-fit p-12 rounded-md shadow-md">
         <h1 className="text-2xl font-semibold italic text-center">TracKiT</h1>
-        <h1 className="text-2xl">Sign in or create an account</h1>
+        <h1 className="text-sm lg:text-2xl">Sign in or create an account</h1>
 
         <div className="flex items-center justify-center gap-2 mt-2">
           <Button

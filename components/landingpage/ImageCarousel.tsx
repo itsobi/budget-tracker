@@ -20,38 +20,36 @@ export function ImageCarousel() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="w-full overflow-hidden bg-gradient-to-b from-transparent to-gray-50/50"
+      className="w-full overflow-hidden"
     >
       <div className="mx-auto max-w-7xl">
         <div className="relative flex w-full overflow-x-hidden py-12">
-          <div className="flex animate-scroll space-x-4 md:space-x-8">
-            {images.concat(images).map((image, idx) => (
+          <div className="animate-scroll flex space-x-4 md:space-x-8">
+            {images.map((image, idx) => (
               <div
                 key={`${image.alt}-${idx}`}
-                className="relative min-w-[280px] md:min-w-[400px] lg:min-w-[500px]"
+                className="relative min-w-[280px] shrink-0 md:min-w-[400px] lg:min-w-[500px]"
               >
                 <Image
                   src={image.src}
                   alt={image.alt}
                   width={600}
                   height={400}
-                  className="rounded shadow-lg object-cover h-auto w-auto md:h-[300px] md:w-full"
+                  className="h-auto w-full rounded-lg shadow-lg md:h-[300px] object-cover"
                 />
               </div>
             ))}
-          </div>
-          <div className="flex animate-scroll space-x-4 md:space-x-8">
-            {images.concat(images).map((image, idx) => (
+            {images.map((image, idx) => (
               <div
                 key={`${image.alt}-duplicate-${idx}`}
-                className="relative min-w-[280px] md:min-w-[400px] lg:min-w-[500px]"
+                className="relative min-w-[280px] shrink-0 md:min-w-[400px] lg:min-w-[500px]"
               >
                 <Image
                   src={image.src}
                   alt={image.alt}
                   width={600}
                   height={400}
-                  className="rounded shadow-lg object-cover h-auto w-auto md:h-[300px] md:w-full"
+                  className="h-auto w-full rounded-lg shadow-lg md:h-[300px] object-cover"
                 />
               </div>
             ))}
