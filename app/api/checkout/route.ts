@@ -1,7 +1,17 @@
+import { APP_URL } from '@/lib/constants';
 import { NextResponse } from 'next/server';
 import { Stripe } from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(
+  process.env.NODE_ENV === 'development'
+    ? process.env.DEV_STRIPE_SECRET_KEY!
+    : process.env.STRIPE_SECRET_KEY!
+);
+
+const priceId =
+  process.env.NODE_ENV === 'development'
+    ? process.env.DEV_STRIPE_PRICE_ID!
+    : process.env.STRIPE_PRICE_ID!;
 
 export async function POST(request: Request) {
   try {
@@ -18,18 +28,18 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
-          price: 'price_1QmobAPLJdDj5tSD7RedCv7e', // TODO: Update to PROD priceId
+          price: priceId,
           quantity: 1,
         },
       ],
       mode: 'payment',
       payment_method_types: ['card', 'us_bank_account', 'amazon_pay'],
-      success_url: `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/checkout?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/pro`,
+      success_url: `${APP_URL}/checkout?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${APP_URL}/pro`,
       metadata: {
         userId: userId,
       },
-      //   automatic_tax: { enabled: true },
+      automatic_tax: { enabled: true },
     });
 
     if (!session.url) {

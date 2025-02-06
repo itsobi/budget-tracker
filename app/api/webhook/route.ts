@@ -5,8 +5,15 @@ import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { Stripe } from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+const stripe = new Stripe(
+  process.env.NODE_ENV === 'development'
+    ? process.env.DEV_STRIPE_SECRET_KEY!
+    : process.env.STRIPE_SECRET_KEY!
+);
+const webhookSecret =
+  process.env.NODE_ENV === 'development'
+    ? process.env.DEV_STRIPE_WEBHOOK_SECRET!
+    : process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(request: Request) {
   const body = await request.text();
