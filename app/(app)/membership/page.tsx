@@ -4,7 +4,7 @@ import { SubscribePage } from './_components/SubscribePage';
 export default function ProPage() {
   return (
     <main className="w-full">
-      <PageHeader title="Pro" />
+      <PageHeader title="Membership" />
       <SubscribePage />
     </main>
   );
