@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       mode: 'payment',
       payment_method_types: ['card', 'us_bank_account', 'amazon_pay'],
       success_url: `${APP_URL}/checkout?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${APP_URL}/pro`,
+      cancel_url: `${APP_URL}/membership`,
       metadata: {
         userId: userId,
       },

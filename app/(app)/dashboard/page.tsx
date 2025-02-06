@@ -26,7 +26,7 @@ export default function DashboardPage() {
         middleButton={
           <div className="hidden md:block">
             {!isMember && (
-              <AnimatedCTAButton text="Upgrade to Pro" href="/pro" />
+              <AnimatedCTAButton text="Become a Member" href="/membership" />
             )}
           </div>
         }

@@ -53,8 +53,8 @@ const tabs = [
     icon: Mail,
   },
   {
-    label: 'Pro',
-    href: '/pro',
+    label: 'Membership',
+    href: '/membership',
     icon: Sparkles,
   },
 ];

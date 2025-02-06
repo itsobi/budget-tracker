@@ -82,7 +82,7 @@ export function DashboardPreferences() {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-center">
-          <AnimatedCTAButton text="Upgrade to Pro" href="/pro" />
+          <AnimatedCTAButton text="Become a Member" href="/membership" />
         </div>
         <Card className="shadow-md">
           <CardHeader>

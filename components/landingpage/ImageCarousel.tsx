@@ -8,43 +8,53 @@ import uploadReceipt from '../../public/images/upload-receipt.png';
 import Image from 'next/image';
 
 export function ImageCarousel() {
+  const images = [
+    { src: dashboardImage, alt: 'Dashboard' },
+    { src: monthlySummaryImage, alt: 'Monthly Summary' },
+    { src: transactions, alt: 'Transactions' },
+    { src: uploadReceipt, alt: 'Upload Receipt' },
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
+      className="w-full overflow-hidden bg-gradient-to-b from-transparent to-gray-50/50"
     >
-      <div className="flex justify-center items-center mx-auto py-20 w-full max-w-7xl overflow-hidden">
-        <div className="flex overflow-hidden">
-          <div className="flex space-x-16 animate-scroll">
-            <Image
-              src={dashboardImage}
-              alt="Dashboard"
-              width={600}
-              height={400}
-              className="object-contain rounded"
-            />
-            <Image
-              src={monthlySummaryImage}
-              alt="Monthly Summary"
-              width={600}
-              height={400}
-              className="object-contain rounded"
-            />
-            <Image
-              src={transactions}
-              alt="Transactions"
-              width={600}
-              height={400}
-              className="object-contain rounded"
-            />
-            <Image
-              src={uploadReceipt}
-              alt="Upload Receipt"
-              width={600}
-              height={400}
-              className="object-contain rounded"
-            />
+      <div className="mx-auto max-w-7xl">
+        <div className="relative flex w-full overflow-x-hidden py-12">
+          <div className="flex animate-scroll space-x-4 md:space-x-8">
+            {images.concat(images).map((image, idx) => (
+              <div
+                key={`${image.alt}-${idx}`}
+                className="relative min-w-[280px] md:min-w-[400px] lg:min-w-[500px]"
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={600}
+                  height={400}
+                  className="rounded-lg shadow-lg object-cover h-[200px] md:h-[300px] w-full"
+                />
+              </div>
+            ))}
+          </div>
+          <div className="flex animate-scroll space-x-4 md:space-x-8">
+            {images.concat(images).map((image, idx) => (
+              <div
+                key={`${image.alt}-duplicate-${idx}`}
+                className="relative min-w-[280px] md:min-w-[400px] lg:min-w-[500px]"
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={600}
+                  height={400}
+                  className="rounded-lg shadow-lg object-cover h-[200px] md:h-[300px] w-full"
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>

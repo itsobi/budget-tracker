@@ -40,7 +40,7 @@ export function AlertDialog({ title, description, error }: AlertDialogProps) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogAction
-            onClick={() => router.replace(error ? '/pro' : '/dashboard')}
+            onClick={() => router.replace(error ? '/membership' : '/dashboard')}
           >
             Continue
           </AlertDialogAction>

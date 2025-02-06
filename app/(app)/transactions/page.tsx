@@ -41,8 +41,8 @@ export default function TransactionsPage() {
       {!isMember && (
         <div className="flex justify-center">
           <AnimatedCTAButton
-            text="Upgrade to Pro to download reports"
-            href="/pro"
+            text="Become a member to download reports"
+            href="/membership"
           />
         </div>
       )}

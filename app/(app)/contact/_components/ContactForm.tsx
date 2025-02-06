@@ -83,13 +83,13 @@ export function ContactForm() {
     return (
       <div>
         <div className="flex justify-center pb-4">
-          <AnimatedCTAButton text="Upgrade to Pro" href="/pro" />
+          <AnimatedCTAButton text="Become a Member" href="/membership" />
         </div>
         <Card className="w-full shadow-md">
           <CardHeader>
             <CardTitle>Contact us 📧</CardTitle>
             <CardDescription>
-              Sorry, in order to request new features you must upgrade to Pro.
+              Sorry, in order to request new features you must become a member.
             </CardDescription>
           </CardHeader>
           <CardContent>
