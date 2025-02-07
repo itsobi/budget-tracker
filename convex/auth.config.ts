@@ -1,9 +1,7 @@
-import { APP_URL } from '@/lib/constants';
-
 export default {
   providers: [
     {
-      domain: APP_URL,
+      domain: process.env.CONVEX_SITE_URL,
       applicationID: 'convex',
     },
   ],
