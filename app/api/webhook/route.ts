@@ -1,5 +1,4 @@
 import { api } from '@/convex/_generated/api';
-import { Id } from '@/convex/_generated/dataModel';
 import { getConvexClient } from '@/lib/convexClient';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
@@ -48,12 +47,22 @@ export async function POST(request: Request) {
         '--- CHECKOUT SESSION COMPLETED ---',
         checkoutSessionCompleted
       );
-      await convex.mutation(api.users.updateUserMembershipStatus, {
-        userId: checkoutSessionCompleted?.metadata?.userId as Id<'users'>,
-        isMember: true,
-      });
+      try {
+        await convex.mutation(api.users.createUser, {
+          authId: checkoutSessionCompleted?.metadata?.authId as string,
+          email: checkoutSessionCompleted?.metadata?.email as string,
+          name: checkoutSessionCompleted?.metadata?.name as string,
+          image: checkoutSessionCompleted?.metadata?.image as string,
+          isMember: true,
+        });
+        console.log('--- USER CREATED ---');
+        console.log('--- USER CREATED ---');
+        console.log('--- USER CREATED ---');
+        console.log('--- USER CREATED ---');
+      } catch (error) {
+        console.error('Error creating user', error);
+      }
       break;
-    // ... handle other event types
     default:
       console.log(`Unhandled event type ${event.type}`);
   }

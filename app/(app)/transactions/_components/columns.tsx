@@ -24,6 +24,7 @@ export type Transaction = {
   title: string;
   amount: number;
   date: string;
+  authId: string;
 };
 
 export const columns: ColumnDef<Transaction>[] = [

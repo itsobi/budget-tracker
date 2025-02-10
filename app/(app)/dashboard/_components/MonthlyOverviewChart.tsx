@@ -12,7 +12,6 @@ import {
   ChartContainer,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import { Id } from '@/convex/_generated/dataModel';
 
 const formatDollar = (
   value: string | number | (string | number)[],
@@ -68,18 +67,18 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function MonthlyOverviewChart({
-  userId,
+  authId,
 }: {
-  userId: Id<'users'> | null | undefined;
+  authId: string | undefined;
 }) {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const yearAndMonth = useYearAndMonth();
   const transactions = useQuery(api.transactions.getTransactions, {
-    userId: userId ?? '',
+    authId: authId ?? '',
     yearAndMonth: yearAndMonth,
   });
   const preferences = useQuery(api.preferences.getPreferences, {
-    userId: userId ?? '',
+    authId: authId ?? '',
   });
   const chartData = Object.entries(
     transactions?.transactions?.reduce(

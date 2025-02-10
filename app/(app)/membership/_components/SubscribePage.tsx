@@ -4,9 +4,15 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import { SubscribeCard } from './SubscribeCard';
+import { useSession } from 'next-auth/react';
 
 export function SubscribePage() {
-  const isMember = useQuery(api.helpers.isMember);
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
+  const user = useQuery(api.users.getUserByAuthId, {
+    authId: authId ?? '',
+  });
+  const isMember = user?.isMember ?? false;
 
   return (
     <div className="flex flex-col items-center mt-10 md:mt-0">

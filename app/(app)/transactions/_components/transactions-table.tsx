@@ -30,6 +30,7 @@ import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
 import { toast } from 'sonner';
 import { Id } from '@/convex/_generated/dataModel';
+import { useSession } from 'next-auth/react';
 
 interface TransactionsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,7 +41,8 @@ export function TransactionsTable<TData, TValue>({
   columns,
   data,
 }: TransactionsTableProps<TData, TValue>) {
-  const userId = useQuery(api.helpers.getUserId);
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -73,7 +75,11 @@ export function TransactionsTable<TData, TValue>({
           .getFilteredSelectedRowModel()
           // @ts-expect-error - TODO: fix this
           .rows.map((row) => row.original.id as Id<'transactions'>),
-        userId: userId ?? '',
+        authId: authId ?? '',
+        transactionAuthIds: table
+          .getFilteredSelectedRowModel()
+          // @ts-expect-error - TODO: fix this
+          .rows.map((row) => row.original.authId as string),
       }),
       {
         loading: 'Deleting transaction(s)...',

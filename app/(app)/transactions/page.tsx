@@ -9,14 +9,19 @@ import { LoadingScreen } from '@/components/LoadingScreen';
 import { DownloadReportButton } from '../dashboard/_components/DownloadReportButton';
 import { useYearAndMonth } from '@/lib/hooks';
 import { AnimatedCTAButton } from '@/components/AnimatedCTAButton';
+import { useSession } from 'next-auth/react';
 
 export default function TransactionsPage() {
-  const userId = useQuery(api.helpers.getUserId);
-  const isMember = useQuery(api.helpers.isMember);
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
+  const user = useQuery(api.users.getUserByAuthId, {
+    authId: authId ?? '',
+  });
+  const isMember = user?.isMember ?? false;
   const yearAndMonth = useYearAndMonth();
 
   const transactions = useQuery(api.transactions.getTransactions, {
-    userId: userId ?? '',
+    authId: authId ?? '',
     yearAndMonth,
   });
 
@@ -30,6 +35,7 @@ export default function TransactionsPage() {
     title: transaction.title,
     amount: transaction.amount,
     date: transaction.date,
+    authId: transaction.authId,
   }));
 
   return (

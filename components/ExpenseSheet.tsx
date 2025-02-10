@@ -26,6 +26,7 @@ import { toast } from 'sonner';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
+import { useSession } from 'next-auth/react';
 
 const expenseTypes = [
   { value: 'food', label: 'Food' },
@@ -39,11 +40,11 @@ const expenseTypes = [
 export function ExpenseSheet() {
   const { isOpen, close, expenseId } = useExpenseSheetStore();
   const formRef = useRef<HTMLFormElement>(null);
-  const userId = useQuery(api.helpers.getUserId);
+  const { data: session } = useSession();
 
   const existingExpenses = useQuery(
     api.expenses.getExpenses,
-    userId ? { userId } : 'skip'
+    session?.user?.id ? { authId: session.user.id } : 'skip'
   );
 
   const existingExpense = useQuery(
@@ -60,7 +61,7 @@ export function ExpenseSheet() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!userId) return;
+    if (!session?.user?.id) return;
 
     if (existingExpenses?.data.length && existingExpenses.data.length >= 4) {
       toast.error(
@@ -98,11 +99,14 @@ export function ExpenseSheet() {
     if (expenseId) {
       response = await updateExpenseMutation({
         id: expenseId as Id<'expenses'>,
+        authId: session.user.id,
+        expenseAuthId: existingExpense?.authId,
         ...data,
       });
     } else {
       response = await createExpenseMutation({
-        userId: userId,
+        authId: session.user.id,
+        expenseAuthId: session.user.id,
         order: existingExpenses?.data.length || 0,
         date: dateString,
         ...data,

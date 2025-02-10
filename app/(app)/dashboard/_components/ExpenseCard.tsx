@@ -18,22 +18,25 @@ import { toast } from 'sonner';
 
 interface ExpenseCardProps {
   id: string;
+  authId: string | undefined;
   title: string;
   amount: number;
   emoji: string;
+  expenseAuthId: string | undefined;
   // subtitle: string;
 }
 
 export function ExpenseCard({
   id,
+  authId,
   title,
   amount,
   emoji,
+  expenseAuthId,
   // subtitle,
 }: ExpenseCardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useSortable({ id: id as Id<'expenses'> });
-  const userId = useQuery(api.helpers.currentUser);
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -42,9 +45,14 @@ export function ExpenseCard({
   const deleteExpenseMutation = useMutation(api.expenses.deleteExpense);
 
   const handleDeleteExpense = async () => {
+    if (!authId) {
+      toast.error('Not authorized');
+      return;
+    }
     const response = await deleteExpenseMutation({
       id: id as Id<'expenses'>,
-      userId: userId?._id ?? '',
+      authId: authId,
+      expenseAuthId: expenseAuthId,
     });
     if (response.success) {
       toast.success(response.message);

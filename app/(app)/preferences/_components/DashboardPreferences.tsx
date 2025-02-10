@@ -11,22 +11,26 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
+import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
 export function DashboardPreferences() {
-  const userId = useQuery(api.helpers.getUserId);
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
   const preferences = useQuery(api.preferences.getPreferences, {
-    userId: userId ?? '',
+    authId: authId ?? '',
   });
-  const isMember = useQuery(api.helpers.isMember);
-  console.log(isMember);
+  const user = useQuery(api.users.getUserByAuthId, {
+    authId: authId ?? '',
+  });
+  const isMember = user?.isMember ?? false;
 
   const updatePreferences = useMutation(api.preferences.updatePreferences);
 
   const handleChange = async (checked: boolean, name: string) => {
     try {
       await updatePreferences({
-        userId: userId ?? '',
+        authId: authId ?? '',
         [name]: checked,
       });
     } catch (error) {
@@ -82,7 +86,10 @@ export function DashboardPreferences() {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-center">
-          <AnimatedCTAButton text="Become a Member" href="/membership" />
+          <AnimatedCTAButton
+            text="Enable Dashboard Preferences"
+            href="/membership"
+          />
         </div>
         <Card className="shadow-md">
           <CardHeader>

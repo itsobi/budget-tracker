@@ -23,7 +23,7 @@ export function Transaction({ transaction, emoji }: TransactionProps) {
       <div className="flex items-center gap-6">
         <span className="text-xl lg:text-2xl">{emoji}</span>
         <div>
-          <p className="capitalize font-semibold">{transaction.title}</p>
+          <p className="font-semibold">{transaction.title}</p>
           <p className="text-xs text-muted-foreground">{transaction.type}</p>
         </div>
       </div>

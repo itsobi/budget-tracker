@@ -9,23 +9,19 @@ import { Toaster } from '@/components/ui/sonner';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <ConvexClientProvider>
-        <ExpenseSheet />
-        <TransactionSheet />
-        <SavingsSheet />
-        <AddReceiptDialog />
-        <SummaryDialog />
-        <div className={`h-screen flex flex-col`}>
-          <div className="shadow-sm dark:border-b border-zinc">
-            <Header />
-          </div>
-          <div className="w-full max-w-7xl mx-auto px-4 xl:px-0">
-            {children}
-          </div>
+    <ConvexClientProvider>
+      <ExpenseSheet />
+      <TransactionSheet />
+      <SavingsSheet />
+      <AddReceiptDialog />
+      <SummaryDialog />
+      <div className={`h-screen flex flex-col`}>
+        <div className="shadow-sm dark:border-b border-zinc">
+          <Header />
         </div>
-      </ConvexClientProvider>
+        <div className="w-full max-w-7xl mx-auto px-4 xl:px-0">{children}</div>
+      </div>
       <Toaster richColors />
-    </>
+    </ConvexClientProvider>
   );
 }

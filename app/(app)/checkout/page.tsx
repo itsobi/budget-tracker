@@ -2,7 +2,11 @@ import { AlertDialog } from '@/components/AlertDialog';
 import { redirect } from 'next/navigation';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(
+  process.env.NODE_ENV === 'development'
+    ? process.env.DEV_STRIPE_SECRET_KEY!
+    : process.env.STRIPE_SECRET_KEY!
+);
 
 export default async function CheckoutPage({
   searchParams,
@@ -19,6 +23,7 @@ export default async function CheckoutPage({
     const session = await stripe.checkout.sessions.retrieve(
       queryParams.session_id as string
     );
+    console.log('SESSION STATUS', session.status);
 
     if (!session || session.status !== 'complete') {
       redirect('/dashboard');

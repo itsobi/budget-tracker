@@ -3,13 +3,13 @@ import { mutation, query } from './_generated/server';
 
 export const getPreferences = query({
   args: {
-    userId: v.string(),
+    authId: v.string(),
   },
   handler: async (ctx, args) => {
     try {
       return await ctx.db
         .query('preferences')
-        .withIndex('by_user_id', (q) => q.eq('userId', args.userId))
+        .withIndex('by_auth_id', (q) => q.eq('authId', args.authId))
         .first();
     } catch (error) {
       console.error(error);
@@ -20,27 +20,28 @@ export const getPreferences = query({
 
 export const updatePreferences = mutation({
   args: {
-    userId: v.string(),
+    authId: v.string(),
     monthlyOverview: v.optional(v.boolean()),
     savings: v.optional(v.boolean()),
+    preferenceAuthId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error('User not authenticated');
-    }
     try {
       const existingSettings = await ctx.db
         .query('preferences')
-        .withIndex('by_user_id', (q) => q.eq('userId', args.userId))
+        .withIndex('by_auth_id', (q) => q.eq('authId', args.authId))
         .first();
+
+      if (args.preferenceAuthId && args.preferenceAuthId !== args.authId) {
+        throw new Error('Unauthorized');
+      }
 
       if (existingSettings) {
         await ctx.db.patch(existingSettings._id, args);
         return { success: true };
       } else {
         await ctx.db.insert('preferences', {
-          userId: args.userId,
+          authId: args.authId,
           monthlyOverview: args.monthlyOverview ?? true,
           savings: args.savings ?? true,
         });

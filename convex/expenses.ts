@@ -7,20 +7,14 @@ export const createExpense = mutation({
     title: v.string(),
     amount: v.number(),
     type: v.string(),
-    userId: v.string(),
+    authId: v.string(),
+    expenseAuthId: v.string(),
     order: v.number(),
     date: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
-    }
-
-    const userId = identity.subject;
-
     const { ok } = await rateLimiter.limit(ctx, 'createExpense', {
-      key: userId,
+      key: args.authId,
     });
 
     if (!ok) {
@@ -49,18 +43,13 @@ export const createExpense = mutation({
 
 export const getExpenses = query({
   args: {
-    userId: v.string(),
+    authId: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
-    }
-
     const data = await ctx.db
       .query('expenses')
-      .withIndex('by_user_and_order')
-      .filter((q) => q.eq(q.field('userId'), args.userId))
+      .withIndex('by_auth_id_and_order')
+      .filter((q) => q.eq(q.field('authId'), args.authId))
       .collect();
 
     const expensesTotal = data.reduce(
@@ -76,17 +65,12 @@ export const getExpenses = query({
 });
 
 export const getExpensesCount = query({
-  args: { userId: v.string() },
+  args: { authId: v.string() },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
-    }
-
     try {
       return await ctx.db
         .query('expenses')
-        .filter((q) => q.eq(q.field('userId'), args.userId))
+        .filter((q) => q.eq(q.field('authId'), args.authId))
         .collect()
         .then((expenses) => expenses.length);
     } catch (error) {
@@ -99,10 +83,6 @@ export const getExpensesCount = query({
 export const getExpense = query({
   args: { id: v.id('expenses') },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
-    }
     return await ctx.db.get(args.id);
   },
 });
@@ -121,20 +101,19 @@ export const updateExpenseOrder = mutation({
 export const updateExpense = mutation({
   args: {
     id: v.id('expenses'),
+    authId: v.string(),
     title: v.optional(v.string()),
     amount: v.optional(v.number()),
     type: v.optional(v.string()),
+    expenseAuthId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
+    if (args.expenseAuthId && args.expenseAuthId !== args.authId) {
+      throw new Error('Unauthorized');
     }
 
-    const userId = identity.subject;
-
     const { ok } = await rateLimiter.limit(ctx, 'updateExpense', {
-      key: userId,
+      key: args.authId,
     });
 
     if (!ok) {
@@ -155,6 +134,7 @@ export const updateExpense = mutation({
         message: 'Fixed expense updated successfully! 💪',
       };
     } catch (error) {
+      console.error(error);
       return {
         success: false,
         message: 'Failed to update fixed expense.',
@@ -166,22 +146,16 @@ export const updateExpense = mutation({
 export const deleteExpense = mutation({
   args: {
     id: v.id('expenses'),
-    userId: v.string(),
+    authId: v.string(),
+    expenseAuthId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
-    }
-
-    const userId = identity.subject;
-
-    if (userId.split('|')[0] !== args.userId) {
-      throw new Error('Not authorized');
+    if (args.expenseAuthId && args.expenseAuthId !== args.authId) {
+      throw new Error('Unauthorized');
     }
 
     const { ok } = await rateLimiter.limit(ctx, 'deleteExpense', {
-      key: userId,
+      key: args.authId,
     });
 
     if (!ok) {

@@ -8,13 +8,13 @@ import { formatCurrency } from './Transaction';
 import { Id } from '@/convex/_generated/dataModel';
 
 export default function MonthlyBudgetCap({
-  userId,
+  authId,
 }: {
-  userId: Id<'users'> | null | undefined;
+  authId: string | undefined;
 }) {
   const budgetCap = useQuery(
     api.budgetCap.getBudgetCap,
-    userId ? { userId } : 'skip'
+    authId ? { authId } : 'skip'
   );
 
   const [isEditing, setIsEditing] = useState(false);
@@ -53,7 +53,7 @@ export default function MonthlyBudgetCap({
 
     try {
       const response = await setBudgetCap({
-        userId: userId ?? '',
+        authId: authId ?? '',
         amount: Number(newBudget),
       });
 

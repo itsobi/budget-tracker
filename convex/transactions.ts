@@ -7,19 +7,17 @@ export const createTransaction = mutation({
     title: v.string(),
     amount: v.number(),
     type: v.string(),
-    userId: v.string(),
+    authId: v.string(),
     date: v.string(),
     yearAndMonth: v.string(),
+    transactionAuthId: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
+    if (!args.authId) {
       throw new Error('Not authenticated');
     }
-
-    const userId = identity.subject;
     const { ok } = await rateLimiter.limit(ctx, 'createTransaction', {
-      key: userId,
+      key: args.authId,
     });
 
     if (!ok) {
@@ -48,14 +46,14 @@ export const createTransaction = mutation({
 
 export const getTransactions = query({
   args: {
-    userId: v.string(),
+    authId: v.string(),
     yearAndMonth: v.string(),
   },
   handler: async (ctx, args) => {
     const transactions = await ctx.db
       .query('transactions')
-      .withIndex('by_user_id_and_date', (q) =>
-        q.eq('userId', args.userId).eq('yearAndMonth', args.yearAndMonth)
+      .withIndex('by_auth_id_and_date', (q) =>
+        q.eq('authId', args.authId).eq('yearAndMonth', args.yearAndMonth)
       )
       .order('desc')
       .collect();
@@ -74,10 +72,6 @@ export const getTransaction = query({
     id: v.id('transactions'),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
-    }
     const transaction = await ctx.db.get(args.id);
 
     return transaction;
@@ -90,17 +84,16 @@ export const updateTransaction = mutation({
     title: v.string(),
     amount: v.number(),
     type: v.string(),
+    authId: v.string(),
+    transactionAuthId: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
+    if (args.transactionAuthId && args.transactionAuthId !== args.authId) {
+      throw new Error('Unauthorized');
     }
 
-    const userId = identity.subject;
-
     const { ok } = await rateLimiter.limit(ctx, 'updateTransaction', {
-      key: userId,
+      key: args.authId,
     });
 
     if (!ok) {
@@ -130,22 +123,16 @@ export const updateTransaction = mutation({
 export const deleteTransaction = mutation({
   args: {
     id: v.id('transactions'),
-    userId: v.string(),
+    authId: v.string(),
+    transactionAuthId: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
-    }
-
-    const userId = identity.subject;
-
-    if (userId.split('|')[0] !== args.userId) {
+    if (args.authId !== args.transactionAuthId) {
       throw new Error('Not authorized');
     }
 
     const { ok } = await rateLimiter.limit(ctx, 'deleteTransaction', {
-      key: userId,
+      key: args.authId,
     });
 
     if (!ok) {
@@ -174,17 +161,15 @@ export const deleteTransaction = mutation({
 export const deleteTransactions = mutation({
   args: {
     ids: v.array(v.id('transactions')),
-    userId: v.string(),
+    authId: v.string(),
+    transactionAuthIds: v.array(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
-    }
+    const goodToDelete = args.transactionAuthIds.every(
+      (transactionAuthId) => args.authId === transactionAuthId
+    );
 
-    const userId = identity.subject;
-
-    if (userId.split('|')[0] !== args.userId) {
+    if (!goodToDelete) {
       throw new Error('Not authorized');
     }
 

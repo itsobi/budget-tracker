@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import { APP_URL } from '@/lib/constants';
 import { NextResponse } from 'next/server';
 import { Stripe } from 'stripe';
@@ -14,11 +15,18 @@ const priceId =
     : process.env.STRIPE_PRICE_ID!;
 
 export async function POST(request: Request) {
-  try {
-    const formData = await request.formData();
-    const userId = formData.get('userId') as string;
+  const authSession = await auth();
 
-    if (!userId) {
+  if (!authSession) {
+    return NextResponse.json(
+      { error: 'User is not authenticated' },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const authId = authSession?.user?.id;
+    if (!authId) {
       return NextResponse.json(
         { error: 'User ID is not found' },
         { status: 400 }
@@ -37,7 +45,10 @@ export async function POST(request: Request) {
       success_url: `${APP_URL}/checkout?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${APP_URL}/membership`,
       metadata: {
-        userId: userId,
+        authId: authId,
+        email: authSession.user?.email as string,
+        name: authSession.user?.name as string,
+        image: authSession.user?.image as string,
       },
       automatic_tax: { enabled: true },
     });

@@ -10,8 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
+import { useSession } from 'next-auth/react';
 
 const features = [
   {
@@ -32,7 +31,8 @@ const features = [
 ];
 
 export function SubscribeCard({ isMember }: { isMember: boolean | undefined }) {
-  const userId = useQuery(api.helpers.getUserId);
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
 
   return (
     <Card className="w-[350px] shadow-md dark:border-2">
@@ -65,12 +65,12 @@ export function SubscribeCard({ isMember }: { isMember: boolean | undefined }) {
       {!isMember && (
         <CardFooter className="flex justify-center">
           <form action="/api/checkout" method="POST" className="w-full">
-            <input type="hidden" name="userId" value={userId ?? ''} />
+            <input type="hidden" name="userId" value={authId ?? ''} />
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold transition-all duration-500 hover:scale-105"
             >
-              Upgrade
+              Become a Member
             </Button>
           </form>
         </CardFooter>

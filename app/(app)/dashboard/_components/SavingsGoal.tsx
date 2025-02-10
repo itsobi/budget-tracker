@@ -24,7 +24,7 @@ type Savings = {
   _creationTime: number;
   title: string;
   type: string;
-  userId: string;
+  authId: string;
   currentAmount: number;
   goalAmount: number;
 };
@@ -45,7 +45,11 @@ export function SavingsGoal({ savings }: SavingsGoalProps) {
   );
 
   const handleDeleteSavingsGoal = async () => {
-    const response = await deleteSavingsGoalMutation({ id: savings._id });
+    const response = await deleteSavingsGoalMutation({
+      id: savings._id,
+      authId: savings.authId,
+      savingsAuthId: savings.authId,
+    });
     if (response.success) {
       toast.success(response.message);
     } else {

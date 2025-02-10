@@ -24,10 +24,12 @@ import { Label } from './ui/label';
 import { transactionTypes } from './TransactionSheet';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { useSession } from 'next-auth/react';
 
 export function AddReceiptDialog() {
   const { isOpen, open, close } = useReceiptDialogStore();
-  const userId = useQuery(api.helpers.getUserId);
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [receipt, setReceipt] = useState<{
@@ -63,9 +65,10 @@ export function AddReceiptDialog() {
       title: receipt.storeName,
       amount: receipt.total,
       type: transactionType,
-      userId: userId ?? '',
+      authId: authId ?? '',
       date: new Date().toISOString().split('T')[0],
       yearAndMonth: new Date().toISOString().slice(0, 7),
+      transactionAuthId: authId ?? '',
     });
 
     if (response.success) {

@@ -28,8 +28,9 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { AvatarDropdown } from './AvatarDropdown';
-import { useAuthActions } from '@convex-dev/auth/react';
 import { motion } from 'motion/react';
+import { useSession } from 'next-auth/react';
+import { signOutAction } from '@/lib/actions/signOut';
 
 const tabs = [
   {
@@ -60,15 +61,19 @@ const tabs = [
 ];
 
 export function Header() {
-  const currentUser = useQuery(api.helpers.currentUser);
-  const isMember = useQuery(api.helpers.isMember);
+  const { data: session } = useSession();
+  const currentUser = useQuery(
+    api.users.getUserByAuthId,
+    session?.user?.id ? { authId: session.user.id } : 'skip'
+  );
+
+  const isMember = currentUser?.isMember ?? false;
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const { signOut } = useAuthActions();
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    await signOutAction();
     setIsOpen(false);
-    void signOut();
   };
 
   useEffect(() => {
@@ -82,8 +87,6 @@ export function Header() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  if (!currentUser) return <></>;
 
   return (
     <div
@@ -123,7 +126,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <ThemeButton />
 
-          <AvatarDropdown user={currentUser} isMember={isMember} />
+          <AvatarDropdown user={session?.user} isMember={isMember} />
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger className="md:hidden" asChild>
@@ -136,13 +139,13 @@ export function Header() {
                 <SheetTitle className="flex justify-start pb-4 border-b dark:border-zinc-600">
                   <div className="flex items-center gap-2">
                     <Avatar>
-                      <AvatarImage src={currentUser?.image} />
+                      <AvatarImage src={session?.user?.image ?? ''} />
                       <AvatarFallback>
-                        {currentUser?.name?.charAt(0).toUpperCase()}
+                        {session?.user?.name?.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
 
-                    <span className="italic">{currentUser?.name}</span>
+                    <span className="italic">{session?.user?.name}</span>
                   </div>
                 </SheetTitle>
                 <div className="flex flex-col items-start h-[calc(100vh-8rem)]">

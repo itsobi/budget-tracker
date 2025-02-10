@@ -11,10 +11,12 @@ import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
 import { useSummaryDialog } from '@/store/useSumaryDialog';
 import { useQuery } from 'convex/react';
+import { useSession } from 'next-auth/react';
 
 export function SummaryDialog() {
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
   const { isOpen, close } = useSummaryDialog();
-  const userId = useQuery(api.helpers.getUserId);
 
   const today = new Date();
   const currentYear = today.getFullYear();
@@ -22,16 +24,16 @@ export function SummaryDialog() {
 
   const MonthlyBudgetCap = useQuery(
     api.budgetCap.getBudgetCap,
-    userId ? { userId } : 'skip'
+    authId ? { authId } : 'skip'
   );
 
   const expensesData = useQuery(
     api.expenses.getExpenses,
-    userId ? { userId } : 'skip'
+    authId ? { authId } : 'skip'
   );
 
   const transactionsData = useQuery(api.transactions.getTransactions, {
-    userId: userId ?? '',
+    authId: authId ?? '',
     yearAndMonth: new Date().toISOString().slice(0, 7),
   });
 

@@ -7,21 +7,20 @@ import CustomTooltip from '@/components/CustomTooltip';
 import { useSavingsSheetStore } from '@/store/useSavingsSheetStore';
 import { api } from '@/convex/_generated/api';
 import { SavingsGoal } from '@/app/(app)/dashboard/_components/SavingsGoal';
-import { Id } from '@/convex/_generated/dataModel';
-import { useQuery } from 'convex/react';
+import { Preloaded, usePreloadedQuery, useQuery } from 'convex/react';
 
 export function SavingsCard({
-  userId,
+  authId,
+  preloadedSavings,
 }: {
-  userId: Id<'users'> | null | undefined;
+  authId: string | undefined;
+  preloadedSavings: Preloaded<typeof api.savings.getSavingsGoals>;
 }) {
   const { open } = useSavingsSheetStore();
-  const savings = useQuery(api.savings.getSavingsGoals, {
-    userId: userId ?? '',
-  });
+  const savings = usePreloadedQuery(preloadedSavings);
 
   const preferences = useQuery(api.preferences.getPreferences, {
-    userId: userId ?? '',
+    authId: authId ?? '',
   });
 
   if (!preferences || preferences?.savings) {

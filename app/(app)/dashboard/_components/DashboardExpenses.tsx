@@ -19,7 +19,12 @@ import {
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
 import { api } from '@/convex/_generated/api';
-import { useMutation, useQuery } from 'convex/react';
+import {
+  Preloaded,
+  useMutation,
+  usePreloadedQuery,
+  useQuery,
+} from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useExpenseSheetStore } from '@/store/useExpenseSheetStore';
@@ -41,15 +46,17 @@ const expenseTypeToEmoji: Record<string, string> = {
   recurring: '📅',
 };
 
+interface DashboardExpensesProps {
+  authId: string | undefined;
+  preloadedExpenses: Preloaded<typeof api.expenses.getExpenses>;
+}
+
 export function DashboardExpenses({
-  userId,
-}: {
-  userId: Id<'users'> | null | undefined;
-}) {
-  const expenses = useQuery(
-    api.expenses.getExpenses,
-    userId ? { userId } : 'skip'
-  );
+  authId,
+  preloadedExpenses,
+}: DashboardExpensesProps) {
+  const expenses = usePreloadedQuery(preloadedExpenses);
+
   const updateExpenseOrder = useMutation(api.expenses.updateExpenseOrder);
   const { open } = useExpenseSheetStore();
 
@@ -139,9 +146,12 @@ export function DashboardExpenses({
           <ExpenseCard
             key={expense._id}
             id={expense._id as Id<'expenses'>}
+            authId={authId}
             title={expense.title}
             amount={expense.amount}
             emoji={expenseTypeToEmoji[expense.type]}
+            expenseAuthId={expense.authId}
+
             // subtitle={expense.subtitle}
           />
         ))}

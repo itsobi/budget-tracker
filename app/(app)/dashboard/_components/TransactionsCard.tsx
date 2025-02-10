@@ -14,7 +14,7 @@ import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import Link from 'next/link';
 import { useYearAndMonth } from '@/lib/hooks';
-import { Id } from '@/convex/_generated/dataModel';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const transactionTypes: { type: string; emoji: string }[] = [
   { type: 'bill', emoji: '💳' },
@@ -26,14 +26,25 @@ const transactionTypes: { type: string; emoji: string }[] = [
   { type: 'other', emoji: '💡' },
 ];
 
-export function TransactionsCard({
-  userId,
-}: {
-  userId: Id<'users'> | null | undefined;
-}) {
+function TransactionSkeleton() {
+  return (
+    <div className="p-4 w-full flex items-center">
+      <Skeleton className="h-12 w-12 rounded-full mr-4" />
+
+      <div className="flex flex-col gap-2 flex-1">
+        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-4 w-20" />
+      </div>
+
+      <Skeleton className="h-4 w-10" />
+    </div>
+  );
+}
+
+export function TransactionsCard({ authId }: { authId: string | undefined }) {
   const yearAndMonth = useYearAndMonth();
   const data = useQuery(api.transactions.getTransactions, {
-    userId: userId ?? '',
+    authId: authId ?? '',
     yearAndMonth,
   });
 
@@ -43,6 +54,8 @@ export function TransactionsCard({
     style: 'currency',
     currency: 'USD',
   });
+
+  const skeletonCount = Math.floor(Math.random() * 3) + 1;
 
   return (
     <Card className="shadow-md dark:border-white/60">
@@ -62,19 +75,25 @@ export function TransactionsCard({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {data?.transactions.slice(0, 3).map((transaction) => {
-          const transactionType = transactionTypes.find(
-            (type) => type.type === transaction.type
-          );
-          const emoji = transactionType?.emoji || '💡';
-          return (
-            <Transaction
-              key={transaction._id}
-              transaction={transaction}
-              emoji={emoji}
-            />
-          );
-        })}
+        {data === undefined
+          ? // Show skeletons while loading
+            [...Array(skeletonCount)].map((_, index) => (
+              <TransactionSkeleton key={index} />
+            ))
+          : // Existing transaction rendering
+            data?.transactions.slice(0, 3).map((transaction) => {
+              const transactionType = transactionTypes.find(
+                (type) => type.type === transaction.type
+              );
+              const emoji = transactionType?.emoji || '💡';
+              return (
+                <Transaction
+                  key={transaction._id}
+                  transaction={transaction}
+                  emoji={emoji}
+                />
+              );
+            })}
         {data?.count && data?.count > 3 ? (
           <Link
             href="/transactions"

@@ -9,38 +9,26 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { Id } from '@/convex/_generated/dataModel';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { ChevronDownIcon, ChevronUpIcon, Loader } from 'lucide-react';
 import { useState } from 'react';
-import { useAuthActions } from '@convex-dev/auth/react';
+import { User } from 'next-auth';
+import { signOutAction } from '@/lib/actions/signOut';
 
 interface AvatarDropdownProps {
-  user:
-    | {
-        _id: Id<'users'>;
-        _creationTime: number;
-        name?: string | undefined;
-        email?: string | undefined;
-        phone?: string | undefined;
-        image?: string | undefined;
-        emailVerificationTime?: number | undefined;
-        phoneVerificationTime?: number | undefined;
-        isAnonymous?: boolean | undefined;
-      }
-    | null
-    | undefined;
+  user: User | undefined;
   isMember: boolean | undefined;
 }
 
 export function AvatarDropdown({ user, isMember }: AvatarDropdownProps) {
   const [open, setOpen] = useState(false);
-  const { signOut } = useAuthActions();
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    await signOutAction();
     setOpen(false);
-    void signOut();
   };
+
+  if (!user) return <Loader className="animate-spin" />;
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -49,7 +37,7 @@ export function AvatarDropdown({ user, isMember }: AvatarDropdownProps) {
         <DropdownMenuTrigger>
           <div className="flex items-center gap-2">
             <Avatar className="w-8 h-8">
-              <AvatarImage src={user?.image} alt={user?.name} />
+              <AvatarImage src={user?.image ?? ''} alt={user?.name ?? ''} />
               <AvatarFallback>
                 {user?.name?.charAt(0).toUpperCase()}
               </AvatarFallback>

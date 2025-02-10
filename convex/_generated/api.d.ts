@@ -8,11 +8,8 @@
  * @module
  */
 
-import type * as auth from "../auth.js";
 import type * as budgetCap from "../budgetCap.js";
 import type * as expenses from "../expenses.js";
-import type * as helpers from "../helpers.js";
-import type * as http from "../http.js";
 import type * as preferences from "../preferences.js";
 import type * as rateLimiter from "../rateLimiter.js";
 import type * as savings from "../savings.js";
@@ -33,11 +30,8 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  auth: typeof auth;
   budgetCap: typeof budgetCap;
   expenses: typeof expenses;
-  helpers: typeof helpers;
-  http: typeof http;
   preferences: typeof preferences;
   rateLimiter: typeof rateLimiter;
   savings: typeof savings;
@@ -93,6 +87,74 @@ export declare const components: {
         "internal",
         { before?: number },
         null
+      >;
+      rateLimit: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          config:
+            | {
+                capacity?: number;
+                kind: "token bucket";
+                maxReserved?: number;
+                period: number;
+                rate: number;
+                shards?: number;
+              }
+            | {
+                capacity?: number;
+                kind: "fixed window";
+                maxReserved?: number;
+                period: number;
+                rate: number;
+                shards?: number;
+                start?: number;
+              };
+          count?: number;
+          key?: string;
+          name: string;
+          reserve?: boolean;
+          throws?: boolean;
+        },
+        { ok: true; retryAfter?: number } | { ok: false; retryAfter: number }
+      >;
+      resetRateLimit: FunctionReference<
+        "mutation",
+        "internal",
+        { key?: string; name: string },
+        null
+      >;
+    };
+    public: {
+      checkRateLimit: FunctionReference<
+        "query",
+        "internal",
+        {
+          config:
+            | {
+                capacity?: number;
+                kind: "token bucket";
+                maxReserved?: number;
+                period: number;
+                rate: number;
+                shards?: number;
+              }
+            | {
+                capacity?: number;
+                kind: "fixed window";
+                maxReserved?: number;
+                period: number;
+                rate: number;
+                shards?: number;
+                start?: number;
+              };
+          count?: number;
+          key?: string;
+          name: string;
+          reserve?: boolean;
+          throws?: boolean;
+        },
+        { ok: true; retryAfter?: number } | { ok: false; retryAfter: number }
       >;
       rateLimit: FunctionReference<
         "mutation",

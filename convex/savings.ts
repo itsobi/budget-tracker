@@ -4,22 +4,20 @@ import { rateLimiter } from './rateLimiter';
 
 export const createSavingsGoal = mutation({
   args: {
-    userId: v.string(),
+    authId: v.string(),
     title: v.string(),
     type: v.string(),
     goalAmount: v.number(),
     currentAmount: v.number(),
+    savingsAuthId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
+    if (!args.authId) {
       throw new Error('Not authenticated');
     }
 
-    const userId = identity.subject;
-
     const { ok } = await rateLimiter.limit(ctx, 'createSavingsGoal', {
-      key: userId,
+      key: args.authId,
     });
 
     if (!ok) {
@@ -49,21 +47,20 @@ export const createSavingsGoal = mutation({
 export const updateSavingsGoal = mutation({
   args: {
     id: v.id('savings'),
+    authId: v.string(),
+    savingsAuthId: v.string(),
     title: v.optional(v.string()),
     type: v.optional(v.string()),
     goalAmount: v.optional(v.number()),
     currentAmount: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
+    if (args.savingsAuthId && args.savingsAuthId !== args.authId) {
+      throw new Error('Unauthorized');
     }
 
-    const userId = identity.subject;
-
     const { ok } = await rateLimiter.limit(ctx, 'updateSavingsGoal', {
-      key: userId,
+      key: args.authId,
     });
 
     if (!ok) {
@@ -92,12 +89,12 @@ export const updateSavingsGoal = mutation({
 
 export const getSavingsGoals = query({
   args: {
-    userId: v.string(),
+    authId: v.string(),
   },
   handler: async (ctx, args) => {
     return await ctx.db
       .query('savings')
-      .withIndex('by_user_id', (q) => q.eq('userId', args.userId))
+      .withIndex('by_auth_id', (q) => q.eq('authId', args.authId))
       .collect();
   },
 });
@@ -114,17 +111,16 @@ export const getSavingsGoal = query({
 export const deleteSavingsGoal = mutation({
   args: {
     id: v.id('savings'),
+    authId: v.string(),
+    savingsAuthId: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error('Not authenticated');
+    if (args.savingsAuthId && args.savingsAuthId !== args.authId) {
+      throw new Error('Unauthorized');
     }
 
-    const userId = identity.subject;
-
     const { ok } = await rateLimiter.limit(ctx, 'deleteSavingsGoal', {
-      key: userId,
+      key: args.authId,
     });
 
     if (!ok) {

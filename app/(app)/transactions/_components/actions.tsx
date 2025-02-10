@@ -8,20 +8,23 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { toast } from 'sonner';
+import { useSession } from 'next-auth/react';
 
 interface ActionsProps {
   transaction: Transaction;
 }
 
 export function Actions({ transaction }: ActionsProps) {
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
   const { open } = useTransactionSheetStore();
   const deleteTransaction = useMutation(api.transactions.deleteTransaction);
-  const userId = useQuery(api.helpers.currentUser);
 
   const handleDelete = async () => {
     const response = await deleteTransaction({
       id: transaction.id as Id<'transactions'>,
-      userId: userId?._id ?? '',
+      authId: authId ?? '',
+      transactionAuthId: transaction.authId,
     });
     if (response.success) {
       toast.success('Transaction deleted successfully!');

@@ -24,6 +24,7 @@ import { api } from '@/convex/_generated/api';
 import { toast } from 'sonner';
 import { useSavingsSheetStore } from '@/store/useSavingsSheetStore';
 import { Id } from '@/convex/_generated/dataModel';
+import { useSession } from 'next-auth/react';
 
 const savingsTypes = [
   { value: 'car', label: 'Car' },
@@ -35,7 +36,8 @@ const savingsTypes = [
 ];
 
 export function SavingsSheet() {
-  const userId = useQuery(api.helpers.getUserId);
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
   const { isOpen, close, savingsId } = useSavingsSheetStore();
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -51,7 +53,7 @@ export function SavingsSheet() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!userId) return;
+    if (!authId) return;
 
     const formData = new FormData(e.currentTarget);
 
@@ -86,11 +88,14 @@ export function SavingsSheet() {
       if (savingsId) {
         response = await updateSavingsGoalMutation({
           id: savingsId as Id<'savings'>,
+          authId,
+          savingsAuthId: existingSaving?.authId ?? '',
           ...data,
         });
       } else {
         response = await createSavingsGoal({
-          userId,
+          authId,
+          savingsAuthId: authId,
           ...data,
         });
       }

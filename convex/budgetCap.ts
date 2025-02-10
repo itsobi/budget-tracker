@@ -3,28 +3,28 @@ import { mutation, query } from './_generated/server';
 
 export const getBudgetCap = query({
   args: {
-    userId: v.string(),
+    authId: v.string(),
   },
   handler: async (ctx, args) => {
     return await ctx.db
       .query('budgetCap')
-      .withIndex('by_user_id')
-      .filter((q) => q.eq(q.field('userId'), args.userId))
+      .withIndex('by_auth_id')
+      .filter((q) => q.eq(q.field('authId'), args.authId))
       .first();
   },
 });
 
 export const setBudgetCap = mutation({
   args: {
-    userId: v.string(),
+    authId: v.string(),
     amount: v.number(),
   },
   handler: async (ctx, args) => {
     try {
       const existingBudgetCap = await ctx.db
         .query('budgetCap')
-        .withIndex('by_user_id')
-        .filter((q) => q.eq(q.field('userId'), args.userId))
+        .withIndex('by_auth_id')
+        .filter((q) => q.eq(q.field('authId'), args.authId))
         .first();
 
       let budgetCap;
@@ -35,7 +35,7 @@ export const setBudgetCap = mutation({
         });
       } else {
         budgetCap = await ctx.db.insert('budgetCap', {
-          userId: args.userId,
+          authId: args.authId,
           amount: args.amount,
         });
       }

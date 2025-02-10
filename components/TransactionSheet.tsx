@@ -24,6 +24,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { toast } from 'sonner';
 import { Id } from '@/convex/_generated/dataModel';
+import { useSession } from 'next-auth/react';
 
 export const transactionTypes = [
   { value: 'bills', label: 'Bills' },
@@ -37,7 +38,8 @@ export const transactionTypes = [
 
 export function TransactionSheet() {
   const { isOpen, close, transactionId } = useTransactionSheetStore();
-  const userId = useQuery(api.helpers.getUserId);
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
   const formRef = useRef<HTMLFormElement>(null);
 
   const existingTransaction = useQuery(
@@ -46,6 +48,8 @@ export function TransactionSheet() {
       ? { id: transactionId as Id<'transactions'> }
       : 'skip'
   );
+
+  console.log(existingTransaction);
 
   const updateTransaction = useMutation(api.transactions.updateTransaction);
 
@@ -58,7 +62,7 @@ export function TransactionSheet() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!userId) return;
+    if (!authId) return;
 
     const formData = new FormData(e.currentTarget);
 
@@ -91,10 +95,13 @@ export function TransactionSheet() {
         title: finalTitle.trim(),
         type: finalType,
         amount: finalAmount,
+        authId,
+        transactionAuthId: existingTransaction?.authId ?? '',
       });
     } else {
       response = await createTransaction({
-        userId,
+        authId,
+        transactionAuthId: authId,
         ...data,
       });
     }

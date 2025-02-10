@@ -16,9 +16,16 @@ import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { sendEmail } from '@/lib/actions/sendEmail';
 import { toast } from 'sonner';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 
 export function ContactForm() {
-  const isMember = useQuery(api.helpers.isMember);
+  const { data: session } = useSession();
+  const authId = session?.user?.id;
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+  const isMember = useQuery(api.users.isUserMember, {
+    authId: authId ?? '',
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,10 +36,12 @@ export function ContactForm() {
     if (!response.success) {
       return;
     }
+    setIsSubmitDisabled(true);
+    setTimeout(() => setIsSubmitDisabled(false), 5 * 60 * 1000); // Not the best way to do this, but it works for now. Disables the button for 5 minutes after submission.
     form.reset();
   };
 
-  if (isMember) {
+  if (isMember && authId) {
     return (
       <div>
         <Card className="w-full shadow-md">
@@ -45,22 +54,35 @@ export function ContactForm() {
           </CardHeader>
           <CardContent>
             <form
-              onSubmit={(e) =>
+              onSubmit={(e) => {
                 toast.promise(() => handleSubmit(e), {
                   loading: 'Sending email... 📧',
                   success: 'Email sent successfully 💪',
                   error: 'Error sending email ❌',
-                })
-              }
+                });
+              }}
             >
               <div className="flex flex-col gap-2">
                 <div>
                   <Label htmlFor="name">Name</Label>
-                  <Input id="name" name="name" required />
+                  <Input
+                    id="name"
+                    name="name"
+                    value={session.user?.name ?? ''}
+                    readOnly
+                    required
+                  />
                 </div>
                 <div>
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" name="email" type="email" required />
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={session.user?.email ?? ''}
+                    readOnly
+                    required
+                  />
                 </div>
 
                 <div>
@@ -71,6 +93,7 @@ export function ContactForm() {
               <Button
                 type="submit"
                 className="w-full mt-4 font-bold bg-gradient-to-r from-blue-600 to-cyan-500 transition-all duration-500 hover:scale-105"
+                disabled={isSubmitDisabled}
               >
                 Send
               </Button>
