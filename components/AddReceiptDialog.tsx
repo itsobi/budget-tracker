@@ -22,7 +22,7 @@ import {
 } from './ui/select';
 import { Label } from './ui/label';
 import { transactionTypes } from './TransactionSheet';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useSession } from 'next-auth/react';
 

@@ -27,7 +27,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { api } from '@/convex/_generated/api';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { toast } from 'sonner';
 import { Id } from '@/convex/_generated/dataModel';
 import { useSession } from 'next-auth/react';

@@ -1,7 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { GoogleLogo } from '@/components/logos/GoogleLogo';
-import { GitHubLogo } from '@/components/logos/GitHubLogo';
-import { SignInButton } from './_components/SignInButton';
 import { signIn } from '@/auth';
 
 export default function SignInPage() {

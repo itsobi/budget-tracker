@@ -4,7 +4,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { Transaction } from './columns';
 import { useTransactionSheetStore } from '@/store/useTransactionSheetStore';
 import { Id } from '@/convex/_generated/dataModel';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { toast } from 'sonner';

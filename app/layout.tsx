@@ -2,7 +2,6 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/ThemProvider';
 import { Lato } from 'next/font/google';
-import { ConvexClientProvider } from '@/components/ConvexClientProvider';
 import { AuthSessionProvider } from '@/components/AuthSessionProvider';
 
 export const metadata: Metadata = {

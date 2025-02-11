@@ -26,21 +26,19 @@ export const sendEmail = async (formData: FormData) => {
     };
   }
 
-  // const { error } = await resend.emails.send({
-  //   from: 'Acme <onboarding@resend.dev>',
-  //   to: ['obi.j.obialo@gmail.com'],
-  //   subject: 'TracKiT Contact Form',
-  //   text: `Name: ${name.trim()}\nEmail: ${email.trim()}\nMessage: ${message.trim()}`,
-  // });
+  const { error } = await resend.emails.send({
+    from: 'TracKiT <onboarding@resend.dev>',
+    to: ['obi.j.obialo@gmail.com'],
+    subject: 'TracKiT Contact Form',
+    text: `Name: ${name.trim()}\nEmail: ${email.trim()}\nMessage: ${message.trim()}`,
+  });
 
-  // if (error) {
-  //   return {
-  //     success: false,
-  //     message: error.message,
-  //   };
-  // }
-
-  console.log(name, email, message);
+  if (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
 
   return {
     success: true,
